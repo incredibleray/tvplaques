@@ -28,6 +28,10 @@ https://plaquetv.z5.web.core.windows.net?tv=2 shows rebirth plaques
 az storage azcopy blob upload -c "\$web" --account-name plaquetv -s "build/*" --recursive
 ```
 
+# Team
+It is developed by Ray Juang (https://github.com/rjuang) and Ray Xu (https://github.com/incredibleray)
+code written before 5/5/2023 are collapsed into the first commit.
+
 # cron
 ## edit cron
 `crontab -e`
