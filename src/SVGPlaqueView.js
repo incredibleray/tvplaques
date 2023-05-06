@@ -15,7 +15,7 @@ function getImagesFromMetadata(metadata, thumbnailSize) {
     ...p,
     src: "",
     thumbnail: "",
-    dateString: dateStringFor(p),
+    // dateString: dateStringFor(p),
     targetHeight: thumbnailSize.height - 2*CARD_MARGIN,
     thumbnailHeight: thumbnailSize.height,
     thumbnailWidth: thumbnailSize.width
