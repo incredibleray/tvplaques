@@ -75,7 +75,7 @@ export function RebirthPlaque(props) {
         <SvgFile svg={rebirth} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} maxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:57, y:420}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
+        <TextOverlay text={props.item.sponsor} position={{x:57, y:410}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
         <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={105} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
      </div>
      </div>

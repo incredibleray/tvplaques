@@ -108,12 +108,14 @@ export function searchPlaques(allPlaques, searchTerms) {
     return [];
   }
 
-  searchTerms = searchTerms.map(s => s.toLowerCase());
+  // searchTerms = searchTerms.map(s => s.toLowerCase());
+  for (const p of allPlaques) {
+    if (p.searchTerms!=null && p.searchTerms.filter(x=>searchTerms.includes(x)).length>0) {
+      return [p]
+    }
+  }
 
-  const results = allPlaques.filter(
-      p => searchTerms.includes(p.beneficiary.toLowerCase()) || searchTerms.includes(p.sponsor.toLowerCase()));
-
-  return results;
+  return [];
 }
 
 export default getImages;

@@ -20,7 +20,7 @@ const initialState = {
   isTyping: false,
   initDone: false,
   showSearchBar: false,
-  location: "dttRebirth",
+  location: "all",
   lastRefreshDate: new Date(),
 }
 
