@@ -23,11 +23,10 @@ function PlaqueCarousel() {
 
   }
 
-  let pages = [];
+  let pages=[];
   for (let i = 0; i < totalPages; i++) {
     pages.push(<SVGPlaqueView page={i} />);
   }
-
 
   return (
       <Carousel autoPlay={autoPlayCarousel} infiniteLoop={true} interval={29000} stopOnHover={false} transitionTime={1000}

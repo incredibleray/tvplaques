@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
 import Gallery from 'react-grid-gallery';
-import { getImages, NUM_ROWS } from './plaques';
-
+import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
 import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
-
+import WPlaque from './WPlaque';
 export const MARGIN_PIXELS = 1;
 
 function getImagesFromMetadata(metadata, thumbnailSize) {
@@ -26,20 +25,38 @@ function getImagesFromMetadata(metadata, thumbnailSize) {
 function SVGPlaqueView(props) {
   const dispatch = useDispatch();
 
-  const allPlaques = useSelector((state) => state.allPlaques);
-  const rowHeight = useSelector((state) => state.rowHeight);
-  const picsPerCol = useSelector((state) => state.picsPerCol);
-  const colWidth = Math.ceil((window.screen.width - MARGIN_PIXELS) / picsPerCol);
+  const plaqueOnPage = useSelector((state) => state.allPlaques[props.page]);
+  const singleRowHeight = useSelector((state) => state.singleRowHeight);
+  const doubleRowHeight=useSelector((state) => state.rowHeight);
+  const singleRowImagesPerRow = useSelector((state) => state.singleRowImagesPerRow);
+  const doubleRowImagesPerRow=useSelector((state) => state.picsPerCol);
 
-  let page = props.page;
-  const plaques = getImages(allPlaques, picsPerCol, page);
-  const arrangedPlaques = getImagesFromMetadata(plaques, {width: colWidth, height: rowHeight});
+  const rowHeight=(plaqueOnPage.rows==1)?singleRowHeight:doubleRowHeight;
+  const imagesPerRow=(plaqueOnPage.rows==1)?singleRowImagesPerRow:doubleRowImagesPerRow;
+  const colWidth = Math.ceil((window.screen.width - MARGIN_PIXELS) / imagesPerRow);
+
+  const arrangedPlaques = getImagesFromMetadata(plaqueOnPage.plaques, {width: colWidth, height: rowHeight});
+
+  if (plaqueOnPage.rows==1) {
+
+    return <ImageList 
+    sx={{ backgroundColor:"black" }} 
+    cols={imagesPerRow} rowHeight={rowHeight}>
+  {arrangedPlaques.map((item) => (
+    <ImageListItem>
+      <WPlaque item={item} />
+    </ImageListItem>
+  ))}
+</ImageList>
+  }
+
+
   const onClick=(index) =>
     dispatch({type:"clickHighlight", payload: arrangedPlaques[index]});
   return (
    <div style={{
         display: "block",
-        minHeight: "1px",
+        height: "100%",
         width: "100%",
         border: "1px solid #ddd",
         overflow: "hidden",
@@ -51,7 +68,7 @@ function SVGPlaqueView(props) {
           enableImageSelection={false}
           rowHeight={rowHeight}
           margin={0}
-          maxRows={NUM_ROWS}
+          maxRows={plaqueOnPage.rows}
           onClickThumbnail={onClick} />
     </div>);
 }

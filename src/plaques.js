@@ -3,21 +3,6 @@ import { useSelector } from 'react-redux'
 
 export const NUM_ROWS = 2;
 
-export const createPadItem = (type) => ({
-  "src": "",
-  "thumbnail": "",
-  "id": "",
-  "beneficiary": "",
-  "sponsor": "",
-  "type": type,
-  "location": "",
-  "requestDate": "",
-  "expiryDate": "",
-  "dateString": "",
-  "searchable": false,
-});
-
-
 function isPlaqueExpired(currentDate, start, end) {
   const beginDate = new Date(start);
   const endDate = new Date(end);
@@ -27,95 +12,117 @@ function isPlaqueExpired(currentDate, start, end) {
   return plaqueStarted && plaqueNotExpired;
 }
 
+function CreatePlaquePages(plaques, imagesPerRow, rows, type, pageOffset) {
+  const imagesPerPage=imagesPerRow*rows;
+  let pages=[];
+  let i=0;
+  for (; i<Math.floor(plaques.length/imagesPerPage); i++) {
+    const plaqueOnPage=plaques.slice(i*imagesPerPage, (i+1)*imagesPerPage);
+    const page={
+      index:pageOffset+i,
+      plaques:plaqueOnPage,
+      type:type,
+      rows:rows,
+      ids:plaqueOnPage.map(p=>p.id),
+      searchTerms:plaqueOnPage.map(p=>p.searchTerms).flat()
+    }
+    pages.push(page);
+  }
+  
+  if (plaques.length>i*imagesPerPage) {
+    const plaqueOnPage=plaques.slice(i*imagesPerPage);
+    const paddingLen= imagesPerPage-plaqueOnPage.length;
+    const padding=Array(paddingLen).fill(createPadItem(type));
+    const page={
+      index:pageOffset+i,
+      plaques:plaqueOnPage.concat(padding),
+      type:type,
+      rows:rows,
+      ids:plaqueOnPage.map(p=>p.id),
+      searchTerms:plaqueOnPage.map(p=>p.searchTerms).flat()
 
-export function preprocessSvgPlaques(picsPerCol, location, plaquesOnFile) {
+    }
+    pages.push(page);
+  } 
+
+  return pages;
+}
+
+const createPadItem = (type) => ({
+  "id": null, "beneficiary": "", "beneFontSize": 30, "sponsor": "", "sponsorFontSize": 20, "type": type, "requestDate": "", "expiryDate": "", "searchTerms": [], "mediaFiles": [], "dateString": "", "dateStringFontSize": 9,
+  location: [],
+  "searchable": false,
+});
+
+export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
   const currentDate = new Date();
-  const plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
+  let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
+  plaques=plaques.filter(p=>p.locations.includes(location));
+
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
   const wishPlaques=plaques.filter(p=>p.type==="wish");
   
-  const imagesPerPage = picsPerCol * NUM_ROWS;
+  let selected=[];
   
-  const mmbPadLen=Math.ceil(mmbPlaques.length/imagesPerPage)*imagesPerPage-mmbPlaques.length;
-  const rebirthPadLen=Math.ceil(rebirthPlaques.length/imagesPerPage)*imagesPerPage-rebirthPlaques.length;
-  const wishPadLen=Math.ceil(wishPlaques.length/imagesPerPage)*imagesPerPage-wishPlaques.length;
-
-  const mmbPadding=Array(mmbPadLen).fill(createPadItem('mmb'));
-  const rebirthPadding=Array(rebirthPadLen).fill(createPadItem('rebirth'));
-  const wishPadding=Array(wishPadLen).fill(createPadItem('wish'));
- 
-  if (location=="dttRebirth") {
-    return rebirthPlaques.concat(rebirthPadding);
-  } else if (location=="dttMmb") {
-    return mmbPlaques.concat(mmbPadding,wishPlaques,wishPadding);
-  } 
-
-  return mmbPlaques.concat(mmbPadding, rebirthPlaques, rebirthPadding, wishPlaques, wishPadding);
-}
-
-export function getImages(allPlaques, picsPerCol, page) {
-
-  const imagesPerPage=picsPerCol * NUM_ROWS;
-  const start=imagesPerPage*page;
-  const end=start + imagesPerPage;
-
-  return allPlaques.slice(start, end);
-}
-
-export function getSearchView(allPlaques, picsPerCol, searchResult) {
-  const resultIndex=allPlaques.findIndex(
-    (p)=>p.id===searchResult.id
-  );
-
-  if (resultIndex===-1){
-    return [];
+  if (types.includes("mmb")) {
+    const existingPagesLen=selected.length;
+    selected=selected.concat(CreatePlaquePages(mmbPlaques, doubleRowImagesPerRow, 2, 'mmb', existingPagesLen));
   }
 
-  const imagesPerPage=picsPerCol * NUM_ROWS;
-  const page=(resultIndex-(resultIndex%imagesPerPage))/imagesPerPage;
-
-  return getImages(allPlaques, picsPerCol, page);
-
-}
-
-export function getSearchPage(allPlaques, picsPerCol, searchResult) {
-  const resultIndex=allPlaques.findIndex(
-    (p)=>p.id===searchResult.id
-  );
-
-  if (resultIndex===-1){
-    return -1;
+  if (types.includes("rebirth")) {
+    const existingPagesLen=selected.length;
+    selected=selected.concat(CreatePlaquePages(rebirthPlaques, doubleRowImagesPerRow, 2, 'rebirth', existingPagesLen));
   }
 
-  const imagesPerPage=picsPerCol * NUM_ROWS;
-  const page=(resultIndex-(resultIndex%imagesPerPage))/imagesPerPage;
+  if (types.includes("wish")) {
+    const existingPagesLen=selected.length;
+    selected=selected.concat(CreatePlaquePages(wishPlaques, doubleRowImagesPerRow, 2, 'wish', existingPagesLen));
+  }
 
-  return page;
+  if (types.includes("wmmb")) {
+  const wmmbPlaques=plaques.filter(p=>p.type==="wmmb");
+    const existingPagesLen=selected.length;
+    selected=selected.concat(CreatePlaquePages(wmmbPlaques, singleRowImagesPerRow, 1, 'wmmb', existingPagesLen));
+  }
+
+  return selected;
 }
 
-export function getGalleryPlaqueInfo(plaque) {
-  return {
-    src: plaque.file,
-    thumbnail: plaque.previewFile,
-    thumbnailWidth: 235,
-    thumbnailHeight: 720,
-  };
-}
+// export function getSearchView(allPlaques, picsPerCol, searchResult) {
+//   const resultIndex=allPlaques.findIndex(
+//     (p)=>p.id===searchResult.id
+//   );
+
+//   if (resultIndex===-1){
+//     return [];
+//   }
+
+//   const imagesPerPage=picsPerCol * NUM_ROWS;
+//   const page=(resultIndex-(resultIndex%imagesPerPage))/imagesPerPage;
+
+//   return getImages(allPlaques, picsPerCol, page);
+
+// }
 
 export function searchPlaques(allPlaques, searchTerms) {
   if (searchTerms == null || searchTerms.length === 0) {
-    return [];
+    return null;
   }
 
+  const query=searchTerms[0];
   // searchTerms = searchTerms.map(s => s.toLowerCase());
-  for (const p of allPlaques) {
-    if (p.searchTerms!=null && p.searchTerms.filter(x=>searchTerms.includes(x)).length>0) {
-      return [p]
+  for (const plaqueOnPage of allPlaques) {
+    if (!plaqueOnPage.searchTerms.includes(query)) {
+      continue;
+    }
+
+    const plaque=plaqueOnPage.plaques.find(p=>p.searchTerms.includes(query));
+    return {
+      page: plaqueOnPage.index,
+      plaque:plaque
     }
   }
 
-  return [];
+  return null;
 }
-
-export default getImages;

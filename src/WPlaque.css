@@ -1,0 +1,135 @@
+	/* gold color 	#ffd700 */
+
+/* simple gold breathing glow
+
+{
+    animation: glow 800ms ease-out infinite alternate;
+	background: #222922;
+	background: linear-gradient(#333933, #222922);
+	border-color: 	#ffd700;
+	box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+	color: 	
+#ffd700;
+	outline: none;
+}
+
+@keyframes glow {
+    0% {
+		border-color: 	
+#ffd700;
+		box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+    }	
+    100% {
+		border-color: 	
+#ffd700;
+		box-shadow: 0 0 20px rgba(255,215,0,.6), inset 0 0 10px rgba(255,215,0,.4), 0 2px 0 #000;
+    }
+} */
+
+.animatedShadow {
+  position: relative;
+  width: 30vw;
+  height: 30vw;
+  line-height: 30vw;
+  text-align: center;
+  color: #252B37;
+  background-color: #151823;
+  animation: 10s ease infinite;
+
+  &:after {
+    position: absolute;
+    content: "";
+    top: 10vw;
+    left: 10vw;
+    right: 0;
+    z-index: -1;
+    height: 7vw;
+    width: 7vw;
+    margin: 0 auto;
+    -webkit-filter: blur(1vw);
+    -moz-filter: blur(1vw);
+    -ms-filter: blur(1vw);
+    filter: blur(1vw);
+    background: linear-gradient(270deg, #FFD700, #FFD700);
+    background-size: 200% 200%;
+    animation: animateGlow 10s ease infinite;
+    
+    @keyframes animateGlow {
+      0%{top:0; left:0}
+      5%{top:0;left: 5vw/4}
+      10%{top:0;left: 5vw/2}
+      15%{top:0;left: 3*5vw/4}
+      20%{top:0;left: 5vw}
+      25%{top: 5vw/4; left: 5vw}
+      30%{top: 5vw/2; left: 5vw}
+      35%{top: 3*5vw/4; left: 5vw}
+      40%{top: 5vw;left:5vw}
+      45%{top:5vw;left: 3*5vw/4}
+      50%{top:5vw;left: 5vw/2}
+      55%{top:5vw;left: 5vw/4}
+      60%{top:5vw;left: 0}
+      100%{top: -5vw; left: -5vw}
+    }
+  }
+}
+
+
+.breathingGlow {
+  animation: glow 800ms ease-out infinite alternate;
+border-color: 	#ffd700;
+box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+outline: none;
+}
+
+@keyframes glow {
+  0% {
+  border-color: 	
+#ffd700;
+  box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+  }	
+  100% {
+  border-color: 	
+#ffd700;
+  box-shadow: 0 0 20px rgba(255,215,0,.6), inset 0 0 10px rgba(255,215,0,.4), 0 2px 0 #000;
+  }
+}
+
+.rotatingShadow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  z-index: 1;
+  box-shadow: 10px -55px 30px 15px #ffd700, 24px -10px 47px 10px #ffd700, -21px -25px 97px 10px #ffd700, 51px 5px 17px 10px #ffd700, 3px 2px 77px 10px #ffd700;
+  animation: shadow-rotate 7s linear infinite;
+  transform-origin: center;
+}
+
+
+@keyframes shadow-rotate {
+from {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+to {
+  transform: translate(-50%, -50%) rotate(360deg);
+}
+}
+
+
+  .glow span:nth-of-type(2) {
+    -webkit-box-shadow: -30px -15px 15px rgba(255,215,0,.8);
+    -webkit-transform: scale(.8);
+    z-index: 1;
+  }
+  .glow span:nth-of-type(3) {
+    -webkit-box-shadow: 30px 190px 30px rgba(255,215,0,.8);
+    -webkit-transform: scale(.3);
+    z-index: 1;
+  }
+  .glow span:nth-of-type(4) {
+    -webkit-box-shadow: 90px 30px 30px rgba(255,215,0,1);
+    -webkit-transform: scale(.5);
+    z-index: 1;
+
+  }

@@ -1,0 +1,116 @@
+	/* gold color 	#ffd700 */
+
+  simple gold breathing glow
+
+  {
+      animation: glow 800ms ease-out infinite alternate;
+    background: #222922;
+    background: linear-gradient(#333933, #222922);
+    border-color: 	#ffd700;
+    box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+    color: 	
+  #ffd700;
+    outline: none;
+  }
+  
+  @keyframes glow {
+      0% {
+      border-color: 	
+  #ffd700;
+      box-shadow: 0 0 5px rgba(255,215,0,.2), inset 0 0 5px rgba(255,215,0,.1), 0 2px 0 #000;
+      }	
+      100% {
+      border-color: 	
+  #ffd700;
+      box-shadow: 0 0 20px rgba(255,215,0,.6), inset 0 0 10px rgba(255,215,0,.4), 0 2px 0 #000;
+      }
+  }
+  
+  
+  dynamic shadow glow
+  https://codepen.io/georgehastings/pen/xgwxgo
+  https://codepen.io/abdullahturkmen/pen/vYJpzRv
+  
+  *{box-sizing: border-box;}
+  
+  html,
+  
+  body {
+    display: flex;
+    align-items: center;
+    font-family: monospace;
+    justify-content: center;
+    background-color:darken(#252B37, 4%);
+  }
+  
+  @mixin backlight($x, $y, $spread, $size, $colorA, $colorB, $duration) {
+    &:after {
+      position: absolute;
+      content: "";
+      top: $y;
+      left: $x;
+      right: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
+      transform: scale($size);
+      -webkit-filter: blur($spread);
+      -moz-filter: blur($spread);
+      -ms-filter: blur($spread);
+      filter: blur($spread);
+      background: linear-gradient(270deg, $colorA, $colorB);
+      background-size: 200% 200%;
+      animation: animateGlow $duration ease infinite;
+      
+      @keyframes animateGlow {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+      }
+    }
+  }
+  
+  div {
+    position: relative;
+    width: 30vw;
+    height: 30vw;
+    line-height: 30vw;
+    text-align: center;
+    color: #252B37;
+    background-color: #151823;
+    animation: 10s ease infinite;
+    @include backlight(0, 5vw, 5vw, 0.75, #FFD700, #FFD700, 10s);
+  }
+  
+  mic-shadow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          //transform: translate(-50%, -50%);
+          border-radius: 100%;
+          z-index: 1;
+          box-shadow: 10px -55px 30px 15px #823ca6, 24px -10px 47px 10px #aab3d2, -21px -25px 97px 10px #5acee3, 51px 5px 17px 10px #1b7d8f, 3px 2px 77px 10px #f30bf5;
+          animation: shadow-rotate 1.5s linear infinite;
+          transform-origin: center;
+      }
+  
+  
+  @keyframes shadow-rotate {
+      from {
+          transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+          transform: translate(-50%, -50%) rotate(360deg);
+      }
+  }
+  
+  particle
+  https://codepen.io/natewiley/pen/GRXBYa
+  
+  https://freefrontend.com/css-glow-effects/
+
+  effects
+  https://s3.amazonaws.com/viget.com/legacy/uploads/file/boxshadows/index.html
+  https://codepen.io/oscarmarcelo/pen/OwdXag
+  

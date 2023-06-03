@@ -119,7 +119,7 @@ WishPlaque.defaultProps = {
 
 export function PlaqueSelector(props) {
   const type = props.item.type;
-  if (type === 'mmb') {
+  if (type === 'mmb' || type=="wmmb") {
     return MmbPlaque(props);
   } else if (type === 'rebirth') {
     return RebirthPlaque(props);

@@ -21,7 +21,7 @@ function App(props) {
   const showSearchBar=useSelector((state)=>state.showSearchBar);
 
   const handleMouseMove = (event) => {
-    if (event.clientY > Math.floor(window.innerHeight*0.9) && showSearchBar==false) {
+    if (event.clientY > Math.floor(window.innerHeight*0.97) && showSearchBar==false) {
       dispatch({type:"setShowSearchBar", payload: true})    
     }
   };
@@ -31,6 +31,12 @@ function App(props) {
   useEffect(() => {
 
     function handleResize() {
+      const singleRowHeight=(window.screen.height - MARGIN_PIXELS);
+      const singleRowScale=singleRowHeight/CARD_HEIGHT;
+      const singleRowPicWidth=Math.floor(CARD_WIDTH*singleRowScale);
+      // const singleRowImagesPerRow = Math.ceil((window.screen.width - MARGIN_PIXELS)/ (singleRowPicWidth + 2*CARD_MARGIN));
+      const singleRowImagesPerRow =1;
+
       let rowHeight = (window.screen.height - MARGIN_PIXELS) / NUM_ROWS
       var scale = rowHeight / CARD_HEIGHT;
       var picWidth = CARD_WIDTH * scale;
@@ -38,7 +44,7 @@ function App(props) {
 
       dispatch({
         type: 'setWinSize',
-        payload: { picsPerCol, rowHeight }
+        payload: { picsPerCol, rowHeight,singleRowImagesPerRow,singleRowHeight }
       });
 
     }
@@ -52,14 +58,23 @@ function App(props) {
 
     const queryParameters = new URLSearchParams(window.location.search);
     const tv = queryParameters.get("tv");
-    let location="";
+    let location=[],types=[];
 
-    if (tv==1) {
-      location="dttMmb";
-    } else if (tv==2) {
-      location="dttRebirth";
+     if (tv=="1") {
+      location="DTT";
+      types=["mmb","wmmb","wish"];
+    } else if (tv=="2") {
+      location="DTT";
+      types=["rebirth"]
+    } else if (tv=="3") {
+      location="GF";
+      types=["mmb","rebirth","wish",]
+    } else if (tv=="4") {
+      location="DTT"
+      types=["wmmb"]
     } else {
-      location="all";
+      location="DTT";
+      types=["mmb","rebirth","wish",]
     }
 
     axios.get('./plaques.json')
@@ -76,6 +91,8 @@ function App(props) {
       setTimeout(resolve, 1000);
     })).then(()=>new Promise((resolve)=>{
       dispatch({type:'setLocation', payload:location});
+      dispatch({type:'setPlaqueTypes', payload:types});
+
       setTimeout(resolve, 1000);
       
     }))
@@ -98,10 +115,11 @@ function App(props) {
     search=search[0]
   }
   return (
-    <div style={{overflow: "hidden", height: window.screen.height }}>
+    <div style={{overflow: "hidden" }}>
       <SearchBar />
       <Box
         onMouseMove={handleMouseMove}
+        
       >
       <PlaqueCarousel />
       </Box>

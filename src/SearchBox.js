@@ -48,7 +48,7 @@ export function SearchBar() {
   // allPlaques=allPlaques.filter(p=>p.id.length>0);
   // const beneficiarys = allPlaques.map(p => p.beneficiary);
   // const requesters = allPlaques.map(p => p.sponsor);
-  let searchTerms=new Set(allPlaques.map(p=>p.searchTerms).filter(x=>x!=null).flat());
+  let searchTerms=new Set(allPlaques.map(p=>p.searchTerms).flat());
   const options = Array.from(searchTerms);
 
   const searchBarWidth = Math.floor((window.innerWidth - MARGIN_PIXELS) * 0.19);

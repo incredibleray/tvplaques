@@ -1,26 +1,29 @@
 import { createAction } from '@reduxjs/toolkit'
 import { preprocessSvgPlaques, searchPlaques} from './plaques';
-import {getSearchPage,NUM_ROWS} from './plaques';
+import {NUM_ROWS} from './plaques';
 import filePlaques from "./plaques.json";
 
 const REFRESH_INTERVAL_S = 30 * 60
 
 const initialState = { 
-  totalPages: 0,
   search: [],
   allPlaques:[],
+  totalPages:0,
   plaquesOnFile: filePlaques,
   searchResults:[],
   highlightPlaque: null,
   picsPerCol:1,
   rowHeight: 1,
+  singleRowHeight:1,
+  singleRowImagesPerRow:1,
   currentPage: 0,
   searchResultPage:0,
   highlightPlaqueWidth: 1,
   isTyping: false,
   initDone: false,
   showSearchBar: false,
-  location: "all",
+  location: "DTT",
+  plaqueTypes: [],
   lastRefreshDate: new Date(),
 }
 
@@ -59,17 +62,15 @@ export default function appReducer(state = initialState, action) {
 
       const searchResults=searchPlaques(state.allPlaques, searchTerm);
 
-      if (searchResults.length==0) {
+      if (searchResults==null) {
         return state;
       }
 
-      const page=getSearchPage(state.allPlaques, state.picsPerCol, searchResults[0]);
-
     return {
           ...state,
-          searchResults: searchResults,       
-          highlightPlaque: searchResults[0],
-          searchResultPage:page,
+          searchResults: [searchResults.plaque],       
+          highlightPlaque: searchResults.plaque,
+          searchResultPage:searchResults.page,
           showSearchBar: false
         }
     
@@ -101,16 +102,13 @@ export default function appReducer(state = initialState, action) {
         return state;
       } 
 
-      const allPlaques=preprocessSvgPlaques(state.picsPerCol, state.location, action.payload);
+      const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, state.location, state.plaqueTypes,action.payload);
 
-      const imagesPerPage=state.picsPerCol*NUM_ROWS;
-      const totalPages=Math.round(allPlaques.length/imagesPerPage);
-   
       return {
         ...state,
         plaquesOnFile: action.payload,
         allPlaques: allPlaques,
-        totalPages: totalPages,
+        totalPages:allPlaques.length,
       }
     }
     case 'closeHighlightPopup': {
@@ -135,21 +133,18 @@ export default function appReducer(state = initialState, action) {
         return state;
       }
 
-      // if (state.isTyping) {
-      //   return state;
-      // }
-
       const picsPerCol=action.payload.picsPerCol;
       const imagesPerPage=picsPerCol*NUM_ROWS;
-      const allPlaques=preprocessSvgPlaques(picsPerCol, state.location, state.plaquesOnFile);
-      const totalPages=Math.round(allPlaques.length/imagesPerPage);
+      const allPlaques=preprocessSvgPlaques(action.payload.singleRowImagesPerRow, picsPerCol,state.location,state.plaqueTypes, state.plaquesOnFile);
    
       return {
         ...state,
         picsPerCol: picsPerCol,
         rowHeight: action.payload.rowHeight,
+        singleRowHeight: action.payload.singleRowHeight,
+        singleRowImagesPerRow:action.payload.singleRowImagesPerRow,
         allPlaques: allPlaques,
-        totalPages: totalPages,
+        totalPages:allPlaques.length,
       }
     }
     case 'setHighlightPlaqueWidth': {
@@ -162,36 +157,11 @@ export default function appReducer(state = initialState, action) {
         return state;
       }
 
-      // if (state.isTyping) {
-      //   return state;
-      // }
-
-
       return {
         ...state,
         highlightPlaqueWidth: highlightPlaqueWidth
       }
     }
-    // case 'startTyping':{
-    //   if (state.isTyping) {
-    //     return state;
-    //   }
-
-    //   return {
-    //     ...state,
-    //     isTyping: true
-    //   }
-    // }
-    // case 'stopTyping':{
-    //   if (!state.isTyping) {
-    //     return state;
-    //   }
-
-    //   return {
-    //     ...state,
-    //     isTyping: false
-    //   }
-    // }
     case 'initDone': {
       return {
         ...state,
@@ -222,25 +192,33 @@ export default function appReducer(state = initialState, action) {
       return newState;
     }
     case 'setLocation': {
-      if (state.initDone) {
-        return state;
-      }
-      
       if (action.payload===state.location) {
         return state;
       }
 
-      const picsPerCol=state.picsPerCol;
-      const imagesPerPage=picsPerCol*NUM_ROWS;
       const location=action.payload;
-      const allPlaques=preprocessSvgPlaques(picsPerCol, location, state.plaquesOnFile);
-      const totalPages=Math.round(allPlaques.length/imagesPerPage);
+      const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, location, state.plaqueTypes,state.plaquesOnFile);
 
       return {
         ...state,
-        location:action.payload,
+        location:location,
         allPlaques: allPlaques,
-        totalPages:totalPages
+        totalPages:allPlaques.length,
+      }
+    }
+    case 'setPlaqueTypes': {
+      if (action.payload===state.plaqueTypes) {
+        return state;
+      }
+
+      const plaqueTypes=action.payload;
+      const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, state.location, plaqueTypes,state.plaquesOnFile);
+
+      return {
+        ...state,
+        plaqueTypes:plaqueTypes,
+        allPlaques: allPlaques,
+        totalPages:allPlaques.length,
       }
     }
     default:
