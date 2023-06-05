@@ -28,3 +28,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 public/plaques.json
+credentials.json
+src/credentials.json
+token.json
+src/token.json
