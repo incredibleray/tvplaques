@@ -74,7 +74,7 @@ export function RebirthPlaque(props) {
         <div style={SVG_STYLE(REBIRTH_COLOR)}>
         <SvgFile svg={rebirth} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} maxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
+        <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:57, y:410}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
         <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={105} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
      </div>
@@ -104,7 +104,7 @@ export function WishPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} defaultFontSize={props.item.beneFontSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:57, y:380}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={150} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:100, y:573}} maxExtent={150} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
      </div>
      </div>
   ); 
