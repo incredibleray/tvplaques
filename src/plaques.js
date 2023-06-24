@@ -57,7 +57,7 @@ const createPadItem = (type) => ({
 export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
   const currentDate = new Date();
   let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
-  plaques=plaques.filter(p=>p.locations.includes(location));
+  plaques=plaques.filter(p=>p.locations?.includes(location));
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
