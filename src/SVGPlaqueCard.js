@@ -46,9 +46,9 @@ export function MmbPlaque(props) {
         <div style={SVG_STYLE(MMB_COLOR)}>
         <SvgFile svg={mmb} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:104, y:578}} maxExtent={116} defaultFontSize={props.item.dateStringFontSize} variant="h6" lang="en" />
+        <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
+        <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+        <TextOverlay text={props.item.dateString} position={{x:104, y:578}} maxExtent={116} defaultFontSize={10} variant="h6" lang="en" />
      </div>
      </div>
   ); 
@@ -74,9 +74,9 @@ export function RebirthPlaque(props) {
         <div style={SVG_STYLE(REBIRTH_COLOR)}>
         <SvgFile svg={rebirth} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:57, y:410}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={105} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
+        <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={30} variant="h1" />
+        <TextOverlay text={props.item.sponsor} position={{x:57, y:410}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+        <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={105} defaultFontSize={10} variant="h6" />
      </div>
      </div>
   ); 
@@ -102,9 +102,9 @@ export function WishPlaque(props) {
         <div style={SVG_STYLE(WISH_COLOR)}>
         <SvgFile svg={wish} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} defaultFontSize={props.item.beneFontSize} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:57, y:380}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:100, y:573}} maxExtent={150} defaultFontSize={props.item.dateStringFontSize} variant="h6" />
+        <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} defaultFontSize={30} variant="h1" />
+        <TextOverlay text={props.item.sponsor} position={{x:57, y:380}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+        <TextOverlay text={props.item.dateString} position={{x:100, y:573}} maxExtent={150} defaultFontSize={10} variant="h6" />
      </div>
      </div>
   ); 
