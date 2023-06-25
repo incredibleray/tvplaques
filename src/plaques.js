@@ -49,7 +49,15 @@ function CreatePlaquePages(plaques, imagesPerRow, rows, type, pageOffset) {
 }
 
 const createPadItem = (type) => ({
-  "id": null, "beneficiary": "", "beneFontSize": 30, "sponsor": "", "sponsorFontSize": 20, "type": type, "requestDate": "", "expiryDate": "", "searchTerms": [], "mediaFiles": [], "dateString": "", "dateStringFontSize": 9,
+  "id": null,
+  "beneficiary": "",
+  "sponsor": "",
+  "type": type,
+  "requestDate": "",
+  "expiryDate": "",
+  "searchTerms": [],
+  "mediaFiles": [],
+  "eventName": "",
   location: [],
   "searchable": false,
 });
@@ -57,7 +65,7 @@ const createPadItem = (type) => ({
 export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
   const currentDate = new Date();
   let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
-  plaques=plaques.filter(p=>p.locations?.includes(location));
+  plaques=plaques.filter(p=>p.locations.includes(location));
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");

@@ -34,7 +34,7 @@ function SVGPlaqueCardDetail(props) {
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
   const beneficiary = highlightPlaque.beneficiary;
   const sponsor = highlightPlaque.sponsor;
-  const dateString = highlightPlaque.dateString;
+  const eventName = highlightPlaque.eventName;
   const plaqueId = highlightPlaque.id;
   const mediaUrl = highlightPlaque.mediaUrl;
   const plaqueType = highlightPlaque.type;
