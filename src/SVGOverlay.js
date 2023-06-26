@@ -20,9 +20,16 @@ const theme = createTheme({
   },
 });
 
-function calculateFontSize(inStr, maxWidth, startingFontSize) {
+const fontFamily = {
+  'h1': '"Playfair Display", Kaiti, "Gowun Batang"',
+  'h2': '"Playfair Display", Kaiti, "Gowun Batang"',
+  'h6': 'Pacifico'
+}
+
+function calculateFontSize(inStr, maxWidth, startingFontSize, fontFamily) {
     let fontSize = startingFontSize;
     let text = document.createElement('span');
+    text.style.fontFamily = fontFamily;
     text.style.fontSize = `${fontSize}px`;
     text.innerHTML = inStr;
     document.body.appendChild(text);
@@ -44,8 +51,8 @@ export function TextOverlay(props) {
 
   // calculate the font size in python program and 
   // write it in the plaques.json file to avoid doing computation here.
-  const fitFontSize=props.defaultFontSize;
-  // const fitFontSize = calculateFontSize(props.text, props.maxExtent, props.defaultFontSize);
+  //const fitFontSize=props.defaultFontSize;
+  const fitFontSize = calculateFontSize(props.text, props.maxExtent, props.defaultFontSize, fontFamily[props.variant]);
 
   const dynamicStyle = props.alignBottom ? {
     transform: 'translate(-50%, 0%)',

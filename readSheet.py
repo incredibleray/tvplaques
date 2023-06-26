@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import json
 import os.path
+import re
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -24,9 +25,21 @@ for more details:
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of the spreadsheet.
-SPREADSHEET_ID = '17lLWwb86CpCJPHx_tkHDp97TVpaamm3rmVLvenuWebw'
-RANGE_NAME = 'Permanent Plaques (INPUT)!A2:H'
-SUPPORTED_LANGUAGES = ['en', 'ko', 'vi', 'zh']
+SPREADSHEET_ID = '1Sw3ZBzFl3lLhYvgzhHIiL_OQkiRItBRcWrJW1F4AlIU'
+RANGE_NAME = 'Published!A1:I'
+
+
+
+def parseLocation(locations):
+  # Examples 'GF / DTT'
+  # ' GF, DTT'
+  # ' GF DTT'
+  result = re.split('[,/ ]+', locations)
+
+  def notEmpty(s):
+    return s.strip() != '' 
+
+  return list(filter(notEmpty, result))
 
 
 def fetch_row(row, idx):
@@ -74,14 +87,15 @@ def main():
         keys = { k: v for k,v in zip(header, range(num_cols)) }
 
         # Need to export to this format:
-        id_col = keys['Plaque ID']
+        id_col = keys['Plaque Id']
         beneficiary_col = keys['Beneficiary']
         sponsor_col = keys['Sponsor']
-        plaque_col = keys['PlaqueTypeKey']
+        plaque_col = keys['Plaque Type Key']
         request_col = keys['Request Date']
-        expiry_col = keys['Expiration Date']
+        expiry_col = keys['Expiry Date']
         location_col = keys['Temple Location']
         media_col = keys['Media Url']
+        eventname_col = keys['Event Name']
 
         # Need to export in the format below:
         firstEntry = True
@@ -96,6 +110,8 @@ def main():
            requestDate = fetch_row(row, request_col)
            expiryDate = fetch_row(row, expiry_col)
            mediaUrl = fetch_row(row, media_col)
+           eventName = fetch_row(row, eventname_col)
+
            if plaqueType == '' or index == '':
              continue
 
@@ -108,9 +124,10 @@ def main():
              'beneficiary': beneText,
              'sponsor': sponsorText,
              'type': plaqueType,
-             'location': plaqueLocation,
+             'locations': parseLocation(plaqueLocation),
              'requestDate': requestDate,
              'expiryDate': expiryDate,
+             'eventName': eventName,
              'searchable': True,
              'mediaUrl': mediaUrl
            } 

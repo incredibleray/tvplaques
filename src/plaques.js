@@ -49,7 +49,15 @@ function CreatePlaquePages(plaques, imagesPerRow, rows, type, pageOffset) {
 }
 
 const createPadItem = (type) => ({
-  "id": null, "beneficiary": "", "beneFontSize": 30, "sponsor": "", "sponsorFontSize": 20, "type": type, "requestDate": "", "expiryDate": "", "searchTerms": [], "mediaFiles": [], "dateString": "", "dateStringFontSize": 9,
+  "id": null,
+  "beneficiary": "",
+  "sponsor": "",
+  "type": type,
+  "requestDate": "",
+  "expiryDate": "",
+  "searchTerms": [],
+  "mediaFiles": [],
+  "eventName": "",
   location: [],
   "searchable": false,
 });

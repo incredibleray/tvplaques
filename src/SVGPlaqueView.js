@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Gallery from 'react-grid-gallery';
 import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,14 +7,24 @@ import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
 import WPlaque from './WPlaque';
 export const MARGIN_PIXELS = 1;
 
+function dateStringFor(plaque) {
+  if (plaque.eventName) {
+    return plaque.eventName;
+  } 
+
+  if (plaque.requestDate || plaque.expiryDate) {
+    return `${plaque.requestDate}-${plaque.expiryDate}`;
+  }
+
+  return '';
+}
+
 function getImagesFromMetadata(metadata, thumbnailSize) {
-  const dateStringFor = (p) => 
-     (p.requestDate || p.expiryDate) ? `${p.requestDate}-${p.expiryDate}` : '';
   const fetchPlaque = (p) => ({
     ...p,
     src: "",
     thumbnail: "",
-    // dateString: dateStringFor(p),
+    dateString: dateStringFor(p),
     targetHeight: thumbnailSize.height - 2*CARD_MARGIN,
     thumbnailHeight: thumbnailSize.height,
     thumbnailWidth: thumbnailSize.width
@@ -31,13 +41,13 @@ function SVGPlaqueView(props) {
   const singleRowImagesPerRow = useSelector((state) => state.singleRowImagesPerRow);
   const doubleRowImagesPerRow=useSelector((state) => state.picsPerCol);
 
-  const rowHeight=(plaqueOnPage.rows==1)?singleRowHeight:doubleRowHeight;
-  const imagesPerRow=(plaqueOnPage.rows==1)?singleRowImagesPerRow:doubleRowImagesPerRow;
+  const rowHeight=(plaqueOnPage.rows===1)?singleRowHeight:doubleRowHeight;
+  const imagesPerRow=(plaqueOnPage.rows===1)?singleRowImagesPerRow:doubleRowImagesPerRow;
   const colWidth = Math.ceil((window.screen.width - MARGIN_PIXELS) / imagesPerRow);
 
   const arrangedPlaques = getImagesFromMetadata(plaqueOnPage.plaques, {width: colWidth, height: rowHeight});
 
-  if (plaqueOnPage.rows==1) {
+  if (plaqueOnPage.rows===1) {
 
     return <ImageList 
     sx={{ backgroundColor:"black" }} 
