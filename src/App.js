@@ -118,7 +118,7 @@ function App(props) {
     <div style={{overflow: "hidden" }}>
       <SearchBar />
       <Box
-        onMouseMove={handleMouseMove}
+        // onMouseMove={handleMouseMove}
         
       >
       <PlaqueCarousel />
