@@ -35,7 +35,7 @@ const SVG_STYLE = (color) => ({
 
 export function MmbPlaque(props) {
   const paddingStyle=props.noPadding?{}:PADDING_STYLE;
-  let cardStyle=CARD_STYLE(props, '#aa0000dd');
+  let cardStyle=CARD_STYLE(props, '#ee203b');
   if (props.noPadding) {
     cardStyle.boxShadow=""
   }
@@ -43,7 +43,7 @@ export function MmbPlaque(props) {
   return (
      <div style={paddingStyle}>
      <div style={cardStyle}>
-        <div style={SVG_STYLE(MMB_COLOR)}>
+        <div style={SVG_STYLE('#ee203b')}>
         <SvgFile svg={mmb} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
@@ -63,15 +63,16 @@ MmbPlaque.defaultProps = {
 
 export function RebirthPlaque(props) {
   const paddingStyle=props.noPadding?{}:PADDING_STYLE;
-  let cardStyle=CARD_STYLE(props, '#aaaa00cc');
+  let cardStyle=CARD_STYLE(props, '#ffcd05');
   if (props.noPadding) {
     cardStyle.boxShadow=""
   }
 
+  // TODO: change the color in SVG_STYLE to '#ffcd05' once the svg template is fixed.
   return (
      <div style={paddingStyle}>
      <div style={cardStyle}>
-        <div style={SVG_STYLE(REBIRTH_COLOR)}>
+        <div style={SVG_STYLE('yellow')}>
         <SvgFile svg={rebirth} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={30} variant="h1" />
@@ -91,7 +92,7 @@ RebirthPlaque.defaultProps = {
 
 export function WishPlaque(props) {
   const paddingStyle=props.noPadding?{}:PADDING_STYLE;
-  let cardStyle=CARD_STYLE(props, '#7fffd4aa');
+  let cardStyle=CARD_STYLE(props, '#47c8f5');
   if (props.noPadding) {
     cardStyle.boxShadow=""
   }
@@ -99,7 +100,7 @@ export function WishPlaque(props) {
   return (
      <div style={paddingStyle}>
      <div style={cardStyle}>
-        <div style={{  backgroundColor: "#55c974",
+        <div style={{  backgroundColor: "#47c8f5",
   display: 'inline-block',
   width: 202,
   height: CARD_HEIGHT }}>
