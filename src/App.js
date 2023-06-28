@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import SearchBar from './SearchBox';
 import {NUM_ROWS} from "./plaques";
 import {CARD_HEIGHT, CARD_WIDTH, CARD_MARGIN} from './SVGPlaqueCard';
+import { W_CARD_HEIGHT, W_CARD_MARGIN, W_CARD_WIDTH } from './WPlaque';
 import {MARGIN_PIXELS} from './SVGPlaqueView';
 import axios from 'axios';
 
@@ -32,10 +33,10 @@ function App(props) {
 
     function handleResize() {
       const singleRowHeight=(window.screen.height - MARGIN_PIXELS);
-      const singleRowScale=singleRowHeight/CARD_HEIGHT;
-      const singleRowPicWidth=Math.floor(CARD_WIDTH*singleRowScale);
-      // const singleRowImagesPerRow = Math.ceil((window.screen.width - MARGIN_PIXELS)/ (singleRowPicWidth + 2*CARD_MARGIN));
-      const singleRowImagesPerRow =1;
+      const singleRowScale=singleRowHeight/W_CARD_HEIGHT;
+      const singleRowPicWidth=Math.floor(W_CARD_WIDTH*singleRowScale);
+      const singleRowImagesPerRow = Math.floor((window.screen.width - MARGIN_PIXELS)/ (singleRowPicWidth + 2*W_CARD_MARGIN));
+      // const singleRowImagesPerRow =1;
 
       let rowHeight = (window.screen.height - MARGIN_PIXELS) / NUM_ROWS
       var scale = rowHeight / CARD_HEIGHT;
@@ -68,13 +69,13 @@ function App(props) {
       types=["rebirth"]
     } else if (tv=="3") {
       location="GF";
-      types=["mmb","rebirth","wish",]
+      types=["mmb","rebirth","wish",];
     } else if (tv=="4") {
-      location="DTT"
-      types=["wmmb"]
+      location="DTT";
+      types=["wmmb"];
     } else {
       location="DTT";
-      types=["mmb","rebirth","wish",]
+      types=["mmb","rebirth","wish",];
     }
 
     axios.get('./plaques.json')

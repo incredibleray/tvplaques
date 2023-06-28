@@ -1,32 +1,25 @@
-import mmb from './resources/mmb.svg';
-import rebirth from './resources/rebirth.svg';
-import wish from './resources/ruyi.svg';
+import wmmb from './resources/W_mmb.svg';
+import wrebirth from './resources/W_rebirth.svg';
 import "./WPlaque.css";
 import {SvgFile, TextOverlay} from './SVGOverlay';
 
-const CARD_HEIGHT = 612;
-const CARD_WIDTH = 204;
-const CARD_MARGIN = 20;
-
-const MMB_COLOR = 'red';
-const REBIRTH_COLOR = 'yellow';
-const WISH_COLOR = 'aquamarine';
-
+export const W_CARD_HEIGHT = 722;
+export const W_CARD_WIDTH = 296;
+export const W_CARD_MARGIN = 15;
 
 const CARD_STYLE = (props, shadowColor, noShadow) => ({
-  transform: `scale(${ (props.item.targetHeight ) / CARD_HEIGHT })`,
+  transform: `scale(${ (props.item.targetHeight ) / W_CARD_HEIGHT })`,
   transformOrigin: 'top left',
   width: 'fit-content',
   padding: '0px',
   boxShadow: noShadow? "":`0 5px 35px 0px ${shadowColor}, 0 5px 35px 0px  ${shadowColor}`,
 }); 
 
-const SVG_STYLE = (color) => ({
-  backgroundColor: color,
+const SVG_STYLE = {
   display: 'inline-block',
-  width: CARD_WIDTH,
-  height: CARD_HEIGHT 
-});
+  width: W_CARD_WIDTH,
+  height: W_CARD_HEIGHT 
+};
 
 // export function RebirthPlaque(props) {
 //   const paddingStyle=props.noPadding?{}:PADDING_STYLE;
@@ -91,13 +84,13 @@ export function WPlaque(props) {
     const cardStyle=CARD_STYLE(props, '#aa0000dd', props.noPadding);
     card=(
        <div style={cardStyle}>
-          <div className="glow" style={SVG_STYLE(MMB_COLOR)}>
+          <div className="" style={SVG_STYLE}>
 
-          <SvgFile svg={mmb} />
+          <SvgFile svg={wmmb} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={props.item.beneFontSize} variant="h1" />
-          <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={props.item.sponsorFontSize} variant="h2" />
-          <TextOverlay text={props.item.dateString} position={{x:104, y:578}} maxExtent={116} defaultFontSize={props.item.dateStringFontSize} variant="h6" lang="en" />
+          <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:104, y:578}} maxExtent={116} defaultFontSize={10} variant="h6" />
        </div>
     ); 
   } 
@@ -107,7 +100,7 @@ export function WPlaque(props) {
   //   return WishPlaque(props);
   // } 
 
-  return <div style={{padding: props.noPadding? 0: CARD_MARGIN,}}>{card}</div>
+  return <div style={{padding: props.noPadding? 0: W_CARD_MARGIN,}}>{card}</div>
 }
 
 export default WPlaque;
