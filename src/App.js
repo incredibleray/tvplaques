@@ -72,7 +72,7 @@ function App(props) {
       types=["mmb","rebirth","wish",];
     } else if (tv=="4") {
       location="DTT";
-      types=["wmmb"];
+      types=["wrebirth"];
     } else {
       location="DTT";
       types=["mmb","rebirth","wish",];

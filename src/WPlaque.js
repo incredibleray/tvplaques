@@ -26,7 +26,7 @@ export function WPlaque(props) {
   const type = props.item.type;
   let card=<></>
   if (type=="wmmb") {
-    const cardStyle=CARD_STYLE(props, '#aa0000dd', props.noPadding);
+    const cardStyle=CARD_STYLE(props, '#ee203b', props.noPadding);
     card=(
        <div style={cardStyle}>
           <div className="" style={SVG_STYLE}>
@@ -39,9 +39,20 @@ export function WPlaque(props) {
        </div>
     ); 
   } 
-  // else if (type === 'rebirth') {
-  //   return RebirthPlaque(props);
-// }
+  else if (type === 'wrebirth') {
+    const cardStyle=CARD_STYLE(props, '#ffcd05', props.noPadding);
+    card=(
+       <div style={cardStyle}>
+          <div className="" style={SVG_STYLE}>
+
+          <SvgFile svg={wrebirth} />
+          </div>
+          <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} variantmaxExtent={255} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:60, y:450}} vertical={true} maxExtent={180} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:146, y:669}} maxExtent={116} defaultFontSize={15} variant="h6" />
+       </div>
+    ); 
+}
 
   return <div style={{padding: props.noPadding? 0: W_CARD_MARGIN,}}>{card}</div>
 }

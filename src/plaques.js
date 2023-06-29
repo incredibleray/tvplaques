@@ -94,6 +94,12 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
     selected=selected.concat(CreatePlaquePages(wmmbPlaques, singleRowImagesPerRow, 1, 'wmmb', existingPagesLen));
   }
 
+  if (types.includes("wrebirth")) {
+    const wRebirthPlaques=plaques.filter(p=>p.type==="wrebirth");
+    const existingPagesLen=selected.length;
+    selected=selected.concat(CreatePlaquePages(wRebirthPlaques, singleRowImagesPerRow, 1, 'wrebirth', existingPagesLen));
+  }
+
   return selected;
 }
 
