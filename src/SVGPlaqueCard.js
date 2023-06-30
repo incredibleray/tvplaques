@@ -6,7 +6,7 @@ import {SvgFile, TextOverlay} from './SVGOverlay';
 
 export const CARD_HEIGHT = 612;
 export const CARD_WIDTH = 204;
-export const CARD_MARGIN = 20;
+export const CARD_MARGIN = 12;
 
 const MMB_COLOR = 'red';
 const REBIRTH_COLOR = 'yellow';

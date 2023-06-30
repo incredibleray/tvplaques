@@ -25,6 +25,7 @@ import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Visibility } from '@mui/icons-material';
+import WPlaque from './WPlaque';
 
 function SVGPlaqueCardDetail(props) {
   const [showGallery, setShowGallery] = useState(false);
@@ -69,18 +70,25 @@ function SVGPlaqueCardDetail(props) {
       })
   }
 
+  let plaqueImg=<></>;
+  if (highlightPlaque.type=="wmmb"||highlightPlaque.type=="wrebirth") {
+    plaqueImg=<WPlaque item={highlightPlaque} />
+  } else {
+    plaqueImg=<PlaqueSelector 
+    item={{ 
+       ...highlightPlaque,
+       targetHeight: plaqueHeight
+    }}
+    noPadding={true}
+  />;
+  }
+
   return (
     <DialogContent sx={{overflow: "hidden", height: "100vh" }} ref={elementRef}>
 <Table style={{tableLayout: "fixed"}}><tbody><tr><td/><td colSpan={3}>
 <ReactCardFlip isFlipped={showGallery} >
   <div onClick={()=>setShowGallery(true)}>
-<PlaqueSelector 
-             item={{ 
-                ...highlightPlaque,
-                targetHeight: plaqueHeight
-             }}
-             noPadding={true}
-        />
+    {plaqueImg}
 </div>
         <div>
         <ImageList cols={3} rowHeight={164}>

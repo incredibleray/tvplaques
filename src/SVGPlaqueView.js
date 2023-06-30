@@ -5,7 +5,7 @@ import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
 import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
 import WPlaque from './WPlaque';
-export const MARGIN_PIXELS = 1;
+export const MARGIN_PIXELS = 2;
 
 function dateStringFor(plaque) {
   if (plaque.eventName) {
@@ -53,7 +53,7 @@ function SVGPlaqueView(props) {
     sx={{ backgroundColor:"black" }} 
     cols={imagesPerRow} rowHeight={rowHeight}>
   {arrangedPlaques.map((item) => (
-    <ImageListItem>
+    <ImageListItem onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
       <WPlaque item={item} />
     </ImageListItem>
   ))}
