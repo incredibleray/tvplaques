@@ -5,7 +5,9 @@ import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
 import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
 import WPlaque from './WPlaque';
-export const MARGIN_PIXELS = 2;
+
+// need to set to 3 to avoid a scroll bar on 4k resolution.
+export const MARGIN_PIXELS = 1;
 
 function dateStringFor(plaque) {
   if (plaque.eventName) {
