@@ -38,14 +38,15 @@ function App(props) {
       const singleRowImagesPerRow = Math.floor((window.screen.width - MARGIN_PIXELS)/ (singleRowPicWidth + 2*W_CARD_MARGIN));
       // const singleRowImagesPerRow =1;
 
-      let rowHeight = (window.screen.height - MARGIN_PIXELS) / NUM_ROWS
+      let rowHeight = Math.floor((window.screen.height - MARGIN_PIXELS) / NUM_ROWS)
       var scale = rowHeight / CARD_HEIGHT;
-      var picWidth = CARD_WIDTH * scale;
+      var picWidth = Math.floor(CARD_WIDTH * scale);
       var picsPerCol = Math.ceil((window.screen.width - MARGIN_PIXELS)/ (picWidth + 2*CARD_MARGIN));
+      const colWidth = Math.ceil((window.screen.width - MARGIN_PIXELS) / picsPerCol);
 
       dispatch({
         type: 'setWinSize',
-        payload: { picsPerCol, rowHeight,singleRowImagesPerRow,singleRowHeight }
+        payload: { picsPerCol, rowHeight,singleRowImagesPerRow,singleRowHeight, colWidth }
       });
 
     }
@@ -120,9 +121,9 @@ function App(props) {
       <SearchBar />
       <Box
         // onMouseMove={handleMouseMove}
-        
+        style={{overflow: "hidden"}}
       >
-      <PlaqueCarousel />
+      <PlaqueCarousel  />
       </Box>
       <HighlightPlaque />
     </div>

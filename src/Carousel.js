@@ -25,7 +25,7 @@ function PlaqueCarousel() {
 
   let pages=[];
   for (let i = 0; i < totalPages; i++) {
-    pages.push(<SVGPlaqueView page={i} />);
+    pages.push(<SVGPlaqueView page={i} style={{overflow: "hidden"}} />);
   }
 
   return (

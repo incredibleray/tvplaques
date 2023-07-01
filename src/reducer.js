@@ -25,6 +25,7 @@ const initialState = {
   location: "DTT",
   plaqueTypes: [],
   lastRefreshDate: new Date(),
+  colWidth: 1,
 }
 
 export default function appReducer(state = initialState, action) {
@@ -145,6 +146,7 @@ export default function appReducer(state = initialState, action) {
         singleRowImagesPerRow:action.payload.singleRowImagesPerRow,
         allPlaques: allPlaques,
         totalPages:allPlaques.length,
+        colWidth: action.payload.colWidth
       }
     }
     case 'setHighlightPlaqueWidth': {
