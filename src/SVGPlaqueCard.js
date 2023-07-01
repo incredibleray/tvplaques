@@ -6,7 +6,7 @@ import {SvgFile, TextOverlay} from './SVGOverlay';
 
 export const CARD_HEIGHT = 612;
 export const CARD_WIDTH = 204;
-export const CARD_MARGIN = 1;
+export const CARD_MARGIN = 12;
 
 const MMB_COLOR = 'red';
 const REBIRTH_COLOR = 'yellow';
@@ -14,8 +14,11 @@ const WISH_COLOR = 'aquamarine';
 
 
 const CARD_STYLE = (props, shadowColor) => ({
-  transform: `scale(${ (props.item.targetHeight ) / CARD_HEIGHT })`,
+  // transform: `scale(${ (props.item.targetHeight ) / CARD_HEIGHT })`,
+  // transformOrigin: 'top left',
+    transform: `scale(${ (props.item.thumbnailWidth ) / CARD_WIDTH })`,
   transformOrigin: 'top left',
+  
   // width: 'fit-content',
   // padding: '0px',
   boxShadow: `0 5px 35px 0px ${shadowColor}, 0 5px 35px 0px  ${shadowColor}`
