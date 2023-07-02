@@ -105,7 +105,7 @@ def main():
            index = fetch_row(row, id_col)
            beneText = fetch_row(row, beneficiary_col)
            sponsorText = fetch_row(row, sponsor_col)
-           plaqueType = fetch_row(row, plaque_col)
+           plaqueType = fetch_row(row, plaque_col).lower()
            plaqueLocation = fetch_row(row, location_col)
            requestDate = fetch_row(row, request_col)
            expiryDate = fetch_row(row, expiry_col)
