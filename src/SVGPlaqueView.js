@@ -5,7 +5,8 @@ import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
 import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
 import WPlaque from './WPlaque';
-import {Stack} from '@mui/material';
+import {Stack, Box} from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
 
 // need to set to 3 to avoid a scroll bar on 4k resolution.
 export const MARGIN_PIXELS = 1;
@@ -28,7 +29,7 @@ function getImagesFromMetadata(metadata, thumbnailSize) {
     src: "",
     thumbnail: "",
     dateString: dateStringFor(p),
-    targetHeight: thumbnailSize.height - 2*CARD_MARGIN,
+    targetHeight: thumbnailSize.height,
     // targetHeight: thumbnailSize.height,
     thumbnailHeight: thumbnailSize.height,
     thumbnailWidth: thumbnailSize.width- 2*CARD_MARGIN
@@ -69,28 +70,34 @@ function SVGPlaqueView(props) {
     dispatch({type:"clickHighlight", payload: arrangedPlaques[index]});
 
   const  topRow=arrangedPlaques.slice(0, imagesPerRow);
-  const botRow=arrangedPlaques.slice(imagesPerRow)
+  const botRow=arrangedPlaques.slice(imagesPerRow);
+  const masonryStyle={ backgroundColor:"black",  
+  // the plus number eliminates white margin on the bottom
+  height: window.screen.height/2+7,  
+  width: window.screen.width, 
+  marginLeft: "12px", marginTop: "0.8px", marginRight: "10px"
+  //  overflow:"hidden" 
+};
+const plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
+  console.log("row elem count, %d, %d", topRow.length, botRow.length);
   return (<>
-  <Stack>
-    <ImageList
-    sx={{ backgroundColor:"black",  height: Math.floor(window.screen.height/2),  width: window.screen.width,  overflow:"hidden" 
-  }}
-    cols={imagesPerRow} rowHeight={rowHeight} variant="masonry">
+  <Stack spacing={0}>
+    <Box>
+  <Masonry columns={imagesPerRow} spacing={2}
+    sx={masonryStyle}>
   {topRow.map((item) => (
-    <ImageListItem cols={1} onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
-      <PlaqueSelector item={item} />
-    </ImageListItem>
+    <div style={plaqueEnclosureStyle}>
+    <PlaqueSelector item={item}/></div>
   ))}
-</ImageList>
-<ImageList gap={4}
-    sx={{ backgroundColor:"black", height: Math.floor(window.screen.height/2), width: window.screen.width, overflow:"hidden"  }}
-    cols={imagesPerRow} rowHeight={rowHeight} variant="masonry">
-  {botRow.map((item) => (
-    <ImageListItem cols={1} onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
-      <PlaqueSelector item={item} />
-    </ImageListItem>
-  ))}
-</ImageList>
+</Masonry>
+</Box>
+<Masonry columns={imagesPerRow} spacing={2}
+sx={masonryStyle}>
+        {botRow.map((item) => (
+          <div style={plaqueEnclosureStyle}>
+          <PlaqueSelector item={item} /></div>
+        ))}
+      </Masonry>
 </Stack>
 </>
 );
