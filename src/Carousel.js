@@ -4,6 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
+import { Box } from '@mui/material';
 
 function PlaqueCarousel() {
   const dispatch = useDispatch();
@@ -25,14 +26,13 @@ function PlaqueCarousel() {
 
   let pages=[];
   for (let i = 0; i < totalPages; i++) {
-    pages.push(<SVGPlaqueView page={i} style={{overflow: "hidden"}} />);
+    pages.push(<Box><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box>);
   }
 
   return (
       <Carousel autoPlay={autoPlayCarousel} infiniteLoop={true} interval={29000} stopOnHover={false} transitionTime={1000}
         showThumbs={false} showStatus={false} showIndicators={false}
         selectedItem={searchResultPage}
-        style={{overflow: "hidden"}}
         onChange={(index)=>dispatch({type:"setCurrentPage", payload:index})}
       >
         {pages}

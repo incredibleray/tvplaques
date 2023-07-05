@@ -65,10 +65,6 @@ function SVGPlaqueView(props) {
 </ImageList>
   }
 
-
-  const onClick=(index) =>
-    dispatch({type:"clickHighlight", payload: arrangedPlaques[index]});
-
   const  topRow=arrangedPlaques.slice(0, imagesPerRow);
   const botRow=arrangedPlaques.slice(imagesPerRow);
   const masonryStyle={ backgroundColor:"black",  
@@ -79,14 +75,14 @@ function SVGPlaqueView(props) {
   //  overflow:"hidden" 
 };
 const plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
-  console.log("row elem count, %d, %d", topRow.length, botRow.length);
+
   return (<>
   <Stack spacing={0}>
     <Box>
   <Masonry columns={imagesPerRow} spacing={2}
     sx={masonryStyle}>
   {topRow.map((item) => (
-    <div style={plaqueEnclosureStyle}>
+    <div style={plaqueEnclosureStyle} onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
     <PlaqueSelector item={item}/></div>
   ))}
 </Masonry>
@@ -94,8 +90,8 @@ const plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
 <Masonry columns={imagesPerRow} spacing={2}
 sx={masonryStyle}>
         {botRow.map((item) => (
-          <div style={plaqueEnclosureStyle}>
-          <PlaqueSelector item={item} /></div>
+          <div style={plaqueEnclosureStyle} onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
+          <PlaqueSelector item={item}/></div>
         ))}
       </Masonry>
 </Stack>
