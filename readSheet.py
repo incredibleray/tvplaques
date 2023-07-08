@@ -27,7 +27,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of the spreadsheet.
 SPREADSHEET_ID = '17lLWwb86CpCJPHx_tkHDp97TVpaamm3rmVLvenuWebw'
 RANGE_NAME = 'Permanent Plaques (INPUT)!A2:H'
-
+IS_PERMANENT = True
 
 
 def parseLocation(locations):
@@ -108,7 +108,9 @@ def main():
            plaqueType = fetch_row(row, plaque_col).lower()
            plaqueLocation = fetch_row(row, location_col)
            requestDate = fetch_row(row, request_col)
-           expiryDate = fetch_row(row, expiry_col)
+           # We are only fetching from the permanent tab.
+           # In the event this is temporary, we need to 
+           expiryDate = 'Permanent' if IS_PERMANENT else fetch_row(row, expiry_col)
            mediaUrl = fetch_row(row, media_col)
            # eventName = fetch_row(row, eventname_col)
 
@@ -118,6 +120,9 @@ def main():
            if not firstEntry:
              print(',')
            firstEntry = False
+
+           if sponsorText == beneText:
+             sponsorText = ''
 
            entry = {
              'id': index,

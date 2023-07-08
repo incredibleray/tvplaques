@@ -62,9 +62,29 @@ const createPadItem = (type) => ({
   "searchable": false,
 });
 
+function compareDates(plaque1, plaque2) {
+  const date1 = plaque1.requestDate;
+  const date2 = plaque2.requestDate;
+
+  const [mm1, dd1, yyyy1] = date1.split('/');
+  const [mm2, dd2, yyyy2] = date2.split('/');
+  
+  const d1 = new Date(yyyy1, mm1 - 1, dd1);
+  const d2 = new Date(yyyy2, mm2 - 1, dd2);
+  
+  if (d1 > d2) {
+    return -1;
+  } else if (d1 < d2) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
   const currentDate = new Date();
   let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
+  plaques=plaques.sort(compareDates);
   plaques=plaques.filter(p=>p.locations.includes(location));
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");

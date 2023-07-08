@@ -57,7 +57,8 @@ function SVGPlaqueCardDetail(props) {
 
   let media=<ReactPlayer url={videoSrc} width={String(videoWidth)} height={String(videoHeight)} controls />;
 
-  if (highlightPlaque.mediaFiles.length>0) {
+  highlightPlaque.mediaFiles = highlightPlaque.mediaFiles ?? []
+  if (highlightPlaque.mediaFiles.length > 0) {
     media=highlightPlaque.mediaFiles.map(
       (mf, i)=>{
       if (mf.endsWith(".jpg") || mf.endsWith(".jpeg") || mf.endsWith(".png")) {

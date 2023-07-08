@@ -14,6 +14,10 @@ function dateStringFor(plaque) {
     return plaque.eventName;
   } 
 
+  if (plaque.expiryDate.toLowerCase() == 'permanent') {
+    return `${plaque.id}`;
+  }
+
   if (plaque.requestDate || plaque.expiryDate) {
     return `${plaque.requestDate}-${plaque.expiryDate}`;
   }
