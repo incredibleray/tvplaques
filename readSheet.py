@@ -3,6 +3,7 @@ from __future__ import print_function
 import json
 import os.path
 import re
+import sys
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -46,10 +47,34 @@ def fetch_row(row, idx):
   return row[idx] if idx < len(row) else ''
 
 
-def main():
+def dumpJSONFiles(files):
+  """Load existing JSON files and combine."""
+  result = []
+  cnt = 0
+  # Manually output the commas instead of constructing a large array to dump in order to scale.
+  for file in files:
+    try:
+      with open(file, mode='r') as f:
+        data = json.load(f)
+        for d in data:
+          if cnt > 0:
+            print(',')
+          print(json.dumps(d), end='')
+          cnt += 1
+    except:
+      pass
+  return cnt
+
+
+def main(args):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
+    print('[', end='')
+    numEntries = 0
+    if args:
+        numEntries = dumpJSONFiles(args)
+      
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -98,9 +123,6 @@ def main():
         # eventname_col = keys['Event Name']
 
         # Need to export in the format below:
-        firstEntry = True
-        print('[')
-
         for row in values[1:]:
            index = fetch_row(row, id_col)
            beneText = fetch_row(row, beneficiary_col)
@@ -117,10 +139,6 @@ def main():
            if plaqueType == '' or index == '':
              continue
 
-           if not firstEntry:
-             print(',')
-           firstEntry = False
-
            if sponsorText == beneText:
              sponsorText = ''
 
@@ -136,12 +154,19 @@ def main():
              'searchable': True,
              'mediaUrl': mediaUrl
            } 
+
+           if numEntries > 0:
+             print(',')
+
            print(json.dumps(entry), end='')
-        print(']')
+           numEntries += 1
+
     except HttpError as err:
-        print(err)
+        #print(err)
+        pass
+    print(']')
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
 
