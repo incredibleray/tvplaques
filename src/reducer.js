@@ -26,6 +26,7 @@ const initialState = {
   plaqueTypes: [],
   lastRefreshDate: new Date(),
   colWidth: 1,
+  carouselAutoplay: true,
 }
 
 export default function appReducer(state = initialState, action) {
@@ -206,6 +207,7 @@ export default function appReducer(state = initialState, action) {
         location:location,
         allPlaques: allPlaques,
         totalPages:allPlaques.length,
+        currentPage: 0
       }
     }
     case 'setPlaqueTypes': {
@@ -221,6 +223,17 @@ export default function appReducer(state = initialState, action) {
         plaqueTypes:plaqueTypes,
         allPlaques: allPlaques,
         totalPages:allPlaques.length,
+        currentPage: 0
+      }
+    }
+    case 'setCarouselAutoplay': {
+      if (action.payload===state.carouselAutoplay) {
+        return state;
+      }
+
+      return {
+        ...state,
+        carouselAutoplay:action.payload
       }
     }
     default:

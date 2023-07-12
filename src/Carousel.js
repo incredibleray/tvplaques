@@ -13,12 +13,13 @@ function PlaqueCarousel() {
   const searchResultPage = useSelector((state) => state.searchResultPage);
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
+  const carouselAutoplay=useSelector(s=>s.carouselAutoplay);
 
   if (totalPages ===0) {
     return <></>
   }
 
-  let autoPlayCarousel = true;
+  let autoPlayCarousel = carouselAutoplay;
   if (highlightPlaque != null || showSearchBar) {
     autoPlayCarousel = false;
 

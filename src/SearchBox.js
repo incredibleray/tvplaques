@@ -26,6 +26,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import useKeypress from 'react-use-keypress';
+import { CheckBox } from '@mui/icons-material';
+import Settings from "./Settings";
 
 export function SearchBar() {
   const dispatch = useDispatch();
@@ -36,8 +38,8 @@ export function SearchBar() {
   const location=useSelector((state)=>state.location);
   const allPlaques=useSelector((state)=>state.allPlaques);
 
-  useKeypress(["MediaPlay", "MediaPause", "Pause", "MediaStop","MediaPlayPause"], (event) => {
-    if (event.key === 'MediaPlay' && showSearchBar===false && highlightPlaque==null) {
+  useKeypress(["MediaPlay", "MediaPause", "Pause", "MediaStop","MediaPlayPause", "\\", "]"], (event) => {
+    if ((event.key === 'MediaPlay'||event.key=="\\") && showSearchBar===false && highlightPlaque==null) {
       dispatch({ type: "setShowSearchBar", payload: true });
     } else {
       dispatch({ type: "setShowSearchBar", payload: false });
@@ -119,6 +121,9 @@ export function SearchBar() {
           </IconButton>
           </Stack>
         </DialogTitle>
+        <DialogContent>
+          <Settings />
+        </DialogContent>
       </Dialog>
     </div>
 

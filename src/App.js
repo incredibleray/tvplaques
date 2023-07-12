@@ -62,16 +62,16 @@ function App(props) {
     const tv = queryParameters.get("tv");
     let location=[],types=[];
 
-     if (tv=="1") {
+     if (tv=="dtttv1") {
       location="DTT";
       types=["mmb","wish"];
-    } else if (tv=="2") {
+    } else if (tv=="dtttv2") {
       location="DTT";
       types=["rebirth"]
-    } else if (tv=="3") {
+    } else if (tv=="gftv1") {
       location="GF";
       types=["mmb","rebirth","wish",];
-    } else if (tv=="4") {
+    } else if (tv=="wplaque") {
       location="DTT";
       types=["wrebirth"];
     } else {
