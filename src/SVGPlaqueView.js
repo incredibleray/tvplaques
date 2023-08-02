@@ -17,7 +17,7 @@ function dateStringFor(plaque) {
   } 
 
   if (plaque.expiryDate.toLowerCase() == 'permanent') {
-    return `${plaque.id}`;
+    return `P${plaque.id}`;
   }
 
   if (plaque.requestDate || plaque.expiryDate) {
@@ -73,9 +73,9 @@ function SVGPlaqueView(props) {
   const botRow=arrangedPlaques.slice(imagesPerRow);
   const masonryStyle={ backgroundColor:"black",  
   // the plus number eliminates white margin on the bottom
-  height: window.screen.height/2+7,  
+  height: window.screen.height/2+8,  
   width: window.screen.width, 
-  marginLeft: "12px", marginTop: "0.8px", marginRight: "10px"
+  marginLeft: "6px", marginTop: "0px", marginRight: "6px"
   //  overflow:"hidden" 
 };
 const plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};

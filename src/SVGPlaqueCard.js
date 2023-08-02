@@ -1,6 +1,6 @@
-import mmb from './resources/mmb.svg';
-import rebirth from './resources/rebirth.svg';
-import wish from './resources/ruyi.svg';
+import mmb from './resources/MMBPlaque_7_24.svg';
+import rebirth from './resources/RebirthPlaque_7_24.svg';
+import wish from './resources/RuYiPlaque_7_24.svg';
 
 import {SvgFile, TextOverlay} from './SVGOverlay';
 
@@ -12,17 +12,14 @@ const MMB_COLOR = 'red';
 const REBIRTH_COLOR = 'yellow';
 const WISH_COLOR = 'aquamarine';
 
+// svg Files no longer have margins. it is 564 (H) X 163 (W).
+// SVG_STYLE creates a box of the old size of the svg file with margins, 612 (H) X 204 (W)
+// SVG_STYLE also create the shadow
+// CARD_STYLE scales the plaque (svg file, shadow, overlay text) to the display size
 
-const CARD_STYLE = (props, shadowColor) => ({
+const CARD_STYLE = (props) => ({
   transform: `scale(${ (props.item.targetHeight ) / CARD_HEIGHT })`,
   transformOrigin: 'top left',
-  //   transform: `scale(${ (props.item.thumbnailWidth ) / CARD_WIDTH })`,
-  // transformOrigin: 'top left',
-  
-  // width: 'fit-content',
-  // padding: '0px',
-  // boxShadow: `0 5px 35px 0px ${shadowColor}, 0 5px 35px 0px  ${shadowColor}`,
-
 }); 
 
 const SVG_STYLE = (color) => ({
@@ -30,23 +27,30 @@ const SVG_STYLE = (color) => ({
   // display: 'inline-block',
   width: CARD_WIDTH,
   height: CARD_HEIGHT,
-  boxShadow: `0 5px 35px 0px ${color}`,
+  boxShadow: `0 2px 17px 0px ${color}`,
 });
 
 export function MmbPlaque(props) {
-  let cardStyle=CARD_STYLE(props, '#ee203b');
-  if (props.noPadding) {
-    cardStyle.boxShadow=""
+  let svgDivStyle=SVG_STYLE('#ee203b');
+  let svgStyle={
+    height:"564px",
+    width:"163px",
+    translate:"0px 27px"
+  };
+
+  if (props.isHighlight) {
+    svgDivStyle.boxShadow="";
+    svgStyle.translate="20.5px 27px"
   }
 
   return (
-     <div style={cardStyle}>
-        <div style={SVG_STYLE('#ee203b')}>
-        <SvgFile svg={mmb} />
+     <div style={CARD_STYLE(props)}>
+      <div style={svgDivStyle} >
+        <img src={mmb} alt="svg" style={svgStyle} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
+        <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:104, y:578}} maxExtent={116} defaultFontSize={10} variant="h6" lang="en" />
+        <TextOverlay text={props.item.dateString} position={{x:104, y:577}} maxExtent={116} defaultFontSize={10} variant="h6" lang="en" />
      </div>
   ); 
 }
@@ -59,20 +63,26 @@ MmbPlaque.defaultProps = {
 };
 
 export function RebirthPlaque(props) {
-  let cardStyle=CARD_STYLE(props, '#ffcd05');
-  if (props.noPadding) {
-    cardStyle.boxShadow=""
+  let svgDivStyle=SVG_STYLE('#ffcd05');
+  let svgStyle={
+    height:"564px",
+    width:"163px",
+    translate:"0px 27px"
+  };
+
+  if (props.isHighlight) {
+    svgDivStyle.boxShadow="";
+    svgStyle.translate="20.5px 27px"
   }
 
-  // TODO: change the color in SVG_STYLE to '#ffcd05' once the svg template is fixed.
   return (
-     <div style={cardStyle}>
-        <div style={SVG_STYLE('yellow')}>
-        <SvgFile svg={rebirth} />
+     <div style={CARD_STYLE(props)}>
+        <div style={svgDivStyle}>
+        <img src={rebirth} alt="svg" style={svgStyle} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={30} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:57, y:410}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:105, y:578}} maxExtent={105} defaultFontSize={10} variant="h6" />
+        <TextOverlay text={props.item.sponsor} position={{x:55, y:410}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+        <TextOverlay text={props.item.dateString} position={{x:105, y:576}} maxExtent={105} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }
@@ -85,23 +95,26 @@ RebirthPlaque.defaultProps = {
 };
 
 export function WishPlaque(props) {
-  let cardStyle=CARD_STYLE(props, '#47c8f5');
-  if (props.noPadding) {
-    cardStyle.boxShadow=""
+  let svgDivStyle=SVG_STYLE('#47c8f5');
+  let svgStyle={
+    height:"564px",
+    width:"163px",
+    translate:"0px 27px"
+  };
+
+  if (props.isHighlight) {
+    svgDivStyle.boxShadow="";
+    svgStyle.translate="20.5px 27px"
   }
 
   return (
-     <div style={cardStyle}>
-     <div style={SVG_STYLE('#47c8f5')}>
-        {/* <div style={{  backgroundColor: "#47c8f5",
-  display: 'inline-block',
-  width: 202,
-  height: CARD_HEIGHT }}> */}
-        <SvgFile svg={wish} />
+     <div style={CARD_STYLE(props)}>
+     <div style={svgDivStyle}>
+     <img src={wish} alt="svg" style={svgStyle} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} defaultFontSize={30} variant="h1" />
-        <TextOverlay text={props.item.sponsor} position={{x:57, y:380}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:100, y:575}} maxExtent={150} defaultFontSize={10} variant="h6" />
+        <TextOverlay text={props.item.sponsor} position={{x:56, y:380}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
+        <TextOverlay text={props.item.dateString} position={{x:100, y:574}} maxExtent={150} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }

@@ -80,7 +80,7 @@ function SVGPlaqueCardDetail(props) {
        ...highlightPlaque,
        targetHeight: plaqueHeight
     }}
-    noPadding={true}
+    isHighlight={true}
   />;
   }
 

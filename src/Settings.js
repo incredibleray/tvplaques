@@ -75,7 +75,7 @@ export function Settings() {
           </Stack></td></tr>
           <tr><td>
           <Typography variant="h6">Carousel</Typography></td>
-          <td><CheckBox checked={carouselAutoplay} onChange={(event) => dispatch({ type: "setCarouselAutoplay",payload: event.target.checked})} />Stop auto-scroll</td></tr>
+          <td><CheckBox checked={carouselAutoplay==false} onChange={(event) => dispatch({ type: "setCarouselAutoplay",payload: event.target.checked==false})} />Stop auto-scroll</td></tr>
           </tbody></Table>
     </div>
   );
