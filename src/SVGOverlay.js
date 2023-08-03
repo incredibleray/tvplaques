@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '@fontsource/playfair-display/400.css';
-import '@fontsource/pacifico/400.css';
+import '@fontsource/roboto/700.css';
 import '@fontsource/gowun-batang/700.css';
 import "./kaiti-700.css";
 
@@ -15,7 +15,7 @@ const theme = createTheme({
       fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
     },
     h6: {
-      fontFamily: "Pacifico",
+      fontFamily: "Roboto",
     },
   },
 });
@@ -23,7 +23,7 @@ const theme = createTheme({
 const fontFamily = {
   'h1': '"Playfair Display", Kaiti, "Gowun Batang"',
   'h2': '"Playfair Display", Kaiti, "Gowun Batang"',
-  'h6': 'Pacifico'
+  'h6': 'Roboto'
 }
 
 function calculateFontSize(inStr, maxWidth, startingFontSize, fontFamily) {
