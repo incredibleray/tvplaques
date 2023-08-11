@@ -50,7 +50,7 @@ export function MmbPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} variantmaxExtent={262} defaultFontSize={30} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:104, y:577}} maxExtent={116} defaultFontSize={10} variant="h6" lang="en" />
+        <TextOverlay text={props.item.dateString} position={{x:104, y:577}} maxExtent={116} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }
@@ -82,7 +82,7 @@ export function RebirthPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} defaultFontSize={30} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:55, y:410}} vertical={true} maxExtent={180} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:105, y:576}} maxExtent={105} defaultFontSize={10} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:103, y:576}} maxExtent={105} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }
