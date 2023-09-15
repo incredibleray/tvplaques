@@ -114,7 +114,7 @@ export function WishPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} maxHeight={64} defaultFontSize={30} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:380}} vertical={true} maxExtent={180} maxHeight={35} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:100, y:574}} maxExtent={150} maxHeight={20} defaultFontSize={10} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:102, y:574}} maxExtent={110} maxHeight={20} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }
