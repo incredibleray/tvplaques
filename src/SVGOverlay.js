@@ -26,15 +26,16 @@ const fontFamily = {
   'h6': 'Roboto'
 }
 
-function calculateFontSize(inStr, maxWidth, startingFontSize, fontFamily) {
+function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFamily) {
     let fontSize = startingFontSize;
     let text = document.createElement('span');
+    inStr = inStr.replace('\n', '<br/>');
     text.style.fontFamily = fontFamily;
     text.style.fontSize = `${fontSize}px`;
     text.innerHTML = inStr;
     document.body.appendChild(text);
 
-    while (text.offsetWidth > maxWidth) {
+    while (fontSize > 1 && (text.offsetWidth > maxWidth || text.offsetHeight > maxHeight)) {
         fontSize--;
         text.style.fontSize = `${fontSize}px`;
     }
@@ -52,7 +53,7 @@ export function TextOverlay(props) {
   // calculate the font size in python program and 
   // write it in the plaques.json file to avoid doing computation here.
   //const fitFontSize=props.defaultFontSize;
-  const fitFontSize = calculateFontSize(props.text, props.maxExtent, props.defaultFontSize, fontFamily[props.variant]);
+  const fitFontSize = calculateFontSize(props.text, props.maxExtent, props.maxHeight, props.defaultFontSize, fontFamily[props.variant]);
 
   const dynamicStyle = props.alignBottom ? {
     transform: 'translate(-50%, 0%)',
@@ -78,5 +79,6 @@ export function TextOverlay(props) {
 
 TextOverlay.defaultProps = {
   vertical: false,
-  alignBottom: false
+  alignBottom: false,
+  maxHeight: 30
 };

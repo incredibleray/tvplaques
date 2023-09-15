@@ -33,9 +33,9 @@ export function WPlaque(props) {
 
           <SvgFile svg={wmmb} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:150, y:405}} vertical={true} maxExtent={262} defaultFontSize={45} variant="h1" />
-          <TextOverlay text={props.item.sponsor} position={{x:66, y:450}} vertical={true} maxExtent={180} defaultFontSize={30} variant="h2" />
-          <TextOverlay text={props.item.dateString} position={{x:146, y:658}} maxExtent={116} defaultFontSize={15} variant="h6" />
+          <TextOverlay text={props.item.beneficiary} position={{x:150, y:405}} vertical={true} maxExtent={262} maxHeight={95} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:66, y:450}} vertical={true} maxExtent={180} maxHeight={45} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:146, y:658}} maxExtent={116} maxHeight={15} defaultFontSize={15} variant="h6" />
        </div>
     ); 
   } 
@@ -47,9 +47,9 @@ export function WPlaque(props) {
 
           <SvgFile svg={wrebirth} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} maxExtent={255} defaultFontSize={45} variant="h1" />
-          <TextOverlay text={props.item.sponsor} position={{x:60, y:450}} vertical={true} maxExtent={180} defaultFontSize={30} variant="h2" />
-          <TextOverlay text={props.item.dateString} position={{x:146, y:669}} maxExtent={116} defaultFontSize={15} variant="h6" />
+          <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} maxExtent={255} maxHeight={95} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:60, y:450}} vertical={true} maxExtent={180} maxHeight={45} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:146, y:669}} maxExtent={116} maxHeight={15} defaultFontSize={15} variant="h6" />
        </div>
     ); 
 }
