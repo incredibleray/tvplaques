@@ -39,10 +39,10 @@ function App(props) {
       // const singleRowImagesPerRow =1;
 
       let rowHeight = Math.floor((window.screen.height - MARGIN_PIXELS)*0.94 / NUM_ROWS)
-      var scale = rowHeight / CARD_HEIGHT;
-      var picWidth = Math.floor(CARD_WIDTH * scale);
-      var picsPerCol = Math.floor((window.screen.width - MARGIN_PIXELS)*0.94/ (picWidth + 2*CARD_MARGIN));
-      const colWidth = Math.floor((window.screen.width - MARGIN_PIXELS)*0.94 / picsPerCol);
+      let scale = rowHeight / CARD_HEIGHT;
+      let picWidth = Math.floor(CARD_WIDTH * scale);
+      let picsPerCol = Math.floor((window.screen.width - MARGIN_PIXELS)*0.94/ (picWidth + 2*CARD_MARGIN));
+      let colWidth = Math.floor((window.screen.width - MARGIN_PIXELS)*0.94 / picsPerCol);
 
       dispatch({
         type: 'setWinSize',
@@ -70,7 +70,16 @@ function App(props) {
       types=["rebirth"]
     } else if (tv=="gftv1") {
       location="GF";
-      types=["mmb","rebirth","wish",];
+      types=["mmb","wish",];
+    } else if (tv=="gftv2") {
+      location="GF";
+      types=["rebirth"];
+    } else if (tv=="wmttv1") {
+      location="WMT";
+      types=["mmb","wish",];
+    } else if (tv=="wmttv2") {
+      location="WMT";
+      types=["rebirth"];
     } else if (tv=="wplaque") {
       location="DTT";
       types=["wrebirth"];

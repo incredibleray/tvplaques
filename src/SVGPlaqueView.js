@@ -71,14 +71,21 @@ function SVGPlaqueView(props) {
 
   const  topRow=arrangedPlaques.slice(0, imagesPerRow);
   const botRow=arrangedPlaques.slice(imagesPerRow);
-  const masonryStyle={ backgroundColor:"black",  
+  let masonryStyle={ backgroundColor:"black",  
   // the plus number eliminates white margin on the bottom
   height: window.screen.height/2+8,  
   width: window.screen.width, 
   marginLeft: "6px", marginTop: "0px", marginRight: "6px"
   //  overflow:"hidden" 
 };
-const plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
+let plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
+
+  if (window.screen.height==1080 && window.screen.width==1920) {
+    masonryStyle={ ...masonryStyle,
+    marginLeft: "1px", marginRight: "1px" };
+  plaqueEnclosureStyle={ ...plaqueEnclosureStyle,
+    marginTop:"12px"};
+  }
 
   return (<>
   <Stack spacing={0}>
