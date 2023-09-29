@@ -4,7 +4,6 @@ import Gallery from 'react-grid-gallery';
 import {ImageList, ImageListItem} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
 import { PlaqueSelector, CARD_MARGIN } from './SVGPlaqueCard';
-import WPlaque from './WPlaque';
 import {Stack, Box} from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 
@@ -58,15 +57,26 @@ function SVGPlaqueView(props) {
 
   if (plaqueOnPage.rows===1) {
 
-    return <ImageList 
-    sx={{ backgroundColor:"black" }} 
-    cols={imagesPerRow} rowHeight={rowHeight}>
+    let masonryStyle={ backgroundColor:"black",  
+    // the plus number eliminates white margin on the bottom
+    height: window.screen.height,  
+    width: window.screen.width, 
+    marginLeft: "33px", 
+    marginTop: "0px", 
+    // marginRight: "33px"
+    //  overflow:"hidden" 
+  };
+
+  let wPlaqueEnclosureStyle={marginTop:"14px", marginLeft:"8.5px"};
+
+    return   <Masonry columns={imagesPerRow} spacing={2}
+    sx={masonryStyle}>
   {arrangedPlaques.map((item) => (
-    <ImageListItem onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
-      <WPlaque item={item} />
-    </ImageListItem>
+    <div style={wPlaqueEnclosureStyle} onClick={()=>dispatch({type:"clickHighlight", payload: item})}>
+      <PlaqueSelector item={item}/>
+    </div>
   ))}
-</ImageList>
+</Masonry>
   }
 
   const  topRow=arrangedPlaques.slice(0, imagesPerRow);

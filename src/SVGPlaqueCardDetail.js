@@ -25,7 +25,6 @@ import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Visibility } from '@mui/icons-material';
-import WPlaque from './WPlaque';
 
 function SVGPlaqueCardDetail(props) {
   const [showGallery, setShowGallery] = useState(false);
@@ -45,7 +44,12 @@ function SVGPlaqueCardDetail(props) {
   const videoWidth=1280;
   const videoHeight=720;
   const paddingHeight=Math.floor((window.innerHeight*0.9-videoHeight)/2)
-  const plaqueHeight=Math.floor(window.innerHeight*0.9)
+  let plaqueHeight=Math.floor(window.innerHeight*0.9);
+
+  if (["wmmb","wrebirth"].includes(highlightPlaque.type)) {
+    plaqueHeight=Math.floor(window.screen.height*0.95);
+  }
+
   const videoTag=(mediaUrl == "") ? "" : (<MediaRenderer url={mediaUrl}/>);
 
   let videoSrc="";
@@ -71,26 +75,18 @@ function SVGPlaqueCardDetail(props) {
       })
   }
 
-  let plaqueImg=<></>;
-  if (highlightPlaque.type=="wmmb"||highlightPlaque.type=="wrebirth") {
-    plaqueImg=<WPlaque item={highlightPlaque} />
-  } else {
-    plaqueImg=<PlaqueSelector 
-    item={{ 
-       ...highlightPlaque,
-       targetHeight: plaqueHeight
-    }}
-    isHighlight={true}
-  />;
-  }
-
   return (
     <DialogContent sx={{overflow: "hidden", height: "100vh" }} ref={elementRef}>
 <Table style={{tableLayout: "fixed"}}><tbody><tr><td/><td colSpan={3}>
 <ReactCardFlip isFlipped={showGallery} >
   <div onClick={()=>setShowGallery(true)}>
-    {plaqueImg}
-</div>
+  <PlaqueSelector 
+    item={{ 
+       ...highlightPlaque,
+       targetHeight: plaqueHeight
+    }}
+    isHighlight={true}
+  /></div>
         <div>
         <ImageList cols={3} rowHeight={164}>
   {highlightPlaque.mediaFiles.slice(galleryStartIndex, galleryStartIndex+15).map((mf, i) => {

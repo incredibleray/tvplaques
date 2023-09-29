@@ -8,8 +8,7 @@ import HighlightPlaque from './HighlightPlaque';
 import Box from '@mui/material/Box';
 import SearchBar from './SearchBox';
 import {NUM_ROWS} from "./plaques";
-import {CARD_HEIGHT, CARD_WIDTH, CARD_MARGIN} from './SVGPlaqueCard';
-import { W_CARD_HEIGHT, W_CARD_MARGIN, W_CARD_WIDTH } from './WPlaque';
+import {CARD_HEIGHT, CARD_WIDTH, CARD_MARGIN, W_CARD_HEIGHT, W_CARD_MARGIN, W_CARD_WIDTH} from './SVGPlaqueCard';
 import {MARGIN_PIXELS} from './SVGPlaqueView';
 import axios from 'axios';
 
@@ -32,10 +31,10 @@ function App(props) {
   useEffect(() => {
 
     function handleResize() {
-      const singleRowHeight=(window.screen.height - MARGIN_PIXELS);
+      const singleRowHeight=(window.screen.height - MARGIN_PIXELS)*0.98;
       const singleRowScale=singleRowHeight/W_CARD_HEIGHT;
       const singleRowPicWidth=Math.floor(W_CARD_WIDTH*singleRowScale);
-      const singleRowImagesPerRow = Math.floor((window.screen.width - MARGIN_PIXELS)/ (singleRowPicWidth + 2*W_CARD_MARGIN));
+      const singleRowImagesPerRow = Math.floor((window.screen.width - MARGIN_PIXELS) *0.98/ (singleRowPicWidth + 2*W_CARD_MARGIN));
       // const singleRowImagesPerRow =1;
 
       let rowHeight = Math.floor((window.screen.height - MARGIN_PIXELS)*0.94 / NUM_ROWS)
@@ -64,10 +63,10 @@ function App(props) {
 
      if (tv=="dtttv1") {
       location="DTT";
-      types=["mmb","wish"];
+      types=["mmb","wmmb","wish", ];
     } else if (tv=="dtttv2") {
       location="DTT";
-      types=["rebirth"]
+      types=["rebirth", "wrebirth"]
     } else if (tv=="gftv1") {
       location="GF";
       types=["mmb","wish",];
@@ -82,7 +81,7 @@ function App(props) {
       types=["rebirth"];
     } else if (tv=="wplaque") {
       location="DTT";
-      types=["wrebirth"];
+      types=["wmmb", "wrebirth"];
     } else {
       location="DTT";
       types=["mmb","rebirth","wish",];

@@ -1,6 +1,9 @@
 import mmb from './resources/MMBPlaque_7_24.svg';
 import rebirth from './resources/RebirthPlaque_7_24.svg';
 import wish from './resources/RuYiPlaque_7_24.svg';
+import wmmb from './resources/W_mmb.svg';
+import wrebirth from './resources/W_rebirth.svg';
+import "./WPlaque.css";
 
 import {SvgFile, TextOverlay} from './SVGOverlay';
 
@@ -126,14 +129,84 @@ WishPlaque.defaultProps = {
   type: 'wish'
 };
 
+export const W_CARD_HEIGHT = 722;
+export const W_CARD_WIDTH = 296;
+export const W_CARD_MARGIN = 8;
+
+
+const W_CARD_STYLE = (props) => ({
+  transform: `scale(${ (props.item.targetHeight ) / W_CARD_HEIGHT })`,
+  transformOrigin: 'top left',
+}); 
+
+const W_SVG_STYLE = (color) => ({
+  backgroundColor: color,
+  // display: 'inline-block',
+  width: W_CARD_WIDTH,
+  height: W_CARD_HEIGHT,
+  boxShadow: `0 2px 17px 0px ${color}`,
+});
+
+ function WMmbPlaque(props) {
+
+    let svgDivStyle=W_SVG_STYLE('#ee203b');
+    let svgStyle={
+      height:"722px",
+      width:"296px"
+    };
+  
+    if (props.isHighlight) {
+      svgDivStyle.boxShadow="";
+    }
+  
+    return (
+       <div style={W_CARD_STYLE(props)}>
+       <div style={svgDivStyle}>
+       <img src={wmmb} alt="svg" style={svgStyle} />
+          </div>
+          <TextOverlay text={props.item.beneficiary} position={{x:155, y:405}} vertical={true} maxExtent={262} maxHeight={95} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:66, y:450}} vertical={true} maxExtent={180} maxHeight={45} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:150, y:660}} maxExtent={116} maxHeight={15} defaultFontSize={15} variant="h6" />
+       </div>
+    ); 
+  } 
+
+  function WRebirthPlaque(props) {
+
+    let svgDivStyle=W_SVG_STYLE('ffcd05');
+    let svgStyle={
+      height:"722px",
+      width:"296px"
+    };
+  
+    if (props.isHighlight) {
+      svgDivStyle.boxShadow="";
+    }
+  
+    return (
+       <div style={W_CARD_STYLE(props)}>
+       <div style={svgDivStyle}>
+       <img src={wrebirth} alt="svg" style={svgStyle} />
+          </div>
+          <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} maxExtent={255} maxHeight={95} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:60, y:450}} vertical={true} maxExtent={180} maxHeight={45} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:146, y:669}} maxExtent={116} maxHeight={15} defaultFontSize={15} variant="h6" />
+       </div>
+    ); 
+}
+
 export function PlaqueSelector(props) {
   const type = props.item.type;
-  if (type === 'mmb' || type=="wmmb") {
+  if (type === 'mmb') {
     return MmbPlaque(props);
   } else if (type === 'rebirth') {
     return RebirthPlaque(props);
   } else if (type === 'wish') {
     return WishPlaque(props);
+  }   else if (type === 'wrebirth') {
+    return WRebirthPlaque(props);
+  } else if (type === 'wmmb') {
+    return WMmbPlaque(props);
   } else {
     console.log('Undefined type: ' + type);
     return `undefined: ${type}`;
