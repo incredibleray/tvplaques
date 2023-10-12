@@ -1,4 +1,4 @@
-import mmb from './resources/MMBPlaque_7_24.svg';
+import mmb from './resources/mmb.svg';
 import rebirth from './resources/rebirth.svg';
 import wish from './resources/RuYiPlaque_7_24.svg';
 import wmmb from './resources/W_mmb.svg';
