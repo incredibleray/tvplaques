@@ -4,6 +4,7 @@ import json
 import os.path
 import re
 import sys
+from datetime import datetime
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -130,6 +131,13 @@ def main(args):
            plaqueType = fetch_row(row, plaque_col).lower()
            plaqueLocation = fetch_row(row, location_col)
            requestDate = fetch_row(row, request_col)
+
+           reqDate=datetime.strptime(requestDate, "%m/%d/%Y")
+           # requests after 8/24/2023 are on the digital plaque request form.
+           if reqDate>datetime(2023, 8, 24):
+             continue
+
+
            # We are only fetching from the permanent tab.
            # In the event this is temporary, we need to 
            expiryDate = 'Permanent' if IS_PERMANENT else fetch_row(row, expiry_col)

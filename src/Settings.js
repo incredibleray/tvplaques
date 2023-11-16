@@ -73,6 +73,44 @@ export function Settings() {
           }/>As you wish</div>
             
           </Stack></td></tr>
+          <tr>
+          <td></td><td>
+        <Stack direction="row" spacing={3}>
+
+          <div><CheckBox checked={plaqueTypes.includes("wmmb")} onChange={(event)=>{
+            if (event.target.checked && !plaqueTypes.includes("wmmb")) {
+              dispatch({type:"setPlaqueTypes", payload: [...plaqueTypes, "wmmb"]});
+            }
+
+            if (!event.target.checked && plaqueTypes.includes("wmmb")) {
+              dispatch({type:"setPlaqueTypes", payload:plaqueTypes.filter(e=>e!="wmmb")});
+            }
+          }} />W-MMB</div>
+          <div><CheckBox checked={plaqueTypes.includes("wrebirth")} onChange={
+            (event)=>{
+              if (event.target.checked && !plaqueTypes.includes("wrebirth")) {
+                dispatch({type:"setPlaqueTypes", payload: [...plaqueTypes, "wrebirth"]});
+              }
+  
+              if (!event.target.checked && plaqueTypes.includes("wrebirth")) {
+                dispatch({type:"setPlaqueTypes", payload:plaqueTypes.filter(e=>e!="wrebirth")});
+              }
+            }
+          } />W-Rebirth</div>
+          <div><CheckBox checked={plaqueTypes.includes("49days")} onChange={
+            (event)=>{
+              if (event.target.checked && !plaqueTypes.includes("49days")) {
+                dispatch({type:"setPlaqueTypes", payload: [...plaqueTypes, "49days"]});
+              }
+  
+              if (!event.target.checked && plaqueTypes.includes("49days")) {
+                dispatch({type:"setPlaqueTypes", payload:plaqueTypes.filter(e=>e!="49days")});
+              }
+            }
+          }/>49 Days (Search Only)</div>
+            
+          </Stack></td>
+          </tr>
           <tr><td>
           <Typography variant="h6">Carousel</Typography></td>
           <td><CheckBox checked={carouselAutoplay==false} onChange={(event) => dispatch({ type: "setCarouselAutoplay",payload: event.target.checked==false})} />Stop auto-scroll</td></tr>

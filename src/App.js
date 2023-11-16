@@ -69,16 +69,16 @@ function App(props) {
       types=["rebirth", "wrebirth"]
     } else if (tv=="gftv1") {
       location="GF";
-      types=["mmb","wish",];
+      types=["mmb","wmmb","wish",];
     } else if (tv=="gftv2") {
       location="GF";
-      types=["rebirth"];
+      types=["rebirth", "wrebirth"];
     } else if (tv=="wmttv1") {
       location="WMT";
-      types=["mmb","wish",];
+      types=["mmb","wmmb","wish",];
     } else if (tv=="wmttv2") {
       location="WMT";
-      types=["rebirth"];
+      types=["rebirth", "wrebirth"];
     } else if (tv=="wplaque") {
       location="DTT";
       types=["wmmb", "wrebirth"];
@@ -116,8 +116,17 @@ function App(props) {
       dispatch({type:"initDone"});
     })
 
-
-
+    // refresh the plaques.json every half an hour.
+    const plaqueUpdater=setInterval(
+      axios.get('./plaques.json')
+      .then(response => {
+        if (response.statusText=="OK") {
+          // remote load plaques handler will not use remote loaded plaques.json if it is null or empty array.
+          // no need to check for null or empty array here.
+          dispatch({type:"remoteLoadAllPlaques", payload:response.data});
+        }}
+      )
+      ,30*60*1000)
 
   }, [])
 

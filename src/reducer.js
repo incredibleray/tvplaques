@@ -90,11 +90,10 @@ export default function appReducer(state = initialState, action) {
       };
     }
     case 'remoteLoadAllPlaques':{
-      if (state.initDone) {
-        return state;
-      }
+      // remote load plaques at initialization,
+      // and every half an hour after that
       
-      if (action.payload==null) {
+      if (action.payload==null || action.payload.length==0) {
         return state;
       }
       
