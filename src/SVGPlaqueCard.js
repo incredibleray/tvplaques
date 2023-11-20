@@ -53,7 +53,7 @@ export function MmbPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} maxHeight={64} maxExtent={250} defaultFontSize={30} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} maxHeight={35} defaultFontSize={20} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:102, y:577}} maxExtent={110} maxHeight={15} defaultFontSize={10} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:102, y:577}} maxExtent={100} maxHeight={15} defaultFontSize={10} variant="h6" />
      </div>
   ); 
 }
