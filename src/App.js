@@ -61,16 +61,27 @@ function App(props) {
     const tv = queryParameters.get("tv");
     let location=[],types=[];
 
+    // DTT TV left hand side
+    // shows MMB, W-MMB, and as you wish plaques
      if (tv=="dtttv1") {
       location="DTT";
       types=["mmb","wmmb","wish", ];
-    } else if (tv=="dtttv2") {
+    } 
+    // DTT TV right hand side
+    // shows Rebirth, W-Rebirth plaques
+    else if (tv=="dtttv2") {
       location="DTT";
       types=["rebirth", "wrebirth"]
-    } else if (tv=="gftv1") {
+    } 
+    // GF side wall TV, front of TV is perpendicular to altar
+    // shows MMB, W-MMB, and as you wish plaques
+    else if (tv=="gftv1") {
       location="GF";
       types=["mmb","wmmb","wish",];
-    } else if (tv=="gftv2") {
+    } 
+    // GF back wall TV, front of TV face altar
+    // shows Rebirth, W-Rebirth plaques.
+    else if (tv=="gftv2") {
       location="GF";
       types=["rebirth", "wrebirth"];
     } else if (tv=="wmttv1") {
@@ -82,6 +93,11 @@ function App(props) {
     } else if (tv=="wplaque") {
       location="DTT";
       types=["wmmb", "wrebirth"];
+    // photo booth mode, for taking plaque photos.
+    // include all plaque types, no location filter
+    } else if (tv=="photoBooth") {
+      location="photoBooth";
+      types=["wmmb", "wrebirth", "wish","mmb","rebirth"];
     } else {
       location="DTT";
       types=["mmb","rebirth","wish",];

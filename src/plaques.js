@@ -85,7 +85,20 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   const currentDate = new Date();
   let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
   plaques=plaques.sort(compareDates);
+
+  let regularPlaquesRowsPerPage=2;
+  let wPlaquesRowsPerPage=1;
+
+// single row view of all plaques from new to old, no location filter
+// for taking photos of plaques. 
+// have not seen a need for taking photos of Dharma Assembly plaques
+// thus apply a filter to exclude Dharma Assembly plaques.
+  if (location=="photoBooth") {
+    regularPlaquesRowsPerPage=1;
+    plaques=plaques.filter(p=>p.eventName==null || p.eventName.length==0)
+  } else {
   plaques=plaques.filter(p=>p.locations.includes(location));
+  }
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
@@ -95,17 +108,35 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   
   if (types.includes("mmb")) {
     const existingPagesLen=selected.length;
-    selected=selected.concat(CreatePlaquePages(mmbPlaques, doubleRowImagesPerRow, 2, 'mmb', existingPagesLen));
+    selected=selected.concat(
+      CreatePlaquePages(
+        mmbPlaques, 
+        (regularPlaquesRowsPerPage==2)?doubleRowImagesPerRow:singleRowImagesPerRow,
+        regularPlaquesRowsPerPage, 
+        'mmb', 
+        existingPagesLen));
   }
 
   if (types.includes("rebirth")) {
     const existingPagesLen=selected.length;
-    selected=selected.concat(CreatePlaquePages(rebirthPlaques, doubleRowImagesPerRow, 2, 'rebirth', existingPagesLen));
+    selected=selected.concat(
+      CreatePlaquePages(
+        rebirthPlaques, 
+        (regularPlaquesRowsPerPage==2)?doubleRowImagesPerRow:singleRowImagesPerRow,
+        regularPlaquesRowsPerPage, 
+        'rebirth', 
+        existingPagesLen));
   }
 
   if (types.includes("wish")) {
     const existingPagesLen=selected.length;
-    selected=selected.concat(CreatePlaquePages(wishPlaques, doubleRowImagesPerRow, 2, 'wish', existingPagesLen));
+    selected=selected.concat(
+      CreatePlaquePages(
+        wishPlaques, 
+        (regularPlaquesRowsPerPage==2)?doubleRowImagesPerRow:singleRowImagesPerRow,
+        regularPlaquesRowsPerPage, 
+        'wish', 
+        existingPagesLen));
   }
 
   if (types.includes("wmmb")) {
@@ -160,3 +191,4 @@ export function searchPlaques(allPlaques, searchTerms) {
 
   return null;
 }
+
