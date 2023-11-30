@@ -30,14 +30,7 @@ function SVGPlaqueCardDetail(props) {
   const [showGallery, setShowGallery] = useState(false);
   const [carouselIndex, setCarouselIndex]= useState(0);
   const [galleryStartIndex, setGalleryStartIndex]= useState(0);
-  const highlightPlaqueWidth = useSelector(s=>s.singleRowPicWidth);
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
-  const beneficiary = highlightPlaque.beneficiary;
-  const sponsor = highlightPlaque.sponsor;
-  const dateString = highlightPlaque.dateString;
-  const plaqueId = highlightPlaque.id;
-  const mediaUrl = highlightPlaque.mediaUrl;
-  const plaqueType = highlightPlaque.type;
   const elementRef = useRef(null);
   
   // on tv the dimension is 1280x720
@@ -53,6 +46,8 @@ function SVGPlaqueCardDetail(props) {
 if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)==false || highlightPlaque.mediaFiles.length==0) {
   // see original code for highlight content: https://github.com/incredibleray/plaquetv/blob/319913710ecd2e043fe3d6b6b395df52252c9f15/src/App.js
   
+  // dialog window width is limited, can't go beyond 100vw or equavalent pixel value. 
+  // reduce plaqueHeight and dialog window height to fix the dialog window width
   plaqueHeight=Math.floor(plaqueHeight*0.85);
  return     <DialogContent sx={{ 
   overflow: "hidden",
