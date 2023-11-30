@@ -25,9 +25,14 @@ function PlaqueCarousel() {
 
   }
 
+  // the pages are layed out horizontally from left to right like a long horizontal scrolls that span many screens
+  // there is some gap between adjacent pages
+  // a segment of the scroll is shown at any given time, 
   let pages=[];
   for (let i = 0; i < totalPages; i++) {
-    pages.push(<Box><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box>);
+    // setting the background color of <Box> to black
+    // so the gaps between two <SVGPlaqueView> pages appears black instead of white.
+    pages.push(<Box sx={{backgroundColor:"black"}}><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box>);
   }
 
   return (

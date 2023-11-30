@@ -84,9 +84,13 @@ function App(props) {
     else if (tv=="gftv2") {
       location="GF";
       types=["rebirth", "wrebirth"];
-    } else if (tv=="wmttv1") {
+    } 
+    // WMT TV in left side of Buddha hall
+    // the only TV at WMT showing plaques, display both MMB and Rebirth plaques.
+    else if (tv=="wmttv1") {
       location="WMT";
-      types=["mmb","wmmb","wish",];
+      types=["mmb","rebirth","wish"];
+      // types=["mmb","wmmb","wish",];
     } else if (tv=="wmttv2") {
       location="WMT";
       types=["rebirth", "wrebirth"];

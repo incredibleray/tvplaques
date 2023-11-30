@@ -28,30 +28,25 @@ function HighlightPlaque() {
 
   const handleClose = () => dispatch({ type: "closeHighlightPopup" });
 
-  return <div>
-    <Dialog
-    fullScreen
-      open={true}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle sx={{ m: 0, p: 3 }}>
-        <IconButton color="primary" aria-label="close" onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-          }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <SVGPlaqueCardDetail/>
-    </Dialog>
-  </div>
-    ;
+  const dialogContent=<>      <DialogTitle sx={{ m: 3, p: 0, }}>
+  <IconButton color="primary" aria-label="close" onClick={handleClose}
+    sx={{
+      position: 'absolute',
+      right: 8,
+      top: 8,
+    }}>
+    <CloseIcon />
+  </IconButton>
+</DialogTitle>
+<SVGPlaqueCardDetail/></>;
 
+  let dialog=<Dialog open={true} onClose={handleClose}>{dialogContent}</Dialog>;
+  
+  if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)&&highlightPlaque.mediaFiles.length>0) {
+  dialog=<Dialog fullScreen open={true} onClose={handleClose}>{dialogContent}</Dialog>;
+}
 
+  return <>{dialog}</>;
 }
 
 export default HighlightPlaque;

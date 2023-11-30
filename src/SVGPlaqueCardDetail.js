@@ -30,7 +30,7 @@ function SVGPlaqueCardDetail(props) {
   const [showGallery, setShowGallery] = useState(false);
   const [carouselIndex, setCarouselIndex]= useState(0);
   const [galleryStartIndex, setGalleryStartIndex]= useState(0);
-  const highlightPlaqueWidth = window.innerWidth;
+  const highlightPlaqueWidth = useSelector(s=>s.singleRowPicWidth);
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
   const beneficiary = highlightPlaque.beneficiary;
   const sponsor = highlightPlaque.sponsor;
@@ -50,20 +50,39 @@ function SVGPlaqueCardDetail(props) {
     plaqueHeight=Math.floor(window.screen.height*0.95);
   }
 
-  const videoTag=(mediaUrl == "") ? "" : (<MediaRenderer url={mediaUrl}/>);
+if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)==false || highlightPlaque.mediaFiles.length==0) {
+  // see original code for highlight content: https://github.com/incredibleray/plaquetv/blob/319913710ecd2e043fe3d6b6b395df52252c9f15/src/App.js
+  
+  plaqueHeight=Math.floor(plaqueHeight*0.85);
+ return     <DialogContent sx={{ 
+  overflow: "hidden",
+  height: "80vh",
+  width: "100vw"
+}} 
+> <PlaqueSelector 
+  item={{ 
+     ...highlightPlaque,
+     targetHeight: plaqueHeight
+  }}
+  isHighlight={true}
+/>
+    </DialogContent>
+;
+}
 
-  let videoSrc="";
-  if (highlightPlaque.type=="mmb") {
-    videoSrc="https://plaquetv.blob.core.windows.net/plaques/mmbPlaqueIntroSubtitle.mp4";
-  } else if (highlightPlaque.type=="rebirth") {
-    videoSrc="https://plaquetv.blob.core.windows.net/plaques/rebirthPlaqueIntroSubtitle.mp4";
-  }
+const plaqueImg=<PlaqueSelector 
+item={{ 
+   ...highlightPlaque,
+   targetHeight: plaqueHeight
+}}
+isHighlight={true}
+/>;
 
-  let media=<ReactPlayer url={videoSrc} width={String(videoWidth)} height={String(videoHeight)} controls />;
+    // videoSrc="https://plaquetv.blob.core.windows.net/plaques/mmbPlaqueIntroSubtitle.mp4";
+    // videoSrc="https://plaquetv.blob.core.windows.net/plaques/rebirthPlaqueIntroSubtitle.mp4";
 
   highlightPlaque.mediaFiles = highlightPlaque.mediaFiles ?? []
-  if (highlightPlaque.mediaFiles.length > 0) {
-    media=highlightPlaque.mediaFiles.map(
+  const media=highlightPlaque.mediaFiles.map(
       (mf, i)=>{
       if (mf.endsWith(".jpg") || mf.endsWith(".jpeg") || mf.endsWith(".png")) {
         return <img src={"https://plaquetv.blob.core.windows.net/media/"+mf} style={{height:"720px", width:"1280px"}} />
@@ -73,20 +92,34 @@ function SVGPlaqueCardDetail(props) {
         return <ReactPlayer url={"https://plaquetv.blob.core.windows.net/media/"+mf} height="720px" width="1280px"  controls playing={carouselIndex==i} />
       }
       })
-  }
 
+  const cardFlipControl=<><Box >
+  <IconButton onClick={()=>setShowGallery(false)} >
+  <ThreeSixtyIcon sx={{ fontSize: 60, color: orange[500]  }} />
+  </IconButton>
+  <IconButton onClick={()=>{
+    if (galleryStartIndex>0) {
+      setGalleryStartIndex(galleryStartIndex-3);
+    }
+  }} >
+  <ArrowUpwardIcon sx={{ fontSize: 60, color: green[500]  }} />
+  </IconButton>
+  <IconButton onClick={()=>{
+    if (galleryStartIndex<highlightPlaque.mediaFiles.length-15) {
+      setGalleryStartIndex(galleryStartIndex+3);
+    }
+  }} >
+  <ArrowDownwardIcon sx={{ fontSize: 60, color: red[500]  }} />
+  </IconButton>
+  
+  </Box>
+  </>;
+        
   return (
-    <DialogContent sx={{overflow: "hidden", height: "100vh" }} ref={elementRef}>
+    <DialogContent sx={{overflow: "hidden", height: "100vh", backgroundColor:"black" }} ref={elementRef}>
 <Table style={{tableLayout: "fixed"}}><tbody><tr><td/><td colSpan={3}>
 <ReactCardFlip isFlipped={showGallery} >
-  <div onClick={()=>setShowGallery(true)}>
-  <PlaqueSelector 
-    item={{ 
-       ...highlightPlaque,
-       targetHeight: plaqueHeight
-    }}
-    isHighlight={true}
-  /></div>
+  <div onClick={()=>setShowGallery(true)}>{plaqueImg}</div>
         <div>
         <ImageList cols={3} rowHeight={164}>
   {highlightPlaque.mediaFiles.slice(galleryStartIndex, galleryStartIndex+15).map((mf, i) => {
@@ -104,31 +137,11 @@ function SVGPlaqueCardDetail(props) {
     </ImageListItem>);
 })}
 </ImageList>
-<Box >
-<IconButton onClick={()=>setShowGallery(false)} >
-<ThreeSixtyIcon sx={{ fontSize: 60, color: orange[500]  }} />
-</IconButton>
-<IconButton onClick={()=>{
-  if (galleryStartIndex>0) {
-    setGalleryStartIndex(galleryStartIndex-3);
-  }
-}} >
-<ArrowUpwardIcon sx={{ fontSize: 60, color: green[500]  }} />
-</IconButton>
-<IconButton onClick={()=>{
-  if (galleryStartIndex<highlightPlaque.mediaFiles.length-15) {
-    setGalleryStartIndex(galleryStartIndex+3);
-  }
-}} >
-<ArrowDownwardIcon sx={{ fontSize: 60, color: red[500]  }} />
-</IconButton>
-
-</Box>
-        </div>
+{cardFlipControl}        </div>
       </ReactCardFlip>
 
 </td><td/><td colSpan={12}>
-  {/* this spacing value will put the carousel roughly in the center vertically on sony tv */}
+  {/* this spacing value will put the carousel roughly in the center vertically in 4k resolution */}
         <Stack spacing={19}>
 	  <Box />
     <Carousel autoPlay={false} transitionTime={1000}
@@ -166,10 +179,7 @@ function SVGPlaqueCardDetail(props) {
         }
       >
        {media}           
-
       </Carousel>
-          {/* {videoTag} */}
-
 	<Box />
 	</Stack>
 </td><td/></tr></tbody></Table>
