@@ -82,14 +82,16 @@ function compareDates(plaque1, plaque2) {
 }
 
 export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
-  const currentDate = new Date();
-  let plaques = plaquesOnFile.filter(p => isPlaqueExpired(new Date(), p.requestDate, p.expiryDate));
+  // this produce the current date at 00:00 (without current time)
+  // new Date() returns the current datetime, toDateString returns only the date part of the timestamp. new Date(currentDateString) returns the current date at 00:00.
+  const currentDate = new Date(new Date().toDateString());
+  let plaques = plaquesOnFile.filter(p => isPlaqueExpired(currentDate, p.requestDate, p.expiryDate));
   plaques=plaques.sort(compareDates);
 
   let regularPlaquesRowsPerPage=2;
   let wPlaquesRowsPerPage=1;
 
-// single row view of all plaques from new to old, no location filter
+// single row view of all plaques from new to old, no temple location filter, no show on TV filter
 // for taking photos of plaques. 
 // have not seen a need for taking photos of Dharma Assembly plaques
 // thus apply a filter to exclude Dharma Assembly plaques.
@@ -97,7 +99,8 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
     regularPlaquesRowsPerPage=1;
     plaques=plaques.filter(p=>p.eventName==null || p.eventName.length==0)
   } else {
-  plaques=plaques.filter(p=>p.locations.includes(location));
+// regular plaque view apply temple location filter and show on TV filter.
+  plaques=plaques.filter(p=>p.locations.includes(location)).filter(p=>p.showOnTv==null || p.showOnTv==true);
   }
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
