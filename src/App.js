@@ -85,15 +85,16 @@ function App(props) {
       location="GF";
       types=["rebirth", "wrebirth"];
     } 
-    // WMT TV in left side of Buddha hall
-    // the only TV at WMT showing plaques, display both MMB and Rebirth plaques.
+    // WMT TV on right side of Buddha hall
+    // display MMB, as you wish and W-MMB plaques.
     else if (tv=="wmttv1") {
       location="WMT";
-      types=["mmb","rebirth","wish"];
-      // types=["mmb","wmmb","wish",];
+      types=["mmb","wmmb","wish",];
     } else if (tv=="wmttv2") {
+    // WMT TV on left side of Buddha hall,
+    // shows rebirth plaques. do not display W-Rebirth plaque , Master do not seem to like to see a single W-Rebirth plaque of Thomas. 
       location="WMT";
-      types=["rebirth", "wrebirth"];
+      types=["rebirth"];
     } else if (tv=="wplaque") {
       location="DTT";
       types=["wmmb", "wrebirth"];
