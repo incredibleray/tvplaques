@@ -65,7 +65,7 @@ function App(props) {
     // shows MMB, W-MMB, and as you wish plaques
      if (tv=="dtttv1") {
       location="DTT";
-      types=["mmb","wmmb","wish", ];
+      types=["mmb","wmmb","ayw", ];
     } 
     // DTT TV right hand side
     // shows Rebirth, W-Rebirth plaques
@@ -77,7 +77,7 @@ function App(props) {
     // shows MMB, W-MMB, and as you wish plaques
     else if (tv=="gftv1") {
       location="GF";
-      types=["mmb","wmmb","wish",];
+      types=["mmb","wmmb","ayw",];
     } 
     // GF back wall TV, front of TV face altar
     // shows Rebirth, W-Rebirth plaques.
@@ -89,7 +89,7 @@ function App(props) {
     // display MMB, as you wish and W-MMB plaques.
     else if (tv=="wmttv1") {
       location="WMT";
-      types=["mmb","wmmb","wish",];
+      types=["mmb","wmmb","ayw",];
     } else if (tv=="wmttv2") {
     // WMT TV on left side of Buddha hall,
     // shows rebirth plaques. do not display W-Rebirth plaque , Master do not seem to like to see a single W-Rebirth plaque of Thomas. 
@@ -102,10 +102,10 @@ function App(props) {
     // include all plaque types, no location filter
     } else if (tv=="photoBooth") {
       location="photoBooth";
-      types=["wmmb", "wrebirth", "wish","mmb","rebirth"];
+      types=["wmmb", "wrebirth", "ayw","mmb","rebirth"];
     } else {
       location="DTT";
-      types=["mmb","rebirth","wish",];
+      types=["mmb","rebirth","ayw",];
     }
 
     axios.get('./plaques.json')

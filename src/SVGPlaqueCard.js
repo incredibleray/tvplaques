@@ -98,7 +98,7 @@ RebirthPlaque.defaultProps = {
 };
 
 export function WishPlaque(props) {
-  let svgDivStyle=SVG_STYLE('#47c8f5');
+  let svgDivStyle=SVG_STYLE('#a7fe6f');
   let svgStyle={
     height:"564px",
     width:"163px",
@@ -126,7 +126,7 @@ WishPlaque.defaultProps = {
   beneficiary: '',
   sponsor: '',
   dateString: '',
-  type: 'wish'
+  type: 'ayw'
 };
 
 export const W_CARD_HEIGHT = 722;
@@ -201,7 +201,7 @@ export function PlaqueSelector(props) {
     return MmbPlaque(props);
   } else if (type === 'rebirth') {
     return RebirthPlaque(props);
-  } else if (type === 'wish') {
+  } else if (type === 'ayw') {
     return WishPlaque(props);
   }   else if (type === 'wrebirth') {
     return WRebirthPlaque(props);

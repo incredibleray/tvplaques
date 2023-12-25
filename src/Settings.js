@@ -60,14 +60,14 @@ export function Settings() {
               }
             }
           } />Rebirth</div>
-          <div><CheckBox checked={plaqueTypes.includes("wish")} onChange={
+          <div><CheckBox checked={plaqueTypes.includes("ayw")} onChange={
             (event)=>{
-              if (event.target.checked && !plaqueTypes.includes("wish")) {
-                dispatch({type:"setPlaqueTypes", payload: [...plaqueTypes, "wish"]});
+              if (event.target.checked && !plaqueTypes.includes("ayw")) {
+                dispatch({type:"setPlaqueTypes", payload: [...plaqueTypes, "ayw"]});
               }
   
-              if (!event.target.checked && plaqueTypes.includes("wish")) {
-                dispatch({type:"setPlaqueTypes", payload:plaqueTypes.filter(e=>e!="wish")});
+              if (!event.target.checked && plaqueTypes.includes("ayw")) {
+                dispatch({type:"setPlaqueTypes", payload:plaqueTypes.filter(e=>e!="ayw")});
               }
             }
           }/>As you wish</div>

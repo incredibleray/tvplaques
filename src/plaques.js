@@ -105,7 +105,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 
   const mmbPlaques=plaques.filter(p=>p.type==="mmb");
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
-  const wishPlaques=plaques.filter(p=>p.type==="wish");
+  const wishPlaques=plaques.filter(p=>p.type==="ayw");
   
   let selected=[];
   
@@ -131,14 +131,14 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
         existingPagesLen));
   }
 
-  if (types.includes("wish")) {
+  if (types.includes("ayw")) {
     const existingPagesLen=selected.length;
     selected=selected.concat(
       CreatePlaquePages(
         wishPlaques, 
         (regularPlaquesRowsPerPage==2)?doubleRowImagesPerRow:singleRowImagesPerRow,
         regularPlaquesRowsPerPage, 
-        'wish', 
+        'ayw', 
         existingPagesLen));
   }
 
