@@ -48,14 +48,18 @@ const takePlaquePhotosOnPage=async (page)=>{
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({headless: false });
   const page = await browser.newPage();
+  
+  // Set screen size to 4k.
+  await page.setViewport({width: 3840, height: 2160});
 
   // TV Plaque URL
   await page.goto('http://plaquetv.z5.web.core.windows.net/?tv=photoBooth');
   // dev server URL
   // await page.goto('http://localhost:3000/?tv=photoBooth');
 
-  // Set screen size to 4k.
-  await page.setViewport({width: 3840, height: 2160});
+  // wait for 10 seconds so setInterval trigger do not coincide with automatic page flip
+  await page.waitForTimeout(10*1000);
+  await takePlaquePhotosOnPage(page);
 
   // take plaque screenshots every half a minute.
   // the carousel turns every half a minute, operator can also set the next page between the interval.
