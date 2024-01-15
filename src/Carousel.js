@@ -1,11 +1,15 @@
 import SVGPlaqueView from './SVGPlaqueView';
 import React, { useEffect, Children } from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+// import { Carousel } from 'react-responsive-carousel';
+// import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { Box } from '@mui/material';
 import { current } from '@reduxjs/toolkit';
+import Carousel from 'react-bootstrap/Carousel'
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import { CCarousel, CCarouselItem } from '@coreui/react'
+// https://github.com/vadymshymko/react-simply-carousel
 
 const getPosition = (index, props) => {
   if (props.infiniteLoop) {
@@ -49,19 +53,57 @@ const CSSTranslate= (position, metric, axis) => {
 // new animation switch to the next slide with no animation when going from first slide to last slide, or last slide to first slide.
 // the rest is the same as the original slide animation.
 function animation(props, state) {
-  const returnStyles = {};
+  const returnStyles = {
+    slideStyle: {},
+    selectedStyle: { },
+    prevStyle: {},
+  };
   const { previousItem, selectedItem } = state;
   const lastPosition = Children.count(props.children) - 1;
   let transitionTime = props.transitionTime + 'ms';
-  let timingFunction="ease-in-out";
+  let timingFunction="cubic-bezier(1,-0.16,.66,1.02)";
 
-  // console.log(selectedItem, lastPosition);
+  console.log(state);
   if (props.infiniteLoop && (
     (selectedItem == 0 && previousItem==lastPosition)
     || (selectedItem==lastPosition && previousItem==0)
     )) {
-    transitionTime = '250ms';
-    timingFunction="step-end";
+      const transitionTimingFunction = 'cubic-bezier(1,-0.16,.66,1.02)';
+
+      let slideStyle = {
+          position: 'absolute',
+          display: 'block',
+          zIndex: -2,
+          minHeight: '100%',
+          opacity: 0,
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+          transitionTimingFunction: transitionTimingFunction,
+          msTransitionTimingFunction: transitionTimingFunction,
+          MozTransitionTimingFunction: transitionTimingFunction,
+          WebkitTransitionTimingFunction: transitionTimingFunction,
+          OTransitionTimingFunction: transitionTimingFunction,
+      };
+
+      if (!state.swiping) {
+          slideStyle = {
+              ...slideStyle,
+              WebkitTransitionDuration: transitionTime,
+              MozTransitionDuration: transitionTime,
+              OTransitionDuration: transitionTime,
+              transitionDuration: transitionTime,
+              msTransitionDuration: transitionTime,
+          };
+      }
+
+      return {
+          itemListStyle: {},
+          slideStyle,
+          selectedStyle: { ...slideStyle, opacity: 1, position: 'relative' },
+          prevStyle: { ...slideStyle },
+      };
   }
   // console.log(transitionTime);
 
@@ -122,7 +164,7 @@ function PlaqueCarousel() {
   for (let i = 0; i < totalPages; i++) {
     // setting the background color of <Box> to black
     // so the gaps between two <SVGPlaqueView> pages appears black instead of white.
-    pages.push(<Box sx={{backgroundColor:"black"}}><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box>);
+    pages.push(<Carousel.Item><Box sx={{backgroundColor:"black"}}><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box></Carousel.Item>);
   }
 
   const onChangeCallback=(index)=>{
@@ -130,12 +172,8 @@ function PlaqueCarousel() {
   }
 
   return (
-      <Carousel autoPlay={autoPlayCarousel} infiniteLoop={true} interval={29000} stopOnHover={false} transitionTime={1000}
-        showThumbs={false} showStatus={false} showIndicators={false}
-        selectedItem={searchResultPage}
-        onChange={onChangeCallback}
-        animationHandler={animation}
-      >
+    <Carousel indicators={false} controls={true} interval={30000} pause={false}>
+    
         {pages}
       </Carousel>
   );
