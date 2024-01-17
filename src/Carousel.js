@@ -171,10 +171,11 @@ function PlaqueCarousel() {
     dispatch({type:"setCurrentPage", payload:index});
   }
 
+  // no page indicator, have left right arrows to flip left or right (controls), scroll the page automatically every 30,000 milliseconds, or 30 seconds interval. 
+  // do not pause the automatic scroll when mouse hover on the object. In this app, the object in carousel is the entire page, so the mouse is likely always hovering over it.
   return (
     <Carousel indicators={false} controls={true} interval={30000} pause={false}>
-    
-        {pages}
+      {pages}
       </Carousel>
   );
 }

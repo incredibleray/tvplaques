@@ -34,7 +34,7 @@ export function MmbPlaque(props) {
   let svgStyle={
     height:"564px",
     width:"163px",
-    translate:"18px 27px"
+    translate:"20px 27px"
   };
 
   if (props.isHighlight) {
@@ -66,7 +66,7 @@ export function RebirthPlaque(props) {
   let svgStyle={
     height:"564px",
     width:"163px",
-    translate:"0px 27px"
+    translate:"20px 27px"
   };
 
   if (props.isHighlight) {
@@ -98,7 +98,7 @@ export function WishPlaque(props) {
   let svgStyle={
     height:"564px",
     width:"163px",
-    translate:"0px 27px"
+    translate:"20px 27px"
   };
 
   if (props.isHighlight) {
