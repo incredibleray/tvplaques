@@ -61,13 +61,13 @@ function SVGPlaqueView(props) {
     // the plus number eliminates white margin on the bottom
     height: window.screen.height+8,  
     width: window.screen.width, 
-    marginLeft: "33px", 
+    marginLeft: "0px", 
     marginTop: "0px", 
     // marginRight: "33px"
     //  overflow:"hidden" 
   };
 
-  let wPlaqueEnclosureStyle={marginTop:"14px", marginLeft:"8.5px"};
+  let wPlaqueEnclosureStyle={marginTop:"24px", marginLeft:"20px"};
 
     return   <Masonry columns={imagesPerRow} spacing={2}
     sx={masonryStyle}>
@@ -85,10 +85,10 @@ function SVGPlaqueView(props) {
   // the plus number eliminates white margin on the bottom
   height: window.screen.height/2+8,  
   width: window.screen.width, 
-  marginLeft: "6px", marginTop: "0px", marginRight: "6px"
+  marginLeft: "0px", marginTop: "0px", marginRight: "0px"
   //  overflow:"hidden" 
 };
-let plaqueEnclosureStyle={marginTop:"20px", marginLeft:"8.5px"};
+let plaqueEnclosureStyle={marginTop:"38px", marginLeft:"10px"};
 
   if (window.screen.height==1080 && window.screen.width==1920) {
     masonryStyle={ ...masonryStyle,
