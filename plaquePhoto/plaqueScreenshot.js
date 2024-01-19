@@ -16,10 +16,10 @@ const plaqueScreenshot=async(page, i)=>{
   // get string value of beneficiary text
   const beneficiary=await beneficiaryText?.evaluate(e => e.innerText);
   
-  // using index as filename works.
-  // beneficiary is not getting the beneficiary text.
-  await plaque.screenshot({path:".\\plaquePhoto\\"+beneficiary+".png"});
-  await plaque.screenshot({path:".\\plaquePhoto\\"+String(i)+".png"});
+  // using beneficiary text as file name
+  // TODO use plaque ID or jotform submission ID as file name.
+  await plaque.screenshot({path:"./photos/"+beneficiary.replace('/','')+".png"});
+  await plaque.screenshot({path:"./photos/"+String(i)+".png"});
 
 }
 

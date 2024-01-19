@@ -38,7 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "takePhoto": "node plaquePhoto\\plaqueScreenshot.js"
+    "takePhoto": "node plaquePhoto/plaqueScreenshot.js"
   },
   "eslintConfig": {
     "extends": [
