@@ -37,6 +37,8 @@ function App(props) {
       const singleRowImagesPerRow = Math.floor((window.screen.width - MARGIN_PIXELS) *0.98/ (singleRowPicWidth + 2*W_CARD_MARGIN));
       // const singleRowImagesPerRow =1;
 
+      const highlightPlaqueHeight=Math.floor(window.screen.height*0.85)
+      
       let rowHeight = Math.floor((window.screen.height - MARGIN_PIXELS)*0.94 / NUM_ROWS)
       let scale = rowHeight / CARD_HEIGHT;
       let picWidth = Math.floor(CARD_WIDTH * scale);
@@ -45,7 +47,7 @@ function App(props) {
 
       dispatch({
         type: 'setWinSize',
-        payload: { picsPerCol, rowHeight,singleRowImagesPerRow,singleRowHeight, colWidth }
+        payload: { picsPerCol, rowHeight,singleRowImagesPerRow,singleRowHeight, colWidth, highlightPlaqueHeight }
       });
 
     }

@@ -193,6 +193,9 @@ const W_SVG_STYLE = (color) => ({
 
 export function PlaqueSelector(props) {
   const type = props.item.type;
+  
+  console.log(`render plaque of type=${type}, targetHeight=${props.item.targetHeight}`)
+  
   if (type === 'mmb') {
     return MmbPlaque(props);
   } else if (type === 'rebirth') {

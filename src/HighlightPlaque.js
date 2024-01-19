@@ -19,7 +19,7 @@ import Stack from '@mui/material/Stack';
 
 function HighlightPlaque() {
   const dispatch = useDispatch();
-  const rowHeight = useSelector((state) => state.rowHeight);
+  const rowHeight = useSelector((state) => state.highlightPlaqueHeight);
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
   
   if (highlightPlaque == null) {
@@ -28,7 +28,7 @@ function HighlightPlaque() {
 
   const handleClose = () => dispatch({ type: "closeHighlightPopup" });
 
-  const dialogContent=<>      <DialogTitle sx={{ m: 3, p: 0, }}>
+  const dialogTitle=<DialogTitle sx={{ m: 3, p: 0, }}>
   <IconButton color="primary" aria-label="close" onClick={handleClose}
     sx={{
       position: 'absolute',
@@ -37,13 +37,16 @@ function HighlightPlaque() {
     }}>
     <CloseIcon />
   </IconButton>
-</DialogTitle>
-<SVGPlaqueCardDetail/></>;
+</DialogTitle>;
 
-  let dialog=<Dialog open={true} onClose={handleClose}>{dialogContent}</Dialog>;
+  let dialog=<Dialog open={true} onClose={handleClose}>{dialogTitle}
+  <DialogContent>
+    <PlaqueSelector item={{...highlightPlaque, targetHeight:rowHeight}} isHighlight={true} />
+  </DialogContent>
+  </Dialog>;
   
   if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)&&highlightPlaque.mediaFiles.length>0) {
-  dialog=<Dialog fullScreen open={true} onClose={handleClose}>{dialogContent}</Dialog>;
+  dialog=<Dialog fullScreen open={true} onClose={handleClose}>{dialogTitle}<SVGPlaqueCardDetail/></Dialog>;
 }
 
   return <>{dialog}</>;

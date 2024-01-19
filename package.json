@@ -36,12 +36,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && az storage blob directory upload -c \"$web\" --account-name plaquetvalpha -s \"build\" -d \".\" --recursive",
+    "build": "react-scripts build && az storage blob directory upload -c \"$web\" --account-name plaquetvalpha -s \"build/*\" -d \".\" --recursive",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "doc": "take photo boot up a puppeteer based app that takes screenshot of plaques. build will run the react build script then deploy to staging. uploading the build folder to plaquetvalpha storage account. deployToProd will upload the build folder to plaquetv storage account.",
     "takePhoto": "node plaquePhoto\\plaqueScreenshot.js",
-    "deployToProd": "az storage blob directory upload -c \"$web\" --account-name plaquetv -s \"build\" -d \".\" --recursive"
+    "deployToProd": "az storage blob directory upload -c \"$web\" --account-name plaquetv -s \"build/*\" -d \".\" --recursive"
   },
   "eslintConfig": {
     "extends": [

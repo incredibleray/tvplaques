@@ -16,6 +16,7 @@ const initialState = {
   rowHeight: 1,
   singleRowHeight:1,
   singleRowImagesPerRow:1,
+  highlightPlaqueHeight:1,
   currentPage: 0,
   searchResultPage:0,
   highlightPlaqueWidth: 1,
@@ -146,7 +147,8 @@ export default function appReducer(state = initialState, action) {
         singleRowImagesPerRow:action.payload.singleRowImagesPerRow,
         allPlaques: allPlaques,
         totalPages:allPlaques.length,
-        colWidth: action.payload.colWidth
+        colWidth: action.payload.colWidth,
+        highlightPlaqueHeight:action.payload.highlightPlaqueHeight
       }
     }
     case 'setHighlightPlaqueWidth': {

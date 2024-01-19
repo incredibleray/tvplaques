@@ -97,7 +97,16 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 // thus apply a filter to exclude Dharma Assembly plaques.
   if (location=="photoBooth") {
     regularPlaquesRowsPerPage=1;
-    plaques=plaques.filter(p=>p.eventName==null || p.eventName.length==0)
+    plaques=plaquesOnFile.filter(p=>{
+      // not expired or permanent plaque
+      if (p.expiryDate=="Permanent" || p.expiryDate>=currentDate) {
+        return true
+      }      
+      
+      if (p.eventName==null || p.eventName.length==0) {
+        return true
+      }
+    })
   } else {
 // regular plaque view apply temple location filter and show on TV filter.
   plaques=plaques.filter(p=>p.locations.includes(location)).filter(p=>p.showOnTv==null || p.showOnTv==true);
