@@ -59,7 +59,7 @@ function SVGPlaqueView(props) {
 
     let masonryStyle={ backgroundColor:"black",  
     // the plus number eliminates white margin on the bottom
-    height: window.screen.height,  
+    height: window.screen.height+8,  
     width: window.screen.width, 
     marginLeft: "33px", 
     marginTop: "0px", 
