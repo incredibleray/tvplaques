@@ -44,7 +44,7 @@ export function MmbPlaque(props) {
 
   return (
      <div style={CARD_STYLE(props)}>
-      <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={null} >
+      <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
         <img src={mmb} alt="svg" style={svgStyle} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} maxHeight={64} maxExtent={250} defaultFontSize={30} variant="h1" />
@@ -76,7 +76,7 @@ export function RebirthPlaque(props) {
 
   return (
      <div style={CARD_STYLE(props)}>
-        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={null} >
+        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
         <img src={rebirth} alt="svg" style={svgStyle} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} maxHeight={64} defaultFontSize={30} variant="h1" />
@@ -108,7 +108,7 @@ export function WishPlaque(props) {
 
   return (
      <div style={CARD_STYLE(props)}>
-     <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={null}>
+     <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
      <img src={wish} alt="svg" style={svgStyle} />
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:105, y:349}} vertical={true} maxExtent={249} maxHeight={64} defaultFontSize={30} variant="h1" />
@@ -157,7 +157,7 @@ const W_SVG_STYLE = (color) => ({
   
     return (
        <div style={W_CARD_STYLE(props)}>
-       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={null}>
+       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wmmb} alt="svg" style={svgStyle} />
           </div>
           <TextOverlay text={props.item.beneficiary} position={{x:155, y:405}} vertical={true} maxExtent={262} maxHeight={95} defaultFontSize={45} variant="h1" />
@@ -181,7 +181,7 @@ const W_SVG_STYLE = (color) => ({
   
     return (
        <div style={W_CARD_STYLE(props)}>
-       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={null}>
+       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wrebirth} alt="svg" style={svgStyle} />
           </div>
           <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} maxExtent={255} maxHeight={95} defaultFontSize={45} variant="h1" />
@@ -194,7 +194,7 @@ const W_SVG_STYLE = (color) => ({
 export function PlaqueSelector(props) {
   const type = props.item.type;
   
-  console.log(`render plaque of type=${type}, targetHeight=${props.item.targetHeight}`)
+  // console.log(`render plaque of type=${type}, targetHeight=${props.item.targetHeight}`)
   
   if (type === 'mmb') {
     return MmbPlaque(props);

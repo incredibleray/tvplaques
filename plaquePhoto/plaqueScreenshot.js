@@ -3,30 +3,35 @@
 
 // import puppeteer from 'puppeteer';
 const puppeteer = require('puppeteer');
+const path=require('node:path')
 
 const plaqueScreenshot=async(page, i)=>{
   // Locate the proper layer in plaque to take screenshot
-  const plaqueImageSelector='.selected > div > div > div:nth-child('+String(i)+') > div > div';
-  const beneficiaryTextSelector=".selected > div > div > div:nth-child("+String(i)+") > div >h1 ";
+  const plaqueImageSelector='.active > div > div > div:nth-child('+String(i)+') > div > div';
+  const beneficiaryTextSelector=".active > div > div > div:nth-child("+String(i)+") > div >h1 ";
 
   const plaque = await page.$(plaqueImageSelector);
   
-  // HTML Element of beneficiary text
-  const beneficiaryText=await page.$(beneficiaryTextSelector);
-  // get string value of beneficiary text
-  const beneficiary=await beneficiaryText?.evaluate(e => e.innerText);
-  
-  // using beneficiary text as file name
-  // TODO use plaque ID or jotform submission ID as file name.
-  await plaque.screenshot({path:"./photos/"+beneficiary.replace('/','')+".png"});
-  await plaque.screenshot({path:"./photos/"+String(i)+".png"});
+  console.log(await page.$eval(plaqueImageSelector, element=> element.getAttribute("plaqueId")))
+  // plaque is not the same as $(selector), need more research to get attribute.
+  // get plaque ID and jotform submission ID printed on plaque atrributes
+  // attribute labels do not care about case
+  const plaqueId=await page.$eval(plaqueImageSelector, element=> element.getAttribute("plaqueId"))
+  const jotformSubmissionId=await page.$eval(plaqueImageSelector, element=> element.getAttribute("jotformSubmissionId"))
+
+  console.log(`plaque ID=${plaqueId}, jotform submission ID=${jotformSubmissionId}`)
+
+  // use plaque ID or jotform submission ID as file name.
+  const fileName=`${jotformSubmissionId}-${plaqueId}.png`
+  await plaque.screenshot({path:path.join('photos', fileName)});
+  // await plaque.screenshot({path:"./photos/"+String(i)+".png"});
 
 }
 
 const takePlaquePhotosOnPage=async (page)=>{
   // This is a selector of one of the plaque on the page, 
   // use this to wait on the page to complete loading.
-  let selector='.selected > div > div > div:nth-child(3) > div > div';
+  let selector='.active > div > div > div:nth-child(3) > div > div';
   
   await page.waitForSelector(
   selector  
@@ -38,7 +43,7 @@ const takePlaquePhotosOnPage=async (page)=>{
       await plaqueScreenshot(page, i);
     }
     catch (e) {
-
+      console.error(e)
     }
   }
 
@@ -53,7 +58,9 @@ const takePlaquePhotosOnPage=async (page)=>{
   await page.setViewport({width: 3840, height: 2160});
 
   // TV Plaque URL
-  await page.goto('http://plaquetv.z5.web.core.windows.net/?tv=photoBooth');
+  // await page.goto('http://plaquetv.z5.web.core.windows.net/?tv=photoBooth');
+  // staging server URL
+  await page.goto("https://plaquetvalpha.z5.web.core.windows.net/?tv=photoBooth")
   // dev server URL
   // await page.goto('http://localhost:3000/?tv=photoBooth');
 
