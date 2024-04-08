@@ -141,7 +141,13 @@ function App(props) {
 
     // refresh the plaques.json every half an hour.
     const plaqueUpdater=setInterval(
-      axios.get('./plaques.json')
+      axios.get('./plaques.json', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      })
       .then(response => {
         if (response.statusText=="OK") {
           // remote load plaques handler will not use remote loaded plaques.json if it is null or empty array.

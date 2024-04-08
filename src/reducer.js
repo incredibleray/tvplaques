@@ -31,7 +31,11 @@ const initialState = {
 
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
-    case 'updateLastRefreshTime': {
+    case 'setCurrentPage': {
+      if (action.payload==state.currentPage) {
+        return state
+      }
+
       let lastRefreshDate = state.lastRefreshDate;
       const currentDate = new Date();
       const elapsedSeconds = (currentDate.getTime() - lastRefreshDate.getTime()) / 1000;
@@ -45,15 +49,11 @@ export default function appReducer(state = initialState, action) {
         lastRefreshDate = currentDate;
       }
 
+      console.log(`setting current page state to ${action.payload}`)
       return {
         ...state,
-        lastRefreshDate: lastRefreshDate
-      }
-    }
-    case 'clearCurrentPage': {
-      return {
-        ...state,
-        currentPage: null
+        lastRefreshDate: lastRefreshDate,
+        currentPage:action.payload 
       }
     }
     case 'showSearchResults': {

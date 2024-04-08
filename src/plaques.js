@@ -1,5 +1,6 @@
 
 import { useSelector } from 'react-redux'
+import {plaqueMeasurements} from "./SVGPlaqueCard"
 
 export const NUM_ROWS = 2;
 
@@ -119,7 +120,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 // sort from newest to oldest
   plaques=plaques.sort(compareDates);
 
-  const mmbPlaques=plaques.filter(p=>p.type==="mmb");
+  const mmbPlaques=plaques.filter(p=>p.type==="mmb").map();
   const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
   const wishPlaques=plaques.filter(p=>p.type==="ayw");
   
@@ -211,3 +212,49 @@ export function searchPlaques(allPlaques, searchTerms) {
   return null;
 }
 
+let textMeasurementObj=null
+
+function addFontSizes(plaque) {
+  const beneficiaryTextFontFamily = '"Playfair Display", Kaiti, "Gowun Batang"'
+  const sponsorTextFontFamily= '"Playfair Display", Kaiti, "Gowun Batang"'
+  const dateStringFontFamily='Roboto'
+
+  const measurements=plaqueMeasurements[plaque.type]
+  const beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily)
+
+  const sponsorTextSize=calculateFontSize(plaque.sponsor, measurements.sponsor.width, measurements.sponsor.height, measurements.sponsor.defaultFontSize, sponsorTextFontFamily)
+
+  const dateStringSize=calculateFontSize(plaque.dateStr, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+
+  return {
+    ...plaque,
+    beneficiaryTextSize,
+    sponsorTextSize,
+    dateStringSize
+  }
+}
+
+function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFamily) {
+    let fontSize = startingFontSize;
+
+    // reuse the span object, create new if span object is not available.
+    if (textMeasurementObj == null) {
+      textMeasurementObj = document.createElement('span')
+      // textMeasurementObj.style.visibility="hidden"
+      document.body.appendChild(textMeasurementObj)
+
+    }
+
+    inStr = inStr.replace('\n', '<br/>');
+    textMeasurementObj.style.fontFamily = fontFamily;
+    textMeasurementObj.style.fontSize = `${fontSize}px`;
+    textMeasurementObj.innerHTML = inStr;
+
+    console.log(textMeasurementObj.offsetWidth, textMeasurementObj.offsetHeight)
+
+    while (fontSize > 1 && (textMeasurementObj.offsetWidth >= maxWidth || textMeasurementObj.offsetHeight >= maxHeight)) {
+        fontSize--;
+        textMeasurementObj.style.fontSize = `${fontSize}px`;
+    }
+    return fontSize;
+}

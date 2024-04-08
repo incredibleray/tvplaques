@@ -11,6 +11,94 @@ export const CARD_HEIGHT = 612;
 export const CARD_WIDTH = 204;
 export const CARD_MARGIN = 0;
 
+// the text boxes width of each type of plaques 
+export const plaqueMeasurements={
+  mmb: {
+    beneficiary:{
+      width:250,
+      height:64,
+      defaultFontSize:30
+    },
+    sponsor:{
+      width:180,
+      height:35,
+      defaultFontSize:20
+    },
+    dateString:{
+      width:100,
+      height:15,
+      defaultFontSize:10
+    }
+  },
+  rebirth: {
+    beneficiary:{
+      width:262,
+      height:64,
+      defaultFontSize:30
+    },
+    sponsor:{
+      width:180,
+      height:35,
+      defaultFontSize:20
+    },
+    dateString:{
+      width:105,
+      height:20,
+      defaultFontSize:10
+    }
+  },
+  ayw: {
+    beneficiary:{
+      width:249,
+      height:64,
+      defaultFontSize:30
+    },
+    sponsor:{
+      width:180,
+      height:35,
+      defaultFontSize:20
+    },
+    dateString:{
+      width:110,
+      height:20,
+      defaultFontSize:10
+    }
+  },
+  wmmb: {
+    beneficiary:{
+      width:285,
+      height:101,
+      defaultFontSize:45
+    },
+    sponsor:{
+      width:208,
+      height:51,
+      defaultFontSize:30
+    },
+    dateString:{
+      width:114,
+      height:14,
+      defaultFontSize:14
+    }
+  },
+  wrebirth: {
+    beneficiary:{
+      width:262,
+      height:64,
+      defaultFontSize:30
+    },
+    sponsor:{
+      width:180,
+      height:35,
+      defaultFontSize:20
+    },
+    dateString:{
+      width:105,
+      height:20,
+      defaultFontSize:10
+    }
+  }
+}
 // svg Files no longer have margins. it is 564 (H) X 163 (W).
 // SVG_STYLE creates a box of the old size of the svg file with margins, 612 (H) X 204 (W)
 // SVG_STYLE also create the shadow
@@ -155,14 +243,17 @@ const W_SVG_STYLE = (color) => ({
       svgDivStyle.boxShadow="";
     }
   
+    // Beneficiary Text: Top left (98, 274), Top right (200, 273), Bottom left (99, 558), Bottom right (200, 558)
+    // Sponsor Text: Top left (39, 351), top right (90, 351), bottom left (39, 560), bottom right (90, 559)
+    // date string: top left (91, 652), top right (205, 652), bottom left (91, 666), bottom right (205, 666)
     return (
        <div style={W_CARD_STYLE(props)}>
        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wmmb} alt="svg" style={svgStyle} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:155, y:405}} vertical={true} maxExtent={262} maxHeight={95} defaultFontSize={45} variant="h1" />
-          <TextOverlay text={props.item.sponsor} position={{x:66, y:450}} vertical={true} maxExtent={180} maxHeight={45} defaultFontSize={30} variant="h2" />
-          <TextOverlay text={props.item.dateString} position={{x:150, y:660}} maxExtent={116} maxHeight={15} defaultFontSize={15} variant="h6" />
+          <TextOverlay text={props.item.beneficiary} position={{x:149, y:415}} vertical={true} maxExtent={285} maxHeight={101} defaultFontSize={45} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:64, y:455}} vertical={true} maxExtent={208} maxHeight={51} defaultFontSize={30} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:148, y:659}} maxExtent={114} maxHeight={14} defaultFontSize={15} variant="h6" />
        </div>
     ); 
   } 

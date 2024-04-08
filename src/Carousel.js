@@ -39,17 +39,16 @@ function PlaqueCarousel() {
     pages.push(<Carousel.Item><Box sx={{backgroundColor:"black"}}><SVGPlaqueView page={i} style={{overflow: "hidden"}} /></Box></Carousel.Item>);
   }
 
-  // set current page back to null
-  if (currentPage!=null) {
-    dispatch({type:"clearCurrentPage"})
-  }
+  const onItemChange = (selectedIndex) => {
+    dispatch({type:"setCurrentPage", payload: selectedIndex});
+  };
 
   // no page indicator, have left right arrows to flip left or right (controls), scroll the page automatically every 30,000 milliseconds, or 30 seconds interval. 
   // do not pause the automatic scroll when mouse hover on the object. In this app, the object in carousel is the entire page, so the mouse is likely always hovering over it.
   // when autoplayCarousel is set to false, set the interval to null, which will stop the automatic scrolling.
   // React will omit activeIndex attribute if currentPage==null. (an answer from StackOverflow)
   return (
-    <Carousel indicators={false} controls={true} interval={autoPlayCarousel? 30000:null} pause={false} activeIndex={currentPage} >
+    <Carousel indicators={false} controls={true} interval={autoPlayCarousel? 30000:null} pause={false} activeIndex={currentPage} onSelect={onItemChange} >
       {pages}
       </Carousel>
   );
