@@ -133,10 +133,6 @@ def main(args):
            requestDate = fetch_row(row, request_col)
 
            reqDate=datetime.strptime(requestDate, "%m/%d/%Y")
-           # requests after 8/24/2023 are on the digital plaque request form.
-           if reqDate>datetime(2023, 8, 24):
-             continue
-
 
            # We are only fetching from the permanent tab.
            # In the event this is temporary, we need to 
