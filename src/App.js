@@ -147,9 +147,11 @@ function App(props) {
   // refresh the plaques.json every half an hour.
   useEffect(()=> {
     if (!initDone) {
+      console.log("updater is OFF because initialization is not done.")
       return;
     }
 
+    console.log("updater wakes up. fetch plaques.json from server.")
     // bypass browser cache. the request will keep getting the same file from cache if cache is not bypassed.
     const plaqueUpdater=setInterval(
       axios.get('./plaques.json', {
@@ -161,6 +163,7 @@ function App(props) {
       })
       .then(response => {
         if (response.statusText=="OK") {
+          console.log("updater successfully fetch plaques.json from server. Dispatching remote loading event.")
           // remote load plaques handler will not use remote loaded plaques.json if it is null or empty array.
           // no need to check for null or empty array here.
           dispatch({type:"remoteLoadAllPlaques", payload:response.data});
