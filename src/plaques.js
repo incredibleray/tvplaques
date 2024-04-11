@@ -120,9 +120,9 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 // sort from newest to oldest
   plaques=plaques.sort(compareDates);
 
-  const mmbPlaques=plaques.filter(p=>p.type==="mmb").map();
-  const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
-  const wishPlaques=plaques.filter(p=>p.type==="ayw");
+  const mmbPlaques=plaques.filter(p=>p.type==="mmb").map(addFontSizes);
+  const rebirthPlaques=plaques.filter(p=>p.type==="rebirth").map(addFontSizes);
+  const wishPlaques=plaques.filter(p=>p.type==="ayw").map(addFontSizes);
   
   let selected=[];
   
@@ -220,11 +220,20 @@ function addFontSizes(plaque) {
   const dateStringFontFamily='Roboto'
 
   const measurements=plaqueMeasurements[plaque.type]
-  const beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily)
+  let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
+  if (plaque.beneficiary) {
+    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
+  }
 
-  const sponsorTextSize=calculateFontSize(plaque.sponsor, measurements.sponsor.width, measurements.sponsor.height, measurements.sponsor.defaultFontSize, sponsorTextFontFamily)
+  let sponsorTextSize=measurements.sponsor.defaultFontSize;
+  if (plaque.sponsor) {
+    sponsorTextSize=calculateFontSize(plaque.sponsor, measurements.sponsor.width, measurements.sponsor.height, measurements.sponsor.defaultFontSize, sponsorTextFontFamily);
+  }
 
-  const dateStringSize=calculateFontSize(plaque.dateStr, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+  let dateStringSize=measurements.dateString.defaultFontSize;
+  if (plaque.dateStr) {
+    dateStringSize=calculateFontSize(plaque.dateStr, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+  }
 
   return {
     ...plaque,
@@ -240,7 +249,7 @@ function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFam
     // reuse the span object, create new if span object is not available.
     if (textMeasurementObj == null) {
       textMeasurementObj = document.createElement('span')
-      // textMeasurementObj.style.visibility="hidden"
+      textMeasurementObj.style.visibility="hidden"
       document.body.appendChild(textMeasurementObj)
 
     }

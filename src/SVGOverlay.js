@@ -28,11 +28,7 @@ export function SvgFile(props) {
 export function TextOverlay(props) {
   const writingMode = props.vertical ? 'vertical-rl' : 'horizontal-tb'
 
-  // calculate the font size in python program and 
-  // write it in the plaques.json file to avoid doing computation here.
-  //const fitFontSize=props.defaultFontSize;
-  const fitFontSize = calculateFontSize(props.text, props.maxExtent, props.maxHeight, props.defaultFontSize, fontFamily[props.variant]);
-  console.log(`text ${props.text} font size set to ${props.defaultFontSize}`)
+  const fitFontSize = props.fontSize;
 
   const dynamicStyle = props.alignBottom ? {
     transform: 'translate(-50%, 0%)',

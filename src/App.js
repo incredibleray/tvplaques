@@ -19,6 +19,7 @@ function App(props) {
   const rowHeight = useSelector((state) => state.rowHeight);
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
+  const initDone=useSelector((state)=>state.initDone);
 
   const handleMouseMove = (event) => {
     if (event.clientY > Math.floor(window.innerHeight*0.97) && showSearchBar==false) {
@@ -29,6 +30,9 @@ function App(props) {
   // const testHighlight=allPlaques[0];
 
   useEffect(() => {
+    if (initDone) {
+      return;
+    }
 
     function handleResize() {
       const singleRowHeight=(window.screen.height - MARGIN_PIXELS)*0.98;
@@ -138,8 +142,15 @@ function App(props) {
       // dispatch({type:"closeHighlightPopup"});
       dispatch({type:"initDone"});
     })
+  }, [initDone]);
 
-    // refresh the plaques.json every half an hour.
+  // refresh the plaques.json every half an hour.
+  useEffect(()=> {
+    if (!initDone) {
+      return;
+    }
+
+    // bypass browser cache. the request will keep getting the same file from cache if cache is not bypassed.
     const plaqueUpdater=setInterval(
       axios.get('./plaques.json', {
         headers: {
@@ -155,9 +166,10 @@ function App(props) {
           dispatch({type:"remoteLoadAllPlaques", payload:response.data});
         }}
       )
-      ,30*60*1000)
+      ,30*1000)
 
-  }, [])
+    // return ()=>clearInterval(plaqueUpdater);
+  }, [initDone])
 
   if (search.length>0) {
     search=search[0]

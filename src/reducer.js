@@ -1,14 +1,13 @@
 import { createAction } from '@reduxjs/toolkit'
 import { preprocessSvgPlaques, searchPlaques} from './plaques';
 import {NUM_ROWS} from './plaques';
-import filePlaques from "./plaques.json";
 
 
 const initialState = { 
   search: [],
   allPlaques:[],
   totalPages:0,
-  plaquesOnFile: filePlaques,
+  plaquesOnFile: [],
   searchResults:[],
   highlightPlaque: null,
   picsPerCol:1,
