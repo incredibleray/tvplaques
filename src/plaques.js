@@ -259,8 +259,6 @@ function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFam
     textMeasurementObj.style.fontSize = `${fontSize}px`;
     textMeasurementObj.innerHTML = inStr;
 
-    console.log(textMeasurementObj.offsetWidth, textMeasurementObj.offsetHeight)
-
     while (fontSize > 1 && (textMeasurementObj.offsetWidth >= maxWidth || textMeasurementObj.offsetHeight >= maxHeight)) {
         fontSize--;
         textMeasurementObj.style.fontSize = `${fontSize}px`;

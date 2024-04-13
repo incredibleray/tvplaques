@@ -11,10 +11,10 @@ https://plaquetv.z5.web.core.windows.net?tv=dtttv1)
 # Development
 `npm install --force` to install all dependencies
 `npm start` to start a local dev server
-`npm run build` build the website in the _dist_ folder and copy the _dist_ folder content to Azure blob storage to deploy changes
+`npm run build` build the website in the _build_ folder and copy the _build_ folder content to the staging environment at Azure blob storage to deploy changes
 
 ## Deployment
-The website is hosted on Azure Storage, in the _$web_ container of storage account of _plaquetv_. Copy the content of _dist_ folder to the _$web_ container will deploy the new build.
+The website is hosted on Azure Storage, in the _$web_ container of storage account of _plaquetv_. Copy the content of _build_ folder to the _$web_ container will deploy the new build.
 
 Copy can be done on Azure portal, Azure Storage Explorer, or Azure command line.
  
