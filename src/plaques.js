@@ -1,5 +1,6 @@
 
 import { useSelector } from 'react-redux'
+import {plaqueMeasurements} from "./SVGPlaqueCard"
 
 export const NUM_ROWS = 2;
 
@@ -86,7 +87,6 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   // new Date() returns the current datetime, toDateString returns only the date part of the timestamp. new Date(currentDateString) returns the current date at 00:00.
   const currentDate = new Date(new Date().toDateString());
   let plaques = plaquesOnFile.filter(p => isPlaqueExpired(currentDate, p.requestDate, p.expiryDate));
-  plaques=plaques.sort(compareDates);
 
   let regularPlaquesRowsPerPage=2;
   let wPlaquesRowsPerPage=1;
@@ -98,23 +98,31 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   if (location=="photoBooth") {
     regularPlaquesRowsPerPage=1;
     plaques=plaquesOnFile.filter(p=>{
+      // console.log(p)
+      
       // not expired or permanent plaque
-      if (p.expiryDate=="Permanent" || p.expiryDate>=currentDate) {
-        return true
+      if (p.expiryDate!="Permanent" && new Date(p.expiryDate)<currentDate) {
+        return false
       }      
       
-      if (p.eventName==null || p.eventName.length==0) {
-        return true
+      console.log(p.eventName)
+      if (p.eventName!=null && p.eventName.length>0) {
+        return false
       }
+
+      return true
     })
   } else {
 // regular plaque view apply temple location filter and show on TV filter.
   plaques=plaques.filter(p=>p.locations.includes(location)).filter(p=>p.showOnTv==null || p.showOnTv==true);
   }
 
-  const mmbPlaques=plaques.filter(p=>p.type==="mmb");
-  const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
-  const wishPlaques=plaques.filter(p=>p.type==="ayw");
+// sort from newest to oldest
+  plaques=plaques.sort(compareDates);
+
+  const mmbPlaques=plaques.filter(p=>p.type==="mmb").map(addFontSizes);
+  const rebirthPlaques=plaques.filter(p=>p.type==="rebirth").map(addFontSizes);
+  const wishPlaques=plaques.filter(p=>p.type==="ayw").map(addFontSizes);
   
   let selected=[];
   
@@ -204,3 +212,56 @@ export function searchPlaques(allPlaques, searchTerms) {
   return null;
 }
 
+let textMeasurementObj=null
+
+function addFontSizes(plaque) {
+  const beneficiaryTextFontFamily = '"Playfair Display", Kaiti, "Gowun Batang"'
+  const sponsorTextFontFamily= '"Playfair Display", Kaiti, "Gowun Batang"'
+  const dateStringFontFamily='Roboto'
+
+  const measurements=plaqueMeasurements[plaque.type]
+  let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
+  if (plaque.beneficiary) {
+    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
+  }
+
+  let sponsorTextSize=measurements.sponsor.defaultFontSize;
+  if (plaque.sponsor) {
+    sponsorTextSize=calculateFontSize(plaque.sponsor, measurements.sponsor.width, measurements.sponsor.height, measurements.sponsor.defaultFontSize, sponsorTextFontFamily);
+  }
+
+  let dateStringSize=measurements.dateString.defaultFontSize;
+  if (plaque.dateStr) {
+    dateStringSize=calculateFontSize(plaque.dateStr, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+  }
+
+  return {
+    ...plaque,
+    beneficiaryTextSize,
+    sponsorTextSize,
+    dateStringSize
+  }
+}
+
+function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFamily) {
+    let fontSize = startingFontSize;
+
+    // reuse the span object, create new if span object is not available.
+    if (textMeasurementObj == null) {
+      textMeasurementObj = document.createElement('span')
+      textMeasurementObj.style.visibility="hidden"
+      document.body.appendChild(textMeasurementObj)
+
+    }
+
+    inStr = inStr.replace('\n', '<br/>');
+    textMeasurementObj.style.fontFamily = fontFamily;
+    textMeasurementObj.style.fontSize = `${fontSize}px`;
+    textMeasurementObj.innerHTML = inStr;
+
+    while (fontSize > 1 && (textMeasurementObj.offsetWidth >= maxWidth || textMeasurementObj.offsetHeight >= maxHeight)) {
+        fontSize--;
+        textMeasurementObj.style.fontSize = `${fontSize}px`;
+    }
+    return fontSize;
+}

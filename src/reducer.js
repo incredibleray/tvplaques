@@ -1,15 +1,13 @@
 import { createAction } from '@reduxjs/toolkit'
 import { preprocessSvgPlaques, searchPlaques} from './plaques';
 import {NUM_ROWS} from './plaques';
-import filePlaques from "./plaques.json";
 
-const REFRESH_INTERVAL_S = 30 * 60
 
 const initialState = { 
   search: [],
   allPlaques:[],
   totalPages:0,
-  plaquesOnFile: filePlaques,
+  plaquesOnFile: [],
   searchResults:[],
   highlightPlaque: null,
   picsPerCol:1,
@@ -17,7 +15,7 @@ const initialState = {
   singleRowHeight:1,
   singleRowImagesPerRow:1,
   highlightPlaqueHeight:1,
-  currentPage: 0,
+  currentPage: null,
   searchResultPage:0,
   highlightPlaqueWidth: 1,
   isTyping: false,
@@ -33,27 +31,28 @@ const initialState = {
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
     case 'setCurrentPage': {
-  
+      if (action.payload==state.currentPage) {
+        return state
+      }
+
       let lastRefreshDate = state.lastRefreshDate;
       const currentDate = new Date();
       const elapsedSeconds = (currentDate.getTime() - lastRefreshDate.getTime()) / 1000;
 
-      let page=action.payload % state.totalPages;
+      // refresh every 7 days, refresh between 1:00 am to 3:00 am.
+      const REFRESH_INTERVAL_S = 7*24*60 * 60
 
-      if (page===state.currentPage) {
-        return state;
-      }
-
-      if (page === 0 && elapsedSeconds >= REFRESH_INTERVAL_S) {
+      if (elapsedSeconds >= REFRESH_INTERVAL_S &&
+         0<currentDate.getHours()<4) {
         window.location.reload();
         lastRefreshDate = currentDate;
       }
 
-      
+      console.log(`setting current page state to ${action.payload}`)
       return {
         ...state,
-        currentPage:page,
-        lastRefreshDate: lastRefreshDate
+        lastRefreshDate: lastRefreshDate,
+        currentPage:action.payload 
       }
     }
     case 'showSearchResults': {
