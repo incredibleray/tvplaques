@@ -5,7 +5,11 @@ import {NUM_ROWS} from './plaques';
 
 const initialState = { 
   search: [],
-  allPlaques:[],
+  allPlaques:[
+    {"id": 2024040001, "beneficiary": "Permanent MMB Beneficiary", "beneficiaryTextSize": 30, "sponsor": "Permanent MMB Sponsor", "sponsorTextSize": 20,"dateStringSize":10, "type": "mmb", "requestDate": "04/01/2024", "expiryDate": "Permanent", "searchTerms": [], "mediaFiles": [], "locations": ["DTT"], "showOnTv": true, "jotformSubmissionId": "001"},
+    {"id": 2024040002, "beneficiary": "Temporary MMB Beneficiary", "beneficiaryTextSize": 30, "sponsor": "Temporary MMB Sponsor", "sponsorTextSize": 20, "dateStringSize":10, "type": "mmb", "requestDate": "04/01/2024", "expiryDate": "01/01/9999", "searchTerms": [], "mediaFiles": [], "locations": ["DTT"], "showOnTv": true, "jotformSubmissionId": "002"},
+    {"id": 2024040003, "beneficiary": "Temporary Rebirth Beneficiary", "beneficiaryTextSize": 30, "sponsor": "Temporary Rebirth Sponsor", "sponsorTextSize": 20, "dateStringSize":10,"type": "rebirth", "requestDate": "04/01/2024", "expiryDate": "01/01/9999", "searchTerms": [], "mediaFiles": [], "locations": ["DTT"], "showOnTv": true, "jotformSubmissionId": "003"}
+  ],
   totalPages:0,
   plaquesOnFile: [],
   searchResults:[],

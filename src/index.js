@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import { Provider  } from 'react-redux'
 import { createStore } from '@reduxjs/toolkit'
 import reducer from './reducer';
-import TestApp from './TestApp';
 
 const store = createStore(reducer);
 
@@ -15,7 +14,6 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
     <App />
-    {/* <TestApp /> */}
     </Provider>
   </React.StrictMode>
 );

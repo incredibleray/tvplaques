@@ -105,26 +105,24 @@ function App(props) {
     }
 
     // initialization. Fetch plaques, load fetched plaques, set screen size, set location and plaque types.
-    axios.get('./plaques.json')
-    .then(response => {
-      if (response.statusText=="OK") {
-        dispatch({type:"remoteLoadAllPlaques", payload:response.data});
-      }}
-    )
-    .catch(error => {
-      console.log('error during initialization', error);
-    })
-    .finally(()=>new Promise((resolve)=>{
+    new Promise((resolve)=>{
       handleResize();
       setTimeout(resolve, 1000);
-    })).then(()=>new Promise((resolve)=>{
+    }).then(()=>new Promise((resolve)=>{
       dispatch({type:'setLocation', payload:location});
       dispatch({type:'setPlaqueTypes', payload:types});
 
       setTimeout(resolve, 1000);
       
-    }))
-    .then(()=>{
+    })).then(async ()=> {
+      return await axios.get('./plaques.json')
+    }).then(response => {
+      if (response.statusText=="OK") {
+        dispatch({type:"remoteLoadAllPlaques", payload:response.data});
+      }}
+    ).catch(error => {
+      console.log('error during initialization', error);
+    }).finally(()=>{
       dispatch({type:"initDone"});
     })
     // end of initialization.
