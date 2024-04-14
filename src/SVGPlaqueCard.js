@@ -25,8 +25,8 @@ export const plaqueMeasurements={
       defaultFontSize:20
     },
     dateString:{
-      width:100,
-      height:15,
+      width:108,
+      height:20,
       defaultFontSize:10
     }
   },
@@ -83,19 +83,19 @@ export const plaqueMeasurements={
   },
   wrebirth: {
     beneficiary:{
-      width:262,
-      height:64,
-      defaultFontSize:30
+      width:253,
+      height:97,
+      defaultFontSize:45
     },
     sponsor:{
-      width:180,
-      height:35,
-      defaultFontSize:20
+      width:209,
+      height:59,
+      defaultFontSize:30
     },
     dateString:{
-      width:105,
-      height:20,
-      defaultFontSize:10
+      width:138,
+      height:17,
+      defaultFontSize:15
     }
   }
 }
@@ -130,6 +130,7 @@ export function MmbPlaque(props) {
     svgStyle.translate="20.5px 27px"
   }
 
+  // date string box top left (27, 539), top right (135, 539), bottom left (27, 559), bottom right (135, 559)
   return (
      <div style={CARD_STYLE(props)}>
       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
@@ -137,7 +138,7 @@ export function MmbPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} maxHeight={64} maxExtent={250} fontSize={props.item.beneficiaryTextSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} maxHeight={35} fontSize={props.item.sponsorTextSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:102, y:577}} maxExtent={100} maxHeight={15} fontSize={props.item.dateStringSize} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:81, y:549}} fontSize={props.item.dateStringSize} variant="h6" />
      </div>
   ); 
 }
@@ -270,14 +271,17 @@ const W_SVG_STYLE = (color) => ({
       svgDivStyle.boxShadow="";
     }
   
+    // Beneficiary Text: Top left (99, 304), Top right (197, 303), Bottom left (100, 557), Bottom right (197, 557)
+    // Sponsor Text: Top left (29, 352), top right (88, 352), bottom left (29, 561), bottom right (89, 561)
+    // date string: top left (79, 661), top right (217, 661), bottom left (79, 678), bottom right (217, 678)
     return (
        <div style={W_CARD_STYLE(props)}>
        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wrebirth} alt="svg" style={svgStyle} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:152, y:425}} vertical={true} maxExtent={255} maxHeight={95} fontSize={props.item.beneficiaryTextSize} variant="h1" />
-          <TextOverlay text={props.item.sponsor} position={{x:60, y:450}} vertical={true} maxExtent={180} maxHeight={45} fontSize={props.item.sponsorTextSize} variant="h2" />
-          <TextOverlay text={props.item.dateString} position={{x:146, y:669}} maxExtent={116} maxHeight={15} fontSize={props.item.dateStringSize} variant="h6" />
+          <TextOverlay text={props.item.beneficiary} position={{x:148, y:430}} vertical={true} maxExtent={253} maxHeight={97} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+          <TextOverlay text={props.item.sponsor} position={{x:59, y:456}} vertical={true} maxExtent={209} maxHeight={59} fontSize={props.item.sponsorTextSize} variant="h2" />
+          <TextOverlay text={props.item.dateString} position={{x:148, y:669}} maxExtent={138} maxHeight={17} fontSize={props.item.dateStringSize} variant="h6" />
        </div>
     ); 
 }
