@@ -219,6 +219,8 @@ function addFontSizes(plaque) {
   const sponsorTextFontFamily= '"Playfair Display", Kaiti, "Gowun Batang"'
   const dateStringFontFamily='Roboto'
 
+  plaque.dateString= genDateString(plaque);
+
   const measurements=plaqueMeasurements[plaque.type]
   let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
   if (plaque.beneficiary) {
@@ -231,8 +233,8 @@ function addFontSizes(plaque) {
   }
 
   let dateStringSize=measurements.dateString.defaultFontSize;
-  if (plaque.dateStr) {
-    dateStringSize=calculateFontSize(plaque.dateStr, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+  if (plaque.dateString) {
+    dateStringSize=calculateFontSize(plaque.dateString, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
   }
 
   return {
@@ -264,4 +266,20 @@ function calculateFontSize(inStr, maxWidth, maxHeight, startingFontSize, fontFam
         textMeasurementObj.style.fontSize = `${fontSize}px`;
     }
     return fontSize;
+}
+
+function genDateString(plaque) {
+  if (plaque.eventName) {
+    return plaque.eventName;
+  } 
+
+  if (plaque.expiryDate.toLowerCase() == 'permanent') {
+    return `P${plaque.id}`;
+  }
+
+  if (plaque.requestDate || plaque.expiryDate) {
+    return `${plaque.requestDate}-${plaque.expiryDate}`;
+  }
+
+  return '';
 }

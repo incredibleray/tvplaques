@@ -10,28 +10,11 @@ import Masonry from '@mui/lab/Masonry';
 // need to set to 3 to avoid a scroll bar on 4k resolution.
 export const MARGIN_PIXELS = 1;
 
-function dateStringFor(plaque) {
-  if (plaque.eventName) {
-    return plaque.eventName;
-  } 
-
-  if (plaque.expiryDate.toLowerCase() == 'permanent') {
-    return `P${plaque.id}`;
-  }
-
-  if (plaque.requestDate || plaque.expiryDate) {
-    return `${plaque.requestDate}-${plaque.expiryDate}`;
-  }
-
-  return '';
-}
-
 function getImagesFromMetadata(metadata, thumbnailSize) {
   const fetchPlaque = (p) => ({
     ...p,
     src: "",
     thumbnail: "",
-    dateString: dateStringFor(p),
     targetHeight: thumbnailSize.height,
     // targetHeight: thumbnailSize.height,
     thumbnailHeight: thumbnailSize.height,

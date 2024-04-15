@@ -25,8 +25,8 @@ export const plaqueMeasurements={
       defaultFontSize:20
     },
     dateString:{
-      width:108,
-      height:20,
+      width:106,
+      height:18,
       defaultFontSize:10
     }
   },
@@ -130,7 +130,7 @@ export function MmbPlaque(props) {
     svgStyle.translate="20.5px 27px"
   }
 
-  // date string box top left (27, 539), top right (135, 539), bottom left (27, 559), bottom right (135, 559)
+  // date string box top left (28, 540), top right (134, 540), bottom left (28, 558), bottom right (134, 558)
   return (
      <div style={CARD_STYLE(props)}>
       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
@@ -138,7 +138,7 @@ export function MmbPlaque(props) {
         </div>
         <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} maxHeight={64} maxExtent={250} fontSize={props.item.beneficiaryTextSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} maxHeight={35} fontSize={props.item.sponsorTextSize} variant="h2" />
-        <TextOverlay text={props.item.dateString} position={{x:81, y:549}} fontSize={props.item.dateStringSize} variant="h6" />
+        <TextOverlay text={props.item.dateString} position={{x:102, y:576}} fontSize={props.item.dateStringSize} variant="h6" />
      </div>
   ); 
 }
