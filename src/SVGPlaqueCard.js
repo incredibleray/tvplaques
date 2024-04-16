@@ -271,7 +271,7 @@ const W_SVG_STYLE = (color) => ({
       svgDivStyle.boxShadow="";
     }
   
-    // Beneficiary Text: Top left (99, 304), Top right (197, 303), Bottom left (100, 557), Bottom right (197, 557)
+    // Beneficiary Text: Top left (99, 304), Top right (197, 303), Bottom left (100, 557), Bottom right (197, 557)              
     // Sponsor Text: Top left (29, 352), top right (88, 352), bottom left (29, 561), bottom right (89, 561)
     // date string: top left (79, 661), top right (217, 661), bottom left (79, 678), bottom right (217, 678)
     return (

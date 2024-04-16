@@ -86,7 +86,14 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   // this produce the current date at 00:00 (without current time)
   // new Date() returns the current datetime, toDateString returns only the date part of the timestamp. new Date(currentDateString) returns the current date at 00:00.
   const currentDate = new Date(new Date().toDateString());
-  let plaques = plaquesOnFile.filter(p => isPlaqueExpired(currentDate, p.requestDate, p.expiryDate));
+  // filter out expired plaques, order plaques from newest to oldest, and calculate font sizes
+  let plaques = plaquesOnFile.filter(
+    p => isPlaqueExpired(
+      currentDate, 
+      p.requestDate, 
+      p.expiryDate))
+    .sort(compareDates)
+    .map(addFontSizes);
 
   let regularPlaquesRowsPerPage=2;
   let wPlaquesRowsPerPage=1;
@@ -96,10 +103,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 // have not seen a need for taking photos of Dharma Assembly plaques
 // thus apply a filter to exclude Dharma Assembly plaques.
   if (location=="photoBooth") {
-    regularPlaquesRowsPerPage=1;
-    plaques=plaquesOnFile.filter(p=>{
-      // console.log(p)
-      
+    plaques=plaques.filter(p=>{
       // not expired or permanent plaque
       if (p.expiryDate!="Permanent" && new Date(p.expiryDate)<currentDate) {
         return false
@@ -111,22 +115,36 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
       }
 
       return true
-    })
+    });
+
+    const imagesPerPage=singleRowImagesPerRow;
+    let pages=[];
+    let i=0;
+    // 50 pages of plaques seem enough for photo booth.
+    for (; i<50 && i<Math.floor(plaques.length/imagesPerPage); i++) {
+      const plaqueOnPage=plaques.slice(i*imagesPerPage, (i+1)*imagesPerPage);
+      // type can't be defined, plaques of different types are mixed.
+      const page={
+        index:i,
+        plaques:plaqueOnPage,
+        type:plaqueOnPage[0].type,
+        rows:1,
+        ids:plaqueOnPage.map(p=>p.id),
+        searchTerms:plaqueOnPage.map(p=>p.searchTerms).flat()
+      }
+      pages.push(page);
+    }
+  
+    return pages;
   } else {
 // regular plaque view apply temple location filter and show on TV filter.
   plaques=plaques.filter(p=>p.locations.includes(location)).filter(p=>p.showOnTv==null || p.showOnTv==true);
   }
 
-// sort from newest to oldest
-  plaques=plaques.sort(compareDates);
-
-  const mmbPlaques=plaques.filter(p=>p.type==="mmb").map(addFontSizes);
-  const rebirthPlaques=plaques.filter(p=>p.type==="rebirth").map(addFontSizes);
-  const wishPlaques=plaques.filter(p=>p.type==="ayw").map(addFontSizes);
-  
   let selected=[];
   
   if (types.includes("mmb")) {
+    const mmbPlaques=plaques.filter(p=>p.type==="mmb");
     const existingPagesLen=selected.length;
     selected=selected.concat(
       CreatePlaquePages(
@@ -138,6 +156,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   }
 
   if (types.includes("rebirth")) {
+    const rebirthPlaques=plaques.filter(p=>p.type==="rebirth");
     const existingPagesLen=selected.length;
     selected=selected.concat(
       CreatePlaquePages(
@@ -149,6 +168,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   }
 
   if (types.includes("ayw")) {
+    const wishPlaques=plaques.filter(p=>p.type==="ayw");
     const existingPagesLen=selected.length;
     selected=selected.concat(
       CreatePlaquePages(
@@ -160,13 +180,13 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   }
 
   if (types.includes("wmmb")) {
-  const wmmbPlaques=plaques.filter(p=>p.type==="wmmb");
+    const wmmbPlaques=plaques.filter(p=>p.type==="wmmb").map(addFontSizes);
     const existingPagesLen=selected.length;
     selected=selected.concat(CreatePlaquePages(wmmbPlaques, singleRowImagesPerRow, 1, 'wmmb', existingPagesLen));
   }
 
   if (types.includes("wrebirth")) {
-    const wRebirthPlaques=plaques.filter(p=>p.type==="wrebirth");
+    const wRebirthPlaques=plaques.filter(p=>p.type==="wrebirth").map(addFontSizes);
     const existingPagesLen=selected.length;
     selected=selected.concat(CreatePlaquePages(wRebirthPlaques, singleRowImagesPerRow, 1, 'wrebirth', existingPagesLen));
   }
@@ -222,6 +242,11 @@ function addFontSizes(plaque) {
   plaque.dateString= genDateString(plaque);
 
   const measurements=plaqueMeasurements[plaque.type]
+
+  if (measurements==null) {
+    return plaque;
+  }
+
   let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
   if (plaque.beneficiary) {
     beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
