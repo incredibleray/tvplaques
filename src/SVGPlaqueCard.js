@@ -83,8 +83,8 @@ export const plaqueMeasurements={
   },
   wrebirth: {
     beneficiary:{
-      width:253,
-      height:97,
+      width:242,
+      height:93,
       defaultFontSize:45
     },
     sponsor:{
@@ -252,7 +252,7 @@ const W_SVG_STYLE = (color) => ({
        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wmmb} alt="svg" style={svgStyle} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:149, y:415}} vertical={true} maxExtent={285} maxHeight={101} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+          <TextOverlay text={props.item.beneficiary} position={{x:155, y:415}} vertical={true} maxExtent={285} maxHeight={101} fontSize={props.item.beneficiaryTextSize} variant="h1" />
           <TextOverlay text={props.item.sponsor} position={{x:64, y:455}} vertical={true} maxExtent={208} maxHeight={51} fontSize={props.item.sponsorTextSize} variant="h2" />
           <TextOverlay text={props.item.dateString} position={{x:148, y:659}} maxExtent={114} maxHeight={14} fontSize={props.item.dateStringSize} variant="h6" />
        </div>
@@ -271,7 +271,7 @@ const W_SVG_STYLE = (color) => ({
       svgDivStyle.boxShadow="";
     }
   
-    // Beneficiary Text: Top left (99, 304), Top right (197, 303), Bottom left (100, 557), Bottom right (197, 557)              
+    // Beneficiary Text: Top left (101, 308), Top right (193, 308), Bottom left (101, 555), Bottom right (195, 555)              
     // Sponsor Text: Top left (29, 352), top right (88, 352), bottom left (29, 561), bottom right (89, 561)
     // date string: top left (79, 661), top right (217, 661), bottom left (79, 678), bottom right (217, 678)
     return (
@@ -279,7 +279,7 @@ const W_SVG_STYLE = (color) => ({
        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wrebirth} alt="svg" style={svgStyle} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:148, y:430}} vertical={true} maxExtent={253} maxHeight={97} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+          <TextOverlay text={props.item.beneficiary} position={{x:153, y:426}} vertical={true} maxExtent={253} maxHeight={97} fontSize={props.item.beneficiaryTextSize} variant="h1" />
           <TextOverlay text={props.item.sponsor} position={{x:59, y:456}} vertical={true} maxExtent={209} maxHeight={59} fontSize={props.item.sponsorTextSize} variant="h2" />
           <TextOverlay text={props.item.dateString} position={{x:148, y:669}} maxExtent={138} maxHeight={17} fontSize={props.item.dateStringSize} variant="h6" />
        </div>

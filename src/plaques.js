@@ -249,7 +249,7 @@ function addFontSizes(plaque) {
 
   let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
   if (plaque.beneficiary) {
-    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
+    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width*0.88, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
   }
 
   let sponsorTextSize=measurements.sponsor.defaultFontSize;
@@ -259,7 +259,7 @@ function addFontSizes(plaque) {
 
   let dateStringSize=measurements.dateString.defaultFontSize;
   if (plaque.dateString) {
-    dateStringSize=calculateFontSize(plaque.dateString, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+    dateStringSize=calculateFontSize(plaque.dateString, measurements.dateString.width*0.88, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
   }
 
   return {

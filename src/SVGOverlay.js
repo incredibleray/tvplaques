@@ -38,10 +38,23 @@ export function TextOverlay(props) {
     top: props.position.y
   }
 
+  let fontFamily='';
+  switch(props.variant) {
+    case 'h1':
+      fontFamily = '"Playfair Display", Kaiti, "Gowun Batang"';
+      break;
+    case 'h2':
+      fontFamily = '"Playfair Display", Kaiti, "Gowun Batang"';
+      break;
+    case 'h6':
+      fontFamily = "Roboto";
+      break;
+  }
 
   const style = {
     position: 'absolute',
     left: props.position.x,
+    fontFamily: fontFamily,
     fontSize: `${fitFontSize}px`,
     transformOrigin: 'center center',
     writingMode: `${writingMode}`,
@@ -49,7 +62,7 @@ export function TextOverlay(props) {
     ...dynamicStyle
   };
 
-  return (<ThemeProvider theme={theme}><Typography variant={props.variant} style={style}>{props.text}</Typography></ThemeProvider>)
+  return <span style={style}>{props.text}</span>
 }
 
 TextOverlay.defaultProps = {
