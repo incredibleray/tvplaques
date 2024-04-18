@@ -49,7 +49,7 @@ export const plaqueMeasurements={
   },
   ayw: {
     beneficiary:{
-      width:249,
+      width:239,
       height:64,
       defaultFontSize:30
     },
@@ -59,14 +59,14 @@ export const plaqueMeasurements={
       defaultFontSize:20
     },
     dateString:{
-      width:110,
+      width:105,
       height:20,
       defaultFontSize:10
     }
   },
   wmmb: {
     beneficiary:{
-      width:285,
+      width:260,
       height:101,
       defaultFontSize:45
     },
@@ -83,7 +83,7 @@ export const plaqueMeasurements={
   },
   wrebirth: {
     beneficiary:{
-      width:242,
+      width:232,
       height:93,
       defaultFontSize:45
     },
@@ -252,7 +252,7 @@ const W_SVG_STYLE = (color) => ({
        <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null}>
        <img src={wmmb} alt="svg" style={svgStyle} />
           </div>
-          <TextOverlay text={props.item.beneficiary} position={{x:155, y:415}} vertical={true} maxExtent={285} maxHeight={101} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+          <TextOverlay text={props.item.beneficiary} position={{x:155, y:410}} vertical={true} maxExtent={285} maxHeight={101} fontSize={props.item.beneficiaryTextSize} variant="h1" />
           <TextOverlay text={props.item.sponsor} position={{x:64, y:455}} vertical={true} maxExtent={208} maxHeight={51} fontSize={props.item.sponsorTextSize} variant="h2" />
           <TextOverlay text={props.item.dateString} position={{x:148, y:659}} maxExtent={114} maxHeight={14} fontSize={props.item.dateStringSize} variant="h6" />
        </div>

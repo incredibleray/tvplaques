@@ -247,9 +247,13 @@ function addFontSizes(plaque) {
     return plaque;
   }
 
+  // bandage fix for text overflowing, some beneficiary text and date string of temporary plaques overflow.
+  // there is something off with the calculation, I don't know what it is.
+  // multiply a factor on the beneficiary and datestring width.
+  // it fixes the issue for now.
   let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
   if (plaque.beneficiary) {
-    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width*0.88, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
+    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width*0.92, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
   }
 
   let sponsorTextSize=measurements.sponsor.defaultFontSize;
