@@ -133,8 +133,16 @@ function App(props) {
     // bypass browser cache. the request will keep getting the same file from cache if cache is not bypassed.
     const plaqueUpdater=setInterval(
       async ()=> {
-        console.log("updater wakes up, fetching plaques.json from server.")
+        console.log("updater wakes up");
 
+        console.log("check if browser should reload site");
+        const now=new Date();
+        // reload page every Sunday between 2:00 AM and 4:00 AM.
+        if (now.getDay()==6 && 14<now.getHours()<16) {
+          window.location.reload();
+        }
+
+        console.log("fetching plaques.json from server.")
         await axios.get('./plaques.json', {
           headers: {
             'Cache-Control': 'no-cache',
