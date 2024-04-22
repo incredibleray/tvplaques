@@ -33,13 +33,13 @@ export function SearchBar() {
   const dispatch = useDispatch();
   let search = useSelector((state) => state.search);
   const showSearchBar = useSelector((state) => state.showSearchBar);
-  const highlightPlaque = useSelector((state) => state.highlightPlaque);
+  const highlightPlaques = useSelector((state) => state.highlightPlaques);
   const rowHeight = useSelector((state) => state.rowHeight);
   const location=useSelector((state)=>state.location);
   const allPlaques=useSelector((state)=>state.allPlaques);
 
   useKeypress(["MediaPlay", "MediaPause", "Pause", "MediaStop","MediaPlayPause", "\\", "]"], (event) => {
-    if ((event.key === 'MediaPlay'||event.key=="\\") && showSearchBar===false && highlightPlaque==null) {
+    if ((event.key === 'MediaPlay'||event.key=="\\") && showSearchBar===false && highlightPlaques.length==0) {
       dispatch({ type: "setShowSearchBar", payload: true });
     } else {
       dispatch({ type: "setShowSearchBar", payload: false });

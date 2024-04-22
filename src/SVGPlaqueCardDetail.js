@@ -30,7 +30,7 @@ function SVGPlaqueCardDetail(props) {
   const [showGallery, setShowGallery] = useState(false);
   const [carouselIndex, setCarouselIndex]= useState(0);
   const [galleryStartIndex, setGalleryStartIndex]= useState(0);
-  const highlightPlaque = useSelector((state) => state.highlightPlaque);
+  const highlightPlaques = useSelector((state) => state.highlightPlaques);
   const elementRef = useRef(null);
   
   // on tv the dimension is 1280x720
@@ -39,11 +39,14 @@ function SVGPlaqueCardDetail(props) {
   const paddingHeight=Math.floor((window.innerHeight*0.9-videoHeight)/2)
   let plaqueHeight=Math.floor(window.innerHeight*0.9);
 
-  if (["wmmb","wrebirth"].includes(highlightPlaque.type)) {
+  // the following code is developed when highlightPlaques is a single plaque or null
+  // highlightPlauqes has been changed to a list of plaques.
+  // needs migration work to read the new highlightPlaques structure properly.
+  if (["wmmb","wrebirth"].includes(highlightPlaques.type)) {
     plaqueHeight=Math.floor(window.screen.height*0.95);
   }
 
-if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)==false || highlightPlaque.mediaFiles.length==0) {
+if (["rebirth","wrebirth","49days"].includes(highlightPlaques.type)==false || highlightPlaques.mediaFiles.length==0) {
   // see original code for highlight content: https://github.com/incredibleray/plaquetv/blob/319913710ecd2e043fe3d6b6b395df52252c9f15/src/App.js
   
   // dialog window width is limited, can't go beyond 100vw or equavalent pixel value. 
@@ -56,7 +59,7 @@ if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)==false || hig
 }} 
 > <PlaqueSelector 
   item={{ 
-     ...highlightPlaque,
+     ...highlightPlaques,
      targetHeight: plaqueHeight
   }}
   isHighlight={true}
@@ -67,7 +70,7 @@ if (["rebirth","wrebirth","49days"].includes(highlightPlaque.type)==false || hig
 
 const plaqueImg=<PlaqueSelector 
 item={{ 
-   ...highlightPlaque,
+   ...highlightPlaques,
    targetHeight: plaqueHeight
 }}
 isHighlight={true}
@@ -76,8 +79,8 @@ isHighlight={true}
     // videoSrc="https://plaquetv.blob.core.windows.net/plaques/mmbPlaqueIntroSubtitle.mp4";
     // videoSrc="https://plaquetv.blob.core.windows.net/plaques/rebirthPlaqueIntroSubtitle.mp4";
 
-  highlightPlaque.mediaFiles = highlightPlaque.mediaFiles ?? []
-  const media=highlightPlaque.mediaFiles.map(
+  highlightPlaques.mediaFiles = highlightPlaques.mediaFiles ?? []
+  const media=highlightPlaques.mediaFiles.map(
       (mf, i)=>{
       if (mf.endsWith(".jpg") || mf.endsWith(".jpeg") || mf.endsWith(".png")) {
         return <img src={"https://plaquetv.blob.core.windows.net/media/"+mf} style={{height:"720px", width:"1280px"}} />
@@ -100,7 +103,7 @@ isHighlight={true}
   <ArrowUpwardIcon sx={{ fontSize: 60, color: green[500]  }} />
   </IconButton>
   <IconButton onClick={()=>{
-    if (galleryStartIndex<highlightPlaque.mediaFiles.length-15) {
+    if (galleryStartIndex<highlightPlaques.mediaFiles.length-15) {
       setGalleryStartIndex(galleryStartIndex+3);
     }
   }} >
@@ -117,7 +120,7 @@ isHighlight={true}
   <div onClick={()=>setShowGallery(true)}>{plaqueImg}</div>
         <div>
         <ImageList cols={3} rowHeight={164}>
-  {highlightPlaque.mediaFiles.slice(galleryStartIndex, galleryStartIndex+15).map((mf, i) => {
+  {highlightPlaques.mediaFiles.slice(galleryStartIndex, galleryStartIndex+15).map((mf, i) => {
     let imgUrl=mf;
     if (mf.endsWith(".mp4")) {
       imgUrl=mf.split(".")[0]+"-thumbnail.png";

@@ -12,15 +12,13 @@ const initialState = {
   ],
   totalPages:0,
   plaquesOnFile: [],
-  searchResults:[],
-  highlightPlaque: null,
+  highlightPlaques: [],
   picsPerCol:1,
   rowHeight: 1,
   singleRowHeight:1,
   singleRowImagesPerRow:1,
   highlightPlaqueHeight:1,
   currentPage: null,
-  searchResultPage:0,
   highlightPlaqueWidth: 1,
   isTyping: false,
   initDone: false,
@@ -66,17 +64,17 @@ export default function appReducer(state = initialState, action) {
         return state;
       }
 
+      // search results is a list of plaques returned by search function.
+      // empty list is returned if nothing is found.
       const searchResults=searchPlaques(state.allPlaques, searchTerm);
 
-      if (searchResults==null) {
+      if (searchResults.length==0) {
         return state;
       }
 
     return {
-          ...state,
-          searchResults: [searchResults.plaque],       
-          highlightPlaque: searchResults.plaque,
-          searchResultPage:searchResults.page,
+          ...state,      
+          highlightPlaques: searchResults,
           showSearchBar: false
         }
     
@@ -119,13 +117,15 @@ export default function appReducer(state = initialState, action) {
     case 'closeHighlightPopup': {
       return {
         ...state,
-        highlightPlaque: null
+        highlightPlaques: []
       }
     }
     case 'clickHighlight': {
+      // highlightPlaques is a list, action.payload is single plaque, 
+      // create a list from action.payload as assign to highlightPlaques.
       return {
         ...state,
-        highlightPlaque: action.payload,
+        highlightPlaques: [action.payload],
         showSearchBar: false
       }
     }
@@ -180,7 +180,7 @@ export default function appReducer(state = initialState, action) {
         return state;
       }
 
-      if (action.payload==true && state.highlightPlaque!=null) {
+      if (action.payload==true && state.highlightPlaques.length>0) {
         return state;
       }
       

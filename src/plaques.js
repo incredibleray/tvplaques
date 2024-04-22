@@ -194,42 +194,30 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
   return selected;
 }
 
-// export function getSearchView(allPlaques, picsPerCol, searchResult) {
-//   const resultIndex=allPlaques.findIndex(
-//     (p)=>p.id===searchResult.id
-//   );
-
-//   if (resultIndex===-1){
-//     return [];
-//   }
-
-//   const imagesPerPage=picsPerCol * NUM_ROWS;
-//   const page=(resultIndex-(resultIndex%imagesPerPage))/imagesPerPage;
-
-//   return getImages(allPlaques, picsPerCol, page);
-
-// }
-
 export function searchPlaques(allPlaques, searchTerms) {
   if (searchTerms == null || searchTerms.length === 0) {
-    return null;
+    return [];
   }
 
   const query=searchTerms[0];
   // searchTerms = searchTerms.map(s => s.toLowerCase());
+
+  console.log(`executing search query ${query} on ${allPlaques.length} pages of plaques`);
+
+  const searchResults=[];
   for (const plaqueOnPage of allPlaques) {
     if (!plaqueOnPage.searchTerms.includes(query)) {
       continue;
     }
 
-    const plaque=plaqueOnPage.plaques.find(p=>p.searchTerms.includes(query));
-    return {
-      page: plaqueOnPage.index,
-      plaque:plaque
-    }
+    const plaquesFoundOnPage=plaqueOnPage.plaques.filter(p=>p.searchTerms.includes(query));
+
+    console.log(`search query ${query} found ${plaquesFoundOnPage.length} plaques on a page.`);
+
+    searchResults.push(...plaquesFoundOnPage)
   }
 
-  return null;
+  return searchResults;
 }
 
 let textMeasurementObj=null
@@ -247,13 +235,11 @@ function addFontSizes(plaque) {
     return plaque;
   }
 
-  // bandage fix for text overflowing, some beneficiary text and date string of temporary plaques overflow.
-  // there is something off with the calculation, I don't know what it is.
-  // multiply a factor on the beneficiary and datestring width.
-  // it fixes the issue for now.
+  // do NOT work: multiply a factor on the beneficiary and datestring width.
+  // the text becomes too small after page is refreshed or plaques are reloaded.
   let beneficiaryTextSize=measurements.beneficiary.defaultFontSize;
   if (plaque.beneficiary) {
-    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width*0.92, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
+    beneficiaryTextSize=calculateFontSize(plaque.beneficiary, measurements.beneficiary.width, measurements.beneficiary.height, measurements.beneficiary.defaultFontSize, beneficiaryTextFontFamily);
   }
 
   let sponsorTextSize=measurements.sponsor.defaultFontSize;
@@ -263,7 +249,7 @@ function addFontSizes(plaque) {
 
   let dateStringSize=measurements.dateString.defaultFontSize;
   if (plaque.dateString) {
-    dateStringSize=calculateFontSize(plaque.dateString, measurements.dateString.width*0.88, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
+    dateStringSize=calculateFontSize(plaque.dateString, measurements.dateString.width, measurements.dateString.height, measurements.dateString.defaultFontSize, dateStringFontFamily)
   }
 
   return {

@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function PlaqueCarousel() {
   const dispatch = useDispatch();
 
-  const highlightPlaque = useSelector((state) => state.highlightPlaque);
+  const highlightPlaques = useSelector((state) => state.highlightPlaques);
   const searchResultPage = useSelector((state) => state.searchResultPage);
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
@@ -24,7 +24,8 @@ function PlaqueCarousel() {
   }
 
   let autoPlayCarousel = carouselAutoplay;
-  if (highlightPlaque != null || showSearchBar) {
+  // highlight plaques is a list. When the list is empty, no plaques are highlighted.
+  if (highlightPlaques.length>0 || showSearchBar) {
     autoPlayCarousel = false;
 
   }
