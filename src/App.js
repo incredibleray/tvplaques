@@ -45,6 +45,7 @@ function App(props) {
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
   const initDone=useSelector((state)=>state.initDone);
+  const showBlackScreen=useSelector((state)=>state.showBlackScreen);
 
   const handleMouseMove = (event) => {
     if (event.clientY > Math.floor(window.innerHeight*0.97) && showSearchBar==false) {
@@ -80,6 +81,10 @@ function App(props) {
     else if (tv=="gftv2") {
       location="GF";
       types=["rebirth", "wrebirth"];
+
+      // GF side wall TV is broken (5/23/2024)
+      // shows MMB, W-MMB, Rebirth, W-Rebirth plaques.
+      types=["mmb","wmmb","rebirth", "wrebirth","ayw",];
     } 
     // WMT TV on right side of Buddha hall
     // display MMB, as you wish and W-MMB plaques.
@@ -142,6 +147,18 @@ function App(props) {
           window.location.reload();
         }
 
+        if (1<now.getHours()<4) {
+          dispatch({
+            type:"turnOffDisplay"
+          })
+        }
+
+        if (now.getHours()>=4) {
+          dispatch({
+            type:"turnOnDisplay"
+          })
+        }
+
         console.log("fetching plaques.json from server.")
         await axios.get('./plaques.json', {
           headers: {
@@ -163,12 +180,46 @@ function App(props) {
       },
       30*60*1000)
 
-    return ()=>clearInterval(plaqueUpdater);
+      console.log("creating display controller.");
+
+      const displayController=setInterval(
+        async ()=> {
+          console.log("display controller wakes up");
+  
+          const now=new Date();
+  
+          if (1<now.getHours()<4) {
+            console.log(`At hour ${now.getHours()}, turn off display.`);
+
+            dispatch({
+              type:"turnOffDisplay"
+            })
+          }
+  
+          if (now.getHours()>=4) {
+            console.log(`At hour ${now.getHours()}, turn on display.`);
+
+            dispatch({
+              type:"turnOnDisplay"
+            })
+          }        
+        },
+        10*60*1000)
+
+    return ()=>{
+      clearInterval(plaqueUpdater);
+      clearInterval(displayController);
+    }
   }, []);
 
   if (search.length>0) {
     search=search[0]
   }
+
+  if (showBlackScreen) {
+    return <div style={{height: `${window.screen.height}px`, width: `${window.screen.width}px`, backgroundColor: "black"}} />
+  }
+
   return (
     <div style={{overflow: "hidden" }}>
       <SearchBar />

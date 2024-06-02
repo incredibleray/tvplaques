@@ -30,6 +30,7 @@ const initialState = {
   lastRefreshDate: new Date(),
   colWidth: 1,
   carouselAutoplay: true,
+  showBlackScreen: false,
 }
 
 export default function appReducer(state = initialState, action) {
@@ -238,6 +239,26 @@ export default function appReducer(state = initialState, action) {
       return {
         ...state,
         carouselAutoplay:action.payload
+      }
+    }
+    case 'turnOnDisplay': {
+      if (state.showBlackScreen === false) {
+        return state;
+      }
+
+      return {
+        ...state,
+        showBlackScreen: false
+      }
+    }
+    case 'turnOffDisplay': {
+      if (state.showBlackScreen == true) {
+        return state;
+      }
+
+      return {
+        ...state,
+        showBlackScreen: true
       }
     }
     default:
