@@ -185,19 +185,22 @@ function App(props) {
       const displayController=setInterval(
         async ()=> {
           console.log("display controller wakes up");
+
+          // add 20 minutes to the current time
+          // display will darken 20 minutes earlier than black screen start time and recover 20 minutes before the black screen end time 
+          // e.g. black screen from 12 am to 4 am, display will go to black screen from 11:40 pm to 3:40 am. This way it recovers before morning ceremony.
+          const time=new Date(new Date().getTime()+1000 * 60 * 20);
   
-          const now=new Date();
-  
-          if (1<now.getHours()<4) {
-            console.log(`At hour ${now.getHours()}, turn off display.`);
+          if (time.getHours()>=0 && time.getHours()<4) {
+            console.log(`At hour ${time.getHours()}, turn off display.`);
 
             dispatch({
               type:"turnOffDisplay"
             })
           }
   
-          if (now.getHours()>=4) {
-            console.log(`At hour ${now.getHours()}, turn on display.`);
+          if (time.getHours()>=4) {
+            console.log(`At hour ${time.getHours()}, turn on display.`);
 
             dispatch({
               type:"turnOnDisplay"
