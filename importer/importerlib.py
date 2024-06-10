@@ -2,6 +2,7 @@ import json
 import os.path
 import re
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -9,7 +10,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from collections import defaultdict
+from jotform import JotformAPIClient
 
 
 # If modifying these scopes, delete the file token.json.
@@ -445,3 +446,33 @@ def dump_plaque(entry):
     print('=============')
     for k in entry:
         print(f'   {k}: {entry[k]}')
+
+
+def get_jotform_api(token_file):
+    with open(token_file) as f:
+        d = json.load(f)
+        return JotformAPIClient(d['apikey'])
+
+
+def get_jotform_form(token_file):
+    with open(token_file) as f:
+        d = json.load(f)
+        return d['form']
+
+
+def get_jotform_submissions():
+    token_file = "jotform-token.json"
+    form_id = get_jotform_form(token_file)
+    jotform_api = get_jotform_api(token_file)
+
+    offset = 0
+    k_limit = 50
+    submissions = None
+
+    while submissions is None or len(submissions) >= k_limit:
+        submissions = jotform_api.get_form_submissions(form_id, offset=offset, limit=k_limit)
+        if len(submissions) == 0:
+            return
+        offset += len(submissions)
+        yield submissions
+
