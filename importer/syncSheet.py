@@ -1,4 +1,5 @@
 from __future__ import print_function
+from datetime import datetime
 
 import json
 import sys
@@ -8,6 +9,10 @@ from importerlib import dump_json_files
 from importerlib import fetch_credentials
 from importerlib import get_plaquetv_permanent_entries
 from importerlib import get_jotform_request_entries
+from importerlib import get_jotform_submissions
+from importerlib import get_plaquetv_jotform_last_update
+from importerlib import set_plaquetv_jotform_last_update
+from importerlib import append_plaquetv_jotform_entry
 
 
 """
@@ -20,47 +25,26 @@ for more details:
 - pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 """
 
-
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
-IS_PERMANENT = True
-g_entry_count = 0
-
-
-def dump_entries(entries):
-    global g_entry_count
-    for entry in entries:
-        if g_entry_count > 0:
-            print(",")
-        print(json.dumps(entry), end='')
-        g_entry_count += 1
+def parse_date(datestr):
+    return datetime.strptime(datestr, '%Y-%m-%d %H:%M:%S')
 
 
 def main(args):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
-    #for s in get_jotform_submissions():
-    #    print(json.dumps(s, indent=4))
-    #return
-    print('[', end='')
-
-    if args:
-        dump_json_files(args)
-
     creds = fetch_credentials()
 
+    last_update = parse_date(get_plaquetv_jotform_last_update(creds=creds))
     entries = get_jotform_request_entries(creds=creds)
-    dump_entries(entries)
-
-    try:
-        entries = get_plaquetv_permanent_entries(creds=creds)
-        dump_entries(entries)
-    except HttpError as err:
-        pass
-
-    print(']')
+    entries = list(filter(lambda e: parse_date(e['submission_date']) > last_update, entries))
+    if len(entries) == 0:
+        print(f'Last imported: {last_update}.')
+        print('No data to import.')
+        return
+    last_update = max(entries, key=lambda e: parse_date(e['submission_date']))['submission_date']
+    append_plaquetv_jotform_entry(entries, creds=creds)
+    set_plaquetv_jotform_last_update(last_update)
 
 
 if __name__ == '__main__':

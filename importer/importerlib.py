@@ -14,11 +14,15 @@ from jotform import JotformAPIClient
 
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of the spreadsheet.
 PERMANENT_SPREADSHEET_ID = '17lLWwb86CpCJPHx_tkHDp97TVpaamm3rmVLvenuWebw'
 PERMANENT_RANGE_NAME = 'Permanent Plaques (INPUT)!A2:H'
+
+PLAQUETV_JOTFORM_SPREADSHEET_ID = '17lLWwb86CpCJPHx_tkHDp97TVpaamm3rmVLvenuWebw'
+PLAQUETV_JOTFORM_METADATA_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A1:A1'
+PLAQUETV_JOTFORM_ENTRIES_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A4:I'
 
 JOTFORM_SPREADSHEET_ID = '15fgq6Q2kSwekUIy7OND4bF6BQtQ2_GBXWCE1cpN25Qk'
 JOTFORM_RANGE_NAME = 'Plaque Request (1)!A:AJ'
@@ -414,6 +418,7 @@ def parse_jotform_plaque(entry, index):
             dump_plaque(entry)
         return None
 
+    submission_date = entry['Submission Date']
     start_date = parse_jotform_entry_request_date(entry)
     expiration_date = parse_jotform_entry_expiry_date(entry, term)
     plaque_id = parse_jotform_id(entry, index)
@@ -428,7 +433,8 @@ def parse_jotform_plaque(entry, index):
          'expiryDate': expiration_date,
          'eventName': '',  # Permanent plaques are empty
          'searchable': True,
-         'mediaUrl': ''
+         'mediaUrl': '',
+         'submission_date': submission_date
     }
 
 
@@ -475,4 +481,71 @@ def get_jotform_submissions():
             return
         offset += len(submissions)
         yield submissions
+
+
+def get_plaquetv_jotform_entries(creds=None):
+    pass
+
+
+def get_plaquetv_jotform_last_update(creds=None):
+    values = fetch_sheet(
+        PLAQUETV_JOTFORM_SPREADSHEET_ID,
+        PLAQUETV_JOTFORM_METADATA_RANGE_NAME, creds=creds)
+    return values[0][0].split('=')[-1]
+
+
+def set_plaquetv_jotform_last_update(date_str, creds=None):
+    if creds is None:
+        creds = fetch_credentials()
+
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    values = [[f'last={date_str}']]
+    body = {"values": values}
+
+    sheet_id = PLAQUETV_JOTFORM_SPREADSHEET_ID
+    range_name = PLAQUETV_JOTFORM_METADATA_RANGE_NAME
+    (sheet.values()
+          .update(spreadsheetId=sheet_id,
+                  range=range_name,
+                  valueInputOption='USER_ENTERED',
+                  body=body)
+          .execute())
+
+
+def append_plaquetv_jotform_entry(entries, creds=None):
+    def _entry_as_ordered_data(entry):
+        cpy = entry.copy()
+        cpy['locations'] = ','.join(cpy['locations'])
+        return list(map(lambda k: cpy[k], [
+         'sponsor',
+         'beneficiary',
+         'requestDate',
+         'expiryDate',
+         'type',
+         'id',
+         'locations',
+         'mediaUrl',
+         'submission_date']))
+
+    values = list(map(_entry_as_ordered_data, entries))
+    if creds is None:
+        creds = fetch_credentials()
+
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    body = {"values": values}
+
+    sheet_id = PLAQUETV_JOTFORM_SPREADSHEET_ID
+    range_name = PLAQUETV_JOTFORM_ENTRIES_RANGE_NAME
+    (sheet.values()
+     .append(spreadsheetId=sheet_id,
+             range=range_name,
+             valueInputOption='USER_ENTERED',
+             body=body)
+     .execute())
 
