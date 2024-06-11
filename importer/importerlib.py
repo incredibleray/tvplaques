@@ -23,6 +23,7 @@ PERMANENT_RANGE_NAME = 'Permanent Plaques (INPUT)!A2:H'
 PLAQUETV_JOTFORM_SPREADSHEET_ID = '17lLWwb86CpCJPHx_tkHDp97TVpaamm3rmVLvenuWebw'
 PLAQUETV_JOTFORM_METADATA_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A1:A1'
 PLAQUETV_JOTFORM_ENTRIES_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A4:I'
+PLAQUETV_JOTFORM_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A3:I'
 
 JOTFORM_SPREADSHEET_ID = '15fgq6Q2kSwekUIy7OND4bF6BQtQ2_GBXWCE1cpN25Qk'
 JOTFORM_RANGE_NAME = 'Plaque Request (1)!A:AJ'
@@ -126,10 +127,10 @@ def get_plaquetv_permanent_entries(creds=None):
     values = fetch_sheet(PERMANENT_SPREADSHEET_ID, PERMANENT_RANGE_NAME, creds=creds)
     if not values:
         return []
-    return parse_plaquetv_permanent_entries(values)
+    return parse_plaquetv_entries(values)
 
 
-def parse_plaquetv_permanent_entries(data):
+def parse_plaquetv_entries(data):
     cols = get_header_column_map(data)
 
     # Need to export to this format:
@@ -155,7 +156,7 @@ def parse_plaquetv_permanent_entries(data):
         # We are only fetching from the permanent tab.
         # In the event this is temporary, we need to
         # if IS_PERMANENT else get_column(row, expiry_col)
-        expiry_date = 'Permanent'
+        expiry_date = get_column(row, expiry_col)
         media_url = get_column(row, media_col)
 
         if plaque_type == '' or index == '':
@@ -484,7 +485,10 @@ def get_jotform_submissions():
 
 
 def get_plaquetv_jotform_entries(creds=None):
-    pass
+    values = fetch_sheet(PLAQUETV_JOTFORM_SPREADSHEET_ID, PLAQUETV_JOTFORM_RANGE_NAME, creds=creds)
+    if not values:
+        return []
+    return parse_plaquetv_entries(values)
 
 
 def get_plaquetv_jotform_last_update(creds=None):

@@ -7,7 +7,7 @@ from googleapiclient.errors import HttpError
 from importerlib import dump_json_files
 from importerlib import fetch_credentials
 from importerlib import get_plaquetv_permanent_entries
-from importerlib import get_jotform_request_entries
+from importerlib import get_plaquetv_jotform_entries
 
 
 """
@@ -41,9 +41,6 @@ def main(args):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
-    #for s in get_jotform_submissions():
-    #    print(json.dumps(s, indent=4))
-    #return
     print('[', end='')
 
     if args:
@@ -51,7 +48,7 @@ def main(args):
 
     creds = fetch_credentials()
 
-    entries = get_jotform_request_entries(creds=creds)
+    entries = get_plaquetv_jotform_entries(creds=creds)
     dump_entries(entries)
 
     try:
