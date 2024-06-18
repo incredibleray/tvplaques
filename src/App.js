@@ -225,6 +225,16 @@ function App(props) {
 
   return (
     <div style={{overflow: "hidden" }}>
+      <div style={{
+        height: `${window.screen.height}px`, 
+        width: `${window.screen.width}px`, backgroundColor: "black", 
+        position: "absolute", 
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        zIndex: 10,
+        opacity: .9}} />
       <SearchBar />
       <Box
         // onMouseMove={handleMouseMove}
