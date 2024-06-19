@@ -84,7 +84,7 @@ function App(props) {
 
       // GF side wall TV is broken (5/23/2024)
       // shows MMB, W-MMB, Rebirth, W-Rebirth plaques.
-      types=["mmb","wmmb","rebirth", "wrebirth","ayw",];
+      // types=["mmb","wmmb","rebirth", "wrebirth","ayw",];
     } 
     // WMT TV on right side of Buddha hall
     // display MMB, as you wish and W-MMB plaques.
