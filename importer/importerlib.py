@@ -267,7 +267,7 @@ def parse_jotform_entry_sponsor(entry, plaque_index):
     options = entry['More options']
 
     if value == '- past creditors' or value == '- ancestors':
-        return bene_text
+        return sponsor_text
 
     if sponsor_text == bene_text or 'Hide Sponsor on display' in options:
         return ''
