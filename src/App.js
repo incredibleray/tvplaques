@@ -46,6 +46,7 @@ function App(props) {
   const showSearchBar=useSelector((state)=>state.showSearchBar);
   const initDone=useSelector((state)=>state.initDone);
   const showBlackScreen=useSelector((state)=>state.showBlackScreen);
+  const dimDisplay=useSelector((state)=>state.dimDisplay);
 
   const handleMouseMove = (event) => {
     if (event.clientY > Math.floor(window.innerHeight*0.97) && showSearchBar==false) {
@@ -209,6 +210,38 @@ function App(props) {
         },
         10*60*1000)
 
+      console.log("check temple to decide if ChanQi dim controller needs to be created.");
+
+      if (location.includes('WMT') || location.includes('GF')) {
+        console.log("creating ChanQi dim controller.");
+
+        const chanQiDimController=setInterval(
+          async ()=> {
+            console.log("display controller wakes up");
+
+            // deduct 10 minutes from the current time
+            // display will dim from about 9:10 pm to 7:10 pm. 
+            const time=new Date(new Date().getTime()-1000 * 60 * 10);
+    
+            if (time.getHours()>=7 && time.getHours()<9) {
+              console.log(`At hour ${time.getHours()}, turn dim OFF.`);
+
+              dispatch({
+                type:"turnOffDisplay"
+              })
+            }
+    
+            if (time.getHours()>=4) {
+              console.log(`At hour ${time.getHours()}, turn on display.`);
+
+              dispatch({
+                type:"turnOnDisplay"
+              })
+            }        
+          },
+          10*60*1000)
+        }
+        
     return ()=>{
       clearInterval(plaqueUpdater);
       clearInterval(displayController);
@@ -223,18 +256,23 @@ function App(props) {
     return <div style={{height: `${window.screen.height}px`, width: `${window.screen.width}px`, backgroundColor: "black"}} />
   }
 
+  let dimScreen=<></>
+  if (dimDisplay) {
+    dimScreen=<div style={{
+      height: `${window.screen.height}px`, 
+      width: `${window.screen.width}px`, backgroundColor: "black", 
+      position: "absolute", 
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 10,
+      opacity: .7}} />
+  }
+
   return (
     <div style={{overflow: "hidden" }}>
-      <div style={{
-        height: `${window.screen.height}px`, 
-        width: `${window.screen.width}px`, backgroundColor: "black", 
-        position: "absolute", 
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        zIndex: 10,
-        opacity: .9}} />
+      {dimScreen}
       <SearchBar />
       <Box
         // onMouseMove={handleMouseMove}

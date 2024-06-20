@@ -31,6 +31,7 @@ const initialState = {
   colWidth: 1,
   carouselAutoplay: true,
   showBlackScreen: false,
+  dimDisplay: false,
 }
 
 export default function appReducer(state = initialState, action) {
@@ -259,6 +260,26 @@ export default function appReducer(state = initialState, action) {
       return {
         ...state,
         showBlackScreen: true
+      }
+    }
+    case 'turnOnDimDisplay': {
+      if (state.dimDisplay === true) {
+        return state;
+      }
+
+      return {
+        ...state,
+        dimDisplay: true
+      }
+    }
+    case 'turnOffDimDisplay': {
+      if (state.dimDisplay == false) {
+        return state;
+      }
+
+      return {
+        ...state,
+        dimDisplay: false
       }
     }
     default:
