@@ -32,8 +32,8 @@ export const plaqueMeasurements={
   },
   rebirth: {
     beneficiary:{
-      width:262,
-      height:64,
+      width:265,
+      height:60,
       defaultFontSize:30
     },
     sponsor:{
@@ -163,6 +163,7 @@ export function RebirthPlaque(props) {
     svgStyle.translate="20.5px 27px"
   }
 
+  // beneficiary string box top left (50, 196), top right (110, 195), bottom left (50, 478), bottom right (110, 479)
   return (
      <div style={CARD_STYLE(props)}>
         <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
