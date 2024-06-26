@@ -6,6 +6,7 @@ import sys
 from googleapiclient.errors import HttpError
 from importerlib import dump_json_files
 from importerlib import fetch_credentials
+from importerlib import get_current_dharma_assembly_plaques
 from importerlib import get_plaquetv_permanent_entries
 from importerlib import get_plaquetv_jotform_entries
 
@@ -48,11 +49,20 @@ def main(args):
 
     creds = fetch_credentials()
 
+    # Fetch jotform plaques
     entries = get_plaquetv_jotform_entries(creds=creds)
     dump_entries(entries)
 
+    # Fetch permanent plaques
     try:
         entries = get_plaquetv_permanent_entries(creds=creds)
+        dump_entries(entries)
+    except HttpError as err:
+        pass
+
+    # Fetch dharma assembly plaques
+    try:
+        entries = get_current_dharma_assembly_plaques(creds=creds)
         dump_entries(entries)
     except HttpError as err:
         pass
