@@ -1,6 +1,5 @@
 import json
 import os.path
-import re
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -11,6 +10,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from jotform import JotformAPIClient
+from urllib.parse import urlparse, parse_qs
 
 
 # If modifying these scopes, delete the file token.json.
@@ -32,17 +32,24 @@ JOTFORM_RANGE_NAME = 'Plaque Request (1)!A:AJ'
 _g_plaque_ids = set()
 
 
-
 def parse_location(locations):
     # Examples 'GF / DTT'
     # ' GF, DTT'
     # ' GF DTT'
-    result = re.split('[,/ ]+', locations)
 
-    def not_empty(s):
-        return s.strip() != ''
+    result = []
+    location_str = locations.lower().strip()
 
-    return list(filter(not_empty, result))
+    if "wmt" in location_str:
+        result.append("WMT")
+    if "dtt" in location_str:
+        result.append("DTT")
+    if "gf" in location_str:
+        result.append("GF")
+    if len(result) == 0:
+        result = ["WMT"]
+
+    return result
 
 
 def get_column(row, idx):
@@ -97,6 +104,51 @@ def fetch_credentials(token_file=None, secrets_file=None):
     return creds
 
 
+def fetch_sheet_by_url(gsheet_url, creds=None):
+    # Parse the URL to extract spreadsheetId and gid
+    parsed_url = urlparse(gsheet_url)
+    query_params = parse_qs(parsed_url.query)
+
+    # Extract spreadsheetId
+    spreadsheet_id = None
+    if 'key' in query_params:
+        spreadsheet_id = query_params['key'][0]
+    elif 'spreadsheets/d/' in parsed_url.path:
+        spreadsheet_id = parsed_url.path.split('/')[3]
+
+    # Extract gid
+    gid = None
+    if 'gid' in query_params:
+        gid = query_params['gid'][0]
+
+    if spreadsheet_id is None:
+        raise ValueError('Unable to extract spreadsheetId from URL.')
+
+    if creds is None:
+        creds = fetch_credentials()
+
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Call the Sheets API
+    sheet_name = None
+    spreadsheet = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+    for sheet in spreadsheet.get('sheets', []):
+        if sheet['properties']['sheetId'] == int(gid):
+            sheet_name = sheet['properties']['title']
+            break
+
+    if sheet_name is None:
+        raise ValueError(f'No sheet found with gid {gid} in the spreadsheet.')
+
+    # Fetch all data from the specified sheet
+    sheet_range = f'{sheet_name}!A1:ZZ'  # Adjust the range as needed
+    result = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id, range=sheet_range
+    ).execute()
+
+    return result.get('values', [])
+
+
 def fetch_sheet(sheet_id, range_name, creds=None):
     if creds is None:
         creds = fetch_credentials()
@@ -128,6 +180,21 @@ def get_plaquetv_permanent_entries(creds=None):
     if not values:
         return []
     return parse_plaquetv_entries(values)
+
+
+def get_dharma_assembly_plaques(gsheet_url, start_date, end_date, event_name, creds=None):
+    data = fetch_sheet_by_url(gsheet_url, creds=creds)
+    if not data:
+        return []
+    rows = get_entries_as_maps(data)
+    entries = []
+    for row in rows:
+        for idx in range(2):
+            entry = parse_dharma_assembly_plaque(row, idx, start_date, end_date, event_name=event_name)
+            if entry:
+                entries.append(entry)
+
+    return entries
 
 
 def parse_plaquetv_entries(data):
@@ -198,6 +265,8 @@ def get_jotform_request_entries(creds=None):
 JOTFORM_PLAQUETYPE_MAP = defaultdict(str, {
     'mmb': 'mmb',
     'w-mmb': 'wmmb',
+    'wmmb': 'wmmb',
+    'past creditors': 'rebirth',
     '- past creditors': 'rebirth',
     '- ancestors': 'rebirth',
     'rebirth': 'rebirth',
@@ -221,11 +290,12 @@ JOTFORM_PLAQUETYPE_KEYS = [
 
 def parse_jotform_entry_plaque_type(entry, plaque_index):
     key = JOTFORM_PLAQUETYPE_KEYS[plaque_index]
-    value = entry[key].lower().strip()
-    if key in entry:
-        return JOTFORM_PLAQUETYPE_MAP[value]
+    return parse_plaque_type(entry[key].lower().strip()) if key in entry else ''
 
-    return ''
+
+def parse_plaque_type(plaque_type):
+    value = plaque_type.lower().strip()
+    return JOTFORM_PLAQUETYPE_MAP[value]
 
 
 JOTFORM_BENEFICIARY_KEYS = [
@@ -240,14 +310,18 @@ JOTFORM_BENEFICIARY_KEYS = [
 def parse_jotform_entry_beneficiary(entry, plaque_index):
     bene_text = entry[JOTFORM_BENEFICIARY_KEYS[plaque_index]]
     key = JOTFORM_PLAQUETYPE_KEYS[plaque_index]
-    value = entry[key].lower().strip()
+    value = entry[key]
+    return correct_beneficiary(bene_text, value)
 
-    if value == '- past creditors':
-        bene_text = 'Past Creditors'
-    elif value == '- ancestors':
-        bene_text = 'Ancestors'
 
-    return bene_text
+def correct_beneficiary(beneficiary, plaque_description):
+    desc = plaque_description.lower().strip()
+    if 'past creditors' in desc:
+        return 'Past Creditors'
+    elif 'ancestors' in desc:
+        return 'Ancestors'
+
+    return beneficiary
 
 
 JOTFORM_SPONSOR_KEYS = [
@@ -263,16 +337,19 @@ def parse_jotform_entry_sponsor(entry, plaque_index):
     sponsor_text = entry[JOTFORM_SPONSOR_KEYS[plaque_index]]
     bene_text = entry[JOTFORM_BENEFICIARY_KEYS[plaque_index]]
     key = JOTFORM_PLAQUETYPE_KEYS[plaque_index]
-    value = entry[key].lower().strip()
-    options = entry['More options']
+    return correct_sponsor(sponsor_text, bene_text, entry[key], entry['More options'])
 
-    if value == '- past creditors' or value == '- ancestors':
-        return sponsor_text
 
-    if sponsor_text == bene_text or 'Hide Sponsor on display' in options:
+def correct_sponsor(sponsor, beneficiary, plaque_desc, options=''):
+    value = plaque_desc.lower().strip()
+
+    if 'past creditors' in value or 'ancestors' in value:
+        return sponsor
+
+    if sponsor == beneficiary or 'Hide Sponsor on display' in options:
         return ''
 
-    return sponsor_text
+    return sponsor
 
 
 JOTFORM_TERM_KEYS = [
@@ -296,19 +373,7 @@ def parse_jotform_entry_term(entry, plaque_index):
 
 
 def parse_jotform_entry_locations(entry):
-    locations = []
-    location_str = entry['Which BLI temple'].lower().strip()
-
-    if "wmt" in location_str:
-        locations.append("WMT")
-    if "dtt" in location_str:
-        locations.append("DTT")
-    if "gf" in location_str:
-        locations.append("GF")
-    if len(locations) == 0:
-        locations = ["WMT"]
-
-    return locations
+    return parse_location(entry['Which BLI temple'])
 
 
 def parse_jotform_entry_request_date_obj(entry):
@@ -323,7 +388,11 @@ def parse_jotform_entry_request_date_obj(entry):
 
 
 def parse_jotform_entry_request_date(entry):
-    return parse_jotform_entry_request_date_obj(entry).strftime("%m/%d/%Y")
+    return datetime_to_str(parse_jotform_entry_request_date_obj(entry))
+
+
+def datetime_to_str(datetime_obj):
+    return datetime_obj.strftime("%m/%d/%Y")
 
 
 def make_id_unique(id):
@@ -336,10 +405,7 @@ def make_id_unique(id):
     return str(current_id)
 
 
-def parse_jotform_id(entry, index):
-    request_date = parse_jotform_entry_request_date_obj(entry)
-    term = parse_jotform_entry_term(entry, index)
-
+def get_plaque_id(request_date, term=""):
     # basic ID decide a pool of ID, e.g. 2023080000 means a pool from 202308000 to 202308999.
     # each plaque gets an actual ID, that is the smallest value still available in the pool
     basic_id = request_date.year * 1_000_000 + request_date.month + 10_000
@@ -347,6 +413,12 @@ def parse_jotform_id(entry, index):
         basic_id = request_date.year * 100_000 + request_date.month + 1_000
 
     return make_id_unique(basic_id)
+
+
+def parse_jotform_id(entry, index):
+    request_date = parse_jotform_entry_request_date_obj(entry)
+    term = parse_jotform_entry_term(entry, index)
+    return get_plaque_id(request_date, term=term)
 
 
 def get_relativedelta(term):
@@ -394,7 +466,7 @@ def parse_jotform_entry_expiry_date(entry, term):
     else:
         delta = get_relativedelta(term)
         expiration = request_date + delta + relativedelta(days=-1)
-        return expiration.strftime("%m/%d/%Y")
+        return datetime_to_str(expiration)
 
 
 def parse_jotform_plaque(entry, index):
@@ -553,3 +625,48 @@ def append_plaquetv_jotform_entry(entries, creds=None):
              body=body)
      .execute())
 
+
+def parse_dharma_assembly_plaque(entry, index, start_date, end_date, event_name=""):
+    num = index + 1
+    print(entry)
+    locations = parse_location(entry['Branch (Temple Name)'])
+    plaque_type = parse_plaque_type(entry[f'Plaque #{num}'])
+
+    sponsor = correct_sponsor(
+        entry[f'Sponsor #{num}'],
+        entry[f'Beneficiary #{num}'],
+        entry[f'Plaque #{num}']
+    )
+
+    beneficiary = correct_beneficiary(
+        entry[f'Beneficiary #{num}'],
+        entry[f'Plaque #{num}']
+    )
+
+    start_datetime_obj = datetime.strptime(start_date, '%m/%d/%Y')
+    end_datetime_obj = datetime.strptime(end_date, '%m/%d/%Y')
+
+    submission_date = entry[f'Create Date']
+    plaque_id = get_plaque_id(start_datetime_obj)
+
+    if plaque_type == '' or plaque_type is None:
+        return None
+
+    if beneficiary == '' and sponsor == '':
+        print(f'WARNING: Missing DA beneficiary/sponsor for index={index}')
+        dump_plaque(entry)
+        return None
+
+    return {
+        'id': plaque_id,
+        'beneficiary': beneficiary,
+        'sponsor': sponsor,
+        'type': plaque_type,
+        'locations': locations,
+        'requestDate': datetime_to_str(start_datetime_obj),
+        'expiryDate': datetime_to_str(end_datetime_obj),
+        'eventName': event_name,  # Permanent plaques are empty
+        'searchable': True,
+        'mediaUrl': '',
+        'submission_date': submission_date
+    }
