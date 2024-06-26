@@ -28,6 +28,8 @@ PLAQUETV_JOTFORM_RANGE_NAME = 'Jotform Imported Plaques (INPUT)!A3:I'
 JOTFORM_SPREADSHEET_ID = '15fgq6Q2kSwekUIy7OND4bF6BQtQ2_GBXWCE1cpN25Qk'
 JOTFORM_RANGE_NAME = 'Plaque Request (1)!A:AJ'
 
+DHARMA_ASSEMBLY_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/13fogJNvoC-jL3d41KQXenVCwZOXUfnhfbDfw1Vn9uKE/edit?gid=0#gid=0'
+
 # Contains set of plaque ids
 _g_plaque_ids = set()
 
@@ -171,7 +173,7 @@ def get_entries_as_maps(data):
     colmap = get_header_column_map(data)
     entries = []
     for row in data[1:]:
-        entries.append({k: row[idx] for k, idx in colmap.items()})
+        entries.append({k: row[idx] if idx < len(row) else "" for k, idx in colmap.items()})
     return entries
 
 
@@ -182,7 +184,25 @@ def get_plaquetv_permanent_entries(creds=None):
     return parse_plaquetv_entries(values)
 
 
-def get_dharma_assembly_plaques(gsheet_url, start_date, end_date, event_name, creds=None):
+def get_current_dharma_assembly_plaques(creds=None):
+    values = fetch_sheet_by_url(DHARMA_ASSEMBLY_SPREADSHEET_URL, creds=creds)
+    rows = get_entries_as_maps(values)
+    entries = []
+    for row in rows:
+        enabled = row['Checkbox']
+        event = row['Event']
+        start_date = row['Start Date']
+        end_date = row['End Date']
+        location = row['Temple']
+        url = row['URL']
+        if enabled == 'TRUE':
+            plaques = get_dharma_assembly_plaques(url, start_date, end_date, event, location=location, creds=creds)
+            entries.extend(plaques)
+    return entries
+
+
+
+def get_dharma_assembly_plaques(gsheet_url, start_date, end_date, event_name, location="", creds=None):
     data = fetch_sheet_by_url(gsheet_url, creds=creds)
     if not data:
         return []
@@ -190,7 +210,7 @@ def get_dharma_assembly_plaques(gsheet_url, start_date, end_date, event_name, cr
     entries = []
     for row in rows:
         for idx in range(2):
-            entry = parse_dharma_assembly_plaque(row, idx, start_date, end_date, event_name=event_name)
+            entry = parse_dharma_assembly_plaque(row, idx, start_date, end_date, event_name=event_name, location=location)
             if entry:
                 entries.append(entry)
 
@@ -626,10 +646,9 @@ def append_plaquetv_jotform_entry(entries, creds=None):
      .execute())
 
 
-def parse_dharma_assembly_plaque(entry, index, start_date, end_date, event_name=""):
+def parse_dharma_assembly_plaque(entry, index, start_date, end_date, event_name="", location=""):
     num = index + 1
-    print(entry)
-    locations = parse_location(entry['Branch (Temple Name)'])
+    locations = parse_location(location if location else entry['Branch (Temple Name)'])
     plaque_type = parse_plaque_type(entry[f'Plaque #{num}'])
 
     sponsor = correct_sponsor(
