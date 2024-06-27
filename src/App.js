@@ -82,10 +82,6 @@ function App(props) {
     else if (tv=="gftv2") {
       location="GF";
       types=["rebirth", "wrebirth"];
-
-      // GF side wall TV is broken (5/23/2024)
-      // shows MMB, W-MMB, Rebirth, W-Rebirth plaques.
-      types=["mmb","wmmb","rebirth", "wrebirth","ayw",];
     } 
     // WMT TV on right side of Buddha hall
     // display MMB, as you wish and W-MMB plaques.
@@ -144,20 +140,10 @@ function App(props) {
         console.log("check if browser should reload site");
         const now=new Date();
         // reload page every Sunday between 2:00 AM and 4:00 AM.
-        if (now.getDay()==6 && 14<now.getHours()<16) {
+        if (now.getDay()==1 && now.getHours()>=2 && now.getHours()<4) {
+          console.log(`At hour ${now.getHours()}, time ${now.toLocaleString()}, refresh page.`);
+
           window.location.reload();
-        }
-
-        if (1<now.getHours()<4) {
-          dispatch({
-            type:"turnOffDisplay"
-          })
-        }
-
-        if (now.getHours()>=4) {
-          dispatch({
-            type:"turnOnDisplay"
-          })
         }
 
         console.log("fetching plaques.json from server.")
@@ -193,7 +179,7 @@ function App(props) {
           const time=new Date(new Date().getTime()+1000 * 60 * 20);
   
           if (time.getHours()>=0 && time.getHours()<4) {
-            console.log(`At hour ${time.getHours()}, turn off display.`);
+            console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn off display.`);
 
             dispatch({
               type:"turnOffDisplay"
@@ -201,7 +187,7 @@ function App(props) {
           }
   
           if (time.getHours()>=4) {
-            console.log(`At hour ${time.getHours()}, turn on display.`);
+            console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn on display.`);
 
             dispatch({
               type:"turnOnDisplay"
@@ -210,32 +196,32 @@ function App(props) {
         },
         10*60*1000)
 
-      console.log("check temple to decide if ChanQi dim controller needs to be created.");
+      console.log(`check location=${location} to decide if ChanQi dim controller needs to be created.`);
+
+      let chanQiDimController=null;
 
       if (location.includes('WMT') || location.includes('GF')) {
         console.log("creating ChanQi dim controller.");
 
-        const chanQiDimController=setInterval(
+        chanQiDimController=setInterval(
           async ()=> {
             console.log("display controller wakes up");
 
             // deduct 10 minutes from the current time
             // display will dim from about 9:10 pm to 7:10 pm. 
             const time=new Date(new Date().getTime()-1000 * 60 * 10);
-    
-            if (time.getHours()>=7 && time.getHours()<9) {
-              console.log(`At hour ${time.getHours()}, turn dim OFF.`);
+
+            if (time.getHours()>=19 && time.getHours()<21) {
+              console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim OFF.`);
 
               dispatch({
-                type:"turnOffDisplay"
+                type:"turnOffDimDisplay"
               })
-            }
-    
-            if (time.getHours()>=4) {
-              console.log(`At hour ${time.getHours()}, turn on display.`);
+            } else {
+              console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim ON.`);
 
               dispatch({
-                type:"turnOnDisplay"
+                type:"turnOnDimDisplay"
               })
             }        
           },
@@ -245,6 +231,10 @@ function App(props) {
     return ()=>{
       clearInterval(plaqueUpdater);
       clearInterval(displayController);
+
+      if (chanQiDimController) {
+        clearInterval(chanQiDimController);
+      }
     }
   }, []);
 
