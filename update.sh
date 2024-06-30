@@ -9,13 +9,14 @@ AZ_ACCOUNT="plaquetv"
 
 pushd "${SCRIPTPATH}"
 
-echo "Fetching plaques..."
+echo "--- Fetching plaques..."
 python3 importer/readSheet.py > plaques.json
 
-echo "Syncing JOTFORM data"
+echo "--- Syncing JOTFORM data"
 python3 importer/syncSheet.py
 
-echo "Copying plaque data to tv..."
+echo "--- Copying plaque data to tv..."
 az storage azcopy blob upload -c "\$web" --account-name ${AZ_ACCOUNT} -s plaques.json
 
-echo "Last updated: $(date)"
+popd
+echo "--- Last updated: $(date)"
