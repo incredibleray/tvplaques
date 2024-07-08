@@ -103,7 +103,7 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
 // have not seen a need for taking photos of Dharma Assembly plaques
 // thus apply a filter to exclude Dharma Assembly plaques.
   if (location=="photoBooth") {
-    plaques=plaques.filter(p=>{
+    plaques=plaquesOnFile.filter(p=>{
       // not expired or permanent plaque
       if (p.expiryDate!="Permanent" && new Date(p.expiryDate)<currentDate) {
         return false
@@ -115,7 +115,9 @@ export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRo
       }
 
       return true
-    });
+    })
+    .sort(compareDates)
+    .map(addFontSizes);
 
     const imagesPerPage=singleRowImagesPerRow;
     let pages=[];
