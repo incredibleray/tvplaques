@@ -226,6 +226,10 @@ function App(props) {
             }        
           },
           10*60*1000)
+
+        // Chan Qi is over, do not set the Chan Qi Dim controller.
+        chanQiDimController=null;
+          
         }
         
     return ()=>{
@@ -257,7 +261,7 @@ function App(props) {
       bottom: 0,
       left: 0,
       zIndex: 10,
-      opacity: .7}} />
+      opacity: .95}} />
   }
 
   return (
