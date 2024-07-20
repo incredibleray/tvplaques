@@ -203,33 +203,31 @@ function App(props) {
       if (location.includes('WMT') || location.includes('GF')) {
         console.log("creating ChanQi dim controller.");
 
-        chanQiDimController=setInterval(
-          async ()=> {
-            console.log("display controller wakes up");
-
-            // deduct 10 minutes from the current time
-            // display will dim from about 9:10 pm to 7:10 pm. 
-            const time=new Date(new Date().getTime()-1000 * 60 * 10);
-
-            if (time.getHours()>=19 && time.getHours()<21) {
-              console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim OFF.`);
-
-              dispatch({
-                type:"turnOffDimDisplay"
-              })
-            } else {
-              console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim ON.`);
-
-              dispatch({
-                type:"turnOnDimDisplay"
-              })
-            }        
-          },
-          10*60*1000)
-
         // Chan Qi is over, do not set the Chan Qi Dim controller.
-        chanQiDimController=null;
-          
+
+        // chanQiDimController=setInterval(
+        //   async ()=> {
+        //     console.log("display controller wakes up");
+
+        //     // deduct 10 minutes from the current time
+        //     // display will dim from about 9:10 pm to 7:10 pm. 
+        //     const time=new Date(new Date().getTime()-1000 * 60 * 10);
+
+        //     if (time.getHours()>=19 && time.getHours()<21) {
+        //       console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim OFF.`);
+
+        //       dispatch({
+        //         type:"turnOffDimDisplay"
+        //       })
+        //     } else {
+        //       console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim ON.`);
+
+        //       dispatch({
+        //         type:"turnOnDimDisplay"
+        //       })
+        //     }        
+        //   },
+        //   10*60*1000) 
         }
         
     return ()=>{
