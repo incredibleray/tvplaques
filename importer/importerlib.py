@@ -295,6 +295,7 @@ JOTFORM_PLAQUETYPE_MAP = defaultdict(str, {
     'as you wish': 'ayw',
     'w-as you wish': 'wayw',
     '49day': '49day',
+    '49 days': '49day',
     'pre-arranged 49-days': 'pre49',
 })
 
@@ -386,7 +387,7 @@ def parse_jotform_entry_term(entry, plaque_index):
     key = JOTFORM_PLAQUETYPE_KEYS[plaque_index]
     value = entry[key].lower().strip()
 
-    if value == 'pre-arranged 49-days':
+    if value == 'pre-arranged 49-days' or value == '49 days':
         return 'Permanent'
 
     return term_text
