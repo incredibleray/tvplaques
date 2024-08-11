@@ -136,7 +136,7 @@ export function MmbPlaque(props) {
       <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
         <img src={mmb} alt="svg" style={svgStyle} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:107, y:375}} vertical={true} maxHeight={64} maxExtent={250} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+        <TextOverlay text={props.item.beneficiary} position={{x:105, y:375}} vertical={true} maxHeight={64} maxExtent={250} fontSize={props.item.beneficiaryTextSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:56, y:420}} vertical={true} maxExtent={180} maxHeight={35} fontSize={props.item.sponsorTextSize} variant="h2" />
         <TextOverlay text={props.item.dateString} position={{x:102, y:576}} fontSize={props.item.dateStringSize} variant="h6" />
      </div>
@@ -169,7 +169,7 @@ export function RebirthPlaque(props) {
         <div style={svgDivStyle} plaqueId={props.item.id} jotformSubmissionId={props.item.jotformSubmissionId ?? null} >
         <img src={rebirth} alt="svg" style={svgStyle} />
         </div>
-        <TextOverlay text={props.item.beneficiary} position={{x:105, y:365}} vertical={true} maxExtent={262} maxHeight={64} fontSize={props.item.beneficiaryTextSize} variant="h1" />
+        <TextOverlay text={props.item.beneficiary} position={{x:102, y:365}} vertical={true} maxExtent={262} maxHeight={64} fontSize={props.item.beneficiaryTextSize} variant="h1" />
         <TextOverlay text={props.item.sponsor} position={{x:55, y:410}} vertical={true} maxExtent={180} maxHeight={35} fontSize={props.item.sponsorTextSize} variant="h2" />
         <TextOverlay text={props.item.dateString} position={{x:103, y:576}} maxExtent={105} maxHeight={20} fontSize={props.item.dateStringSize} variant="h6" />
      </div>
