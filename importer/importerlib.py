@@ -48,8 +48,8 @@ def parse_location(locations):
         result.append("DTT")
     if "gf" in location_str:
         result.append("GF")
-    if len(result) == 0:
-        result = ["WMT"]
+    if "none" in location_str:
+        result.append("NONE")
 
     return result
 
