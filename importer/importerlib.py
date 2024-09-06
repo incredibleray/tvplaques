@@ -48,8 +48,8 @@ def parse_location(locations):
         result.append("DTT")
     if "gf" in location_str:
         result.append("GF")
-    if len(result) == 0:
-        result = ["WMT"]
+    if "none" in location_str:
+        result.append("NONE")
 
     return result
 
@@ -429,9 +429,9 @@ def make_id_unique(id):
 def get_plaque_id(request_date, term=""):
     # basic ID decide a pool of ID, e.g. 2023080000 means a pool from 202308000 to 202308999.
     # each plaque gets an actual ID, that is the smallest value still available in the pool
-    basic_id = request_date.year * 1_000_000 + request_date.month + 10_000
+    basic_id = request_date.year * 1_000_000 + request_date.month * 10_000
     if term.lower() == "permanent":
-        basic_id = request_date.year * 100_000 + request_date.month + 1_000
+        basic_id = request_date.year * 100_000 + request_date.month * 1_000
 
     return make_id_unique(basic_id)
 

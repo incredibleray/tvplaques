@@ -57,6 +57,7 @@ export function TextOverlay(props) {
     fontFamily: fontFamily,
     fontSize: `${fitFontSize}px`,
     transformOrigin: 'center center',
+    textAlign: 'center',
     writingMode: `${writingMode}`,
     whiteSpace: 'pre',
     ...dynamicStyle
