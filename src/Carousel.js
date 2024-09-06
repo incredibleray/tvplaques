@@ -18,7 +18,8 @@ function PlaqueCarousel() {
   const showSearchBar=useSelector((state)=>state.showSearchBar);
   const carouselAutoplay=useSelector(s=>s.carouselAutoplay);
   const currentPage=useSelector(s=>s.currentPage);
-  
+  const location=useSelector(s=>s.location);
+
   if (totalPages ===0) {
     return <></>
   }
@@ -43,12 +44,16 @@ function PlaqueCarousel() {
     dispatch({type:"setCurrentPage", payload: selectedIndex});
   };
 
-  // no page indicator, have left right arrows to flip left or right (controls), scroll the page automatically every 30,000 milliseconds, or 30 seconds interval. 
+  // set scroll interval to 10 seconds in photo booth mode, and 30 seconds in regular mode.
+  const scrollInterval=(location=="photoBooth")? 10000:30000;
+
+  // no page indicator, have left right arrows to flip left or right (controls), 
+  // scroll the page automatically with scrollInterval. 
   // do not pause the automatic scroll when mouse hover on the object. In this app, the object in carousel is the entire page, so the mouse is likely always hovering over it.
   // when autoplayCarousel is set to false, set the interval to null, which will stop the automatic scrolling.
   // React will omit activeIndex attribute if currentPage==null. (an answer from StackOverflow)
   return (
-    <Carousel indicators={false} controls={true} interval={autoPlayCarousel? 30000:null} pause={false} activeIndex={currentPage} onSelect={onItemChange} >
+    <Carousel indicators={false} controls={true} interval={autoPlayCarousel? scrollInterval:null} pause={false} activeIndex={currentPage} onSelect={onItemChange} >
       {pages}
       </Carousel>
   );
