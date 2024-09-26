@@ -117,12 +117,17 @@ function App(props) {
       setTimeout(resolve, 1000);
       
     })).then(async ()=> {
-      return await axios.get('./plaques.json')
-    }).then(response => {
-      if (response.statusText=="OK") {
-        dispatch({type:"remoteLoadAllPlaques", payload:response.data});
-      }}
-    ).catch(error => {
+      const res=await axios.get('./plaques.json');
+    
+      if (res.statusText=="OK") {
+        console.log(`loading ${res.data.length} plaques from plaques.json. last five are\n`, 
+          // res.data
+          res.data.slice(res.data.length-5)
+        );
+
+        dispatch({type:"remoteLoadAllPlaques", payload:res.data});
+      }
+    }).catch(error => {
       console.log('error during initialization', error);
     }).finally(()=>{
       dispatch({type:"initDone"});

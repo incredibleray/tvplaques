@@ -83,65 +83,89 @@ function compareDates(plaque1, plaque2) {
 }
 
 export function preprocessSvgPlaques(singleRowImagesPerRow, doubleRowImagesPerRow, location, types, plaquesOnFile) {
-  // this produce the current date at 00:00 (without current time)
+    // this produce the current date at 00:00 (without current time)
   // new Date() returns the current datetime, toDateString returns only the date part of the timestamp. new Date(currentDateString) returns the current date at 00:00.
   const currentDate = new Date(new Date().toDateString());
-  // filter out expired plaques, order plaques from newest to oldest, and calculate font sizes
-  let plaques = plaquesOnFile.filter(
-    p => isPlaqueExpired(
-      currentDate, 
-      p.requestDate, 
-      p.expiryDate))
-    .sort(compareDates)
-    .map(addFontSizes);
-
-  let regularPlaquesRowsPerPage=2;
-  let wPlaquesRowsPerPage=1;
 
 // single row view of all plaques from new to old, no temple location filter, no show on TV filter
 // for taking photos of plaques. 
 // have not seen a need for taking photos of Dharma Assembly plaques
 // thus apply a filter to exclude Dharma Assembly plaques.
-  if (location=="photoBooth") {
-    plaques=plaquesOnFile.filter(p=>{
-      // not expired or permanent plaque
-      if (p.expiryDate!="Permanent" && new Date(p.expiryDate)<currentDate) {
-        return false
-      }      
-      
-      console.log(p.eventName)
-      if (p.eventName!=null && p.eventName.length>0) {
-        return false
+if (location=="photoBooth") {
+  const p1=plaquesOnFile.filter(p=>{
+    // do not accept plaques that do not have a request date or expiry date.
+    if (p.requestDate == null || p.requestDate.length==0 || p.expiryDate==null || p.expiryDate.length==0) {
+      return false;
+    }
+
+    // not expired or permanent plaque
+    if (p.expiryDate!="Permanent" && new Date(p.expiryDate)<currentDate) {
+      return false
+    }      
+    
+    // console.log(p.eventName)
+    if (p.eventName!=null && p.eventName.length>0) {
+      return false
+    }
+
+    return true
+  });
+
+  console.log("plaque photo booth, after filtering", p1);
+
+  const p2=p1.sort((x, y)=>new Date(y.requestDate)-new Date(x.requestDate));
+
+  console.log("plaque photo booth, after sorting", p2);
+
+  const plaques=p2.map(addFontSizes);
+
+  console.log("photo booth plaques, first five:\n", plaques.slice(0, 5),
+  "last five:\n", plaques.slice(plaques.length-5));
+  // console.log("all photo booth plaques", plaques);
+
+  const imagesPerPage=singleRowImagesPerRow;
+  let pages=[];
+  let i=0;
+  // 50 pages of plaques seem enough for photo booth.
+  for (; i<50 && i<Math.floor(plaques.length/imagesPerPage); i++) {
+    const plaqueOnPage=plaques.slice(i*imagesPerPage, (i+1)*imagesPerPage);
+    // type can't be defined, plaques of different types are mixed.
+    const page={
+      index:i,
+      plaques:plaqueOnPage,
+      type:plaqueOnPage[0].type,
+      rows:1,
+      ids:plaqueOnPage.map(p=>p.id),
+      searchTerms:plaqueOnPage.map(p=>p.searchTerms).flat()
+    }
+    pages.push(page);
+  }
+
+
+  console.log(`created ${pages.length} pages of plaques photo booth, each page have ${imagesPerPage} plaques`);
+  return pages;
+}
+
+  // filter out expired plaques, order plaques from newest to oldest, and calculate font sizes
+  let plaques = plaquesOnFile.filter(
+    p => {
+      // do not accept plaques that do not have a request date or expiry date.
+      if (p.requestDate == null || p.requestDate.length==0 || p.expiryDate==null || p.expiryDate.length==0) {
+        return false;
       }
 
-      return true
+      return isPlaqueExpired(
+      currentDate, 
+      p.requestDate, 
+      p.expiryDate)
     })
     .sort(compareDates)
     .map(addFontSizes);
 
-    const imagesPerPage=singleRowImagesPerRow;
-    let pages=[];
-    let i=0;
-    // 50 pages of plaques seem enough for photo booth.
-    for (; i<50 && i<Math.floor(plaques.length/imagesPerPage); i++) {
-      const plaqueOnPage=plaques.slice(i*imagesPerPage, (i+1)*imagesPerPage);
-      // type can't be defined, plaques of different types are mixed.
-      const page={
-        index:i,
-        plaques:plaqueOnPage,
-        type:plaqueOnPage[0].type,
-        rows:1,
-        ids:plaqueOnPage.map(p=>p.id),
-        searchTerms:plaqueOnPage.map(p=>p.searchTerms).flat()
-      }
-      pages.push(page);
-    }
-  
-    return pages;
-  } else {
+  let regularPlaquesRowsPerPage=2;
+
 // regular plaque view apply temple location filter and show on TV filter.
   plaques=plaques.filter(p=>p.locations.includes(location)).filter(p=>p.showOnTv==null || p.showOnTv==true);
-  }
 
   let selected=[];
   
