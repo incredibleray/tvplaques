@@ -337,10 +337,14 @@ def parse_jotform_entry_beneficiary(entry, plaque_index):
 
 def correct_beneficiary(beneficiary, plaque_description):
     desc = plaque_description.lower().strip()
-    if 'past creditors' in desc:
-        return 'Past Creditors'
-    elif 'ancestors' in desc:
-        return 'Ancestors'
+
+    # Don't override the beneficiary if entered
+    if beneficiary.strip() == "":
+        # If beneficiary empty, then correct it based on type.
+        if 'past creditors' in desc:
+            return 'Past Creditors'
+        elif 'ancestors' in desc:
+            return 'Ancestors'
 
     return beneficiary
 
