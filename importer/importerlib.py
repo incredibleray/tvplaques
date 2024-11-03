@@ -119,7 +119,7 @@ def fetch_sheet_by_url(gsheet_url, creds=None):
         spreadsheet_id = parsed_url.path.split('/')[3]
 
     # Extract gid
-    gid = None
+    gid = 0
     if 'gid' in query_params:
         gid = query_params['gid'][0]
 
