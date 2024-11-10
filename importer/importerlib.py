@@ -195,7 +195,7 @@ def get_current_dharma_assembly_plaques(creds=None):
         end_date = row['End Date']
         location = row['Temple']
         url = row['URL']
-        if enabled == 'TRUE':
+        if enabled == 'TRUE' and url:
             plaques = get_dharma_assembly_plaques(url, start_date, end_date, event, location=location, creds=creds)
             entries.extend(plaques)
     return entries
