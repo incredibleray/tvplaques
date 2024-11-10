@@ -195,9 +195,14 @@ def get_current_dharma_assembly_plaques(creds=None):
         end_date = row['End Date']
         location = row['Temple']
         url = row['URL']
-        if enabled == 'TRUE' and url:
+
+        if enabled == 'TRUE' and url and start_date and end_date:
             plaques = get_dharma_assembly_plaques(url, start_date, end_date, event, location=location, creds=creds)
             entries.extend(plaques)
+        elif enabled:
+            # print("Skipping row due to missing inputs.")
+            continue
+
     return entries
 
 
