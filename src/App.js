@@ -40,24 +40,19 @@ function App(props) {
   
   }
 
-  let search = useSelector((state) => state.search);
   const rowHeight = useSelector((state) => state.rowHeight);
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
   const initDone=useSelector((state)=>state.initDone);
   const showBlackScreen=useSelector((state)=>state.showBlackScreen);
   const dimDisplay=useSelector((state)=>state.dimDisplay);
-
-  const handleMouseMove = (event) => {
-    if (event.clientY > Math.floor(window.innerHeight*0.97) && showSearchBar==false) {
-      dispatch({type:"setShowSearchBar", payload: true})    
-    }
-  };
+  const l=useSelector((state)=>state.location);
+  const t=useSelector((state)=>state.plaqueTypes);
 
   useEffect(() => {
     const queryParameters = new URLSearchParams(window.location.search);
     const tv = queryParameters.get("tv");
-    let location=[],types=[];
+    let location=null,types=[];
 
     // DTT TV left hand side
     // shows MMB, W-MMB, and as you wish plaques
@@ -102,8 +97,8 @@ function App(props) {
       location="photoBooth";
       types=["wmmb", "wrebirth", "ayw","mmb","rebirth"];
     } else {
-      location="DTT";
-      types=["mmb","rebirth","ayw",];
+      location=l;
+      types=t;
     }
 
     // initialization. Fetch plaques, load fetched plaques, set screen size, set location and plaque types.
@@ -244,10 +239,6 @@ function App(props) {
       }
     }
   }, []);
-
-  if (search.length>0) {
-    search=search[0]
-  }
 
   if (showBlackScreen) {
     return <div style={{height: `${window.screen.height}px`, width: `${window.screen.width}px`, backgroundColor: "black"}} />

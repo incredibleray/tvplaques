@@ -6,15 +6,15 @@ import '@fontsource/roboto/700.css';
 import '@fontsource/gowun-batang/700.css';
 import "./kaiti-700.css";
 
-const theme = createTheme({
+export const searchTheme = createTheme({
   typography: {
-    h1: {
-      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
-    },
-    h2: {
+    h5: {
       fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
     },
     h6: {
+      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
+    },
+    body2: {
       fontFamily: "Roboto",
     },
   },

@@ -28,18 +28,24 @@ import Stack from '@mui/material/Stack';
 import useKeypress from 'react-use-keypress';
 import { CheckBox } from '@mui/icons-material';
 import Settings from "./Settings";
+import {getAutocompleteOptions} from "./plaques";
+import { useNavigate } from 'react-router-dom';
 
 export function SearchBar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let search = useSelector((state) => state.search);
   const showSearchBar = useSelector((state) => state.showSearchBar);
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
   const rowHeight = useSelector((state) => state.rowHeight);
   const location=useSelector((state)=>state.location);
-  const allPlaques=useSelector((state)=>state.allPlaques);
+  const plaquesOnFile=useSelector((state)=>state.plaquesOnFile);
 
-  useKeypress(["MediaPlay", "MediaPause", "Pause", "MediaStop","MediaPlayPause", "\\", "]"], (event) => {
-    if ((event.key === 'MediaPlay'||event.key=="\\") && showSearchBar===false && highlightPlaque==null) {
+  useKeypress(["MediaPlay", "MediaPause", "Pause", "MediaStop","MediaPlayPause", "\\", "]", "/"], (event) => {
+    if (event.key =="/") {
+      navigate('/search');
+    }
+    else if ((event.key === 'MediaPlay'||event.key=="\\") && showSearchBar===false && highlightPlaque==null) {
       dispatch({ type: "setShowSearchBar", payload: true });
     } else {
       dispatch({ type: "setShowSearchBar", payload: false });
@@ -47,17 +53,8 @@ export function SearchBar() {
     }
   });
 
-  // allPlaques=allPlaques.filter(p=>p.id.length>0);
-  // const beneficiarys = allPlaques.map(p => p.beneficiary);
-  // const requesters = allPlaques.map(p => p.sponsor);
-  let searchTerms=new Set(allPlaques.map(p=>p.searchTerms).flat());
-  const options = Array.from(searchTerms);
-
+  
   const searchBarWidth = Math.floor((window.innerWidth - MARGIN_PIXELS) * 0.19);
-
-  if (search.length > 0) {
-    search = search[0]
-  }
 
     const handleClose = () => dispatch({ type: "setShowSearchBar", payload: false });
 
@@ -72,7 +69,7 @@ export function SearchBar() {
           // multiple
           autoHighlight
           handleHomeEndKeys={false}
-          options={options}
+          options={getAutocompleteOptions(plaquesOnFile)}
           // defaultValue={[]}
           renderInput={(params) => (
             <TextField
@@ -90,28 +87,15 @@ export function SearchBar() {
           // onBlur={() => dispatch({ type: "stopTyping" })}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              if (search.length > 0) {
-                new Promise(
-                  (resolve) => {
-                    dispatch({ type: "setShowSearchBar", payload: false });
-                    // wait for the keyboard on tv to disappear
-                    setTimeout(resolve, 3000);
-                  }).then(() => {
-                    dispatch({ type: "showSearchResults" });
-                  });
+              if (search) {
+                navigate('/search');
               }
             }
           }}
           value={search}
         />
         <IconButton aria-label="search" sx={{display:"inline-block"}} >
-          <SearchIcon onClick={() =>
-            new Promise((resolve) => {
-              dispatch({ type: "setShowSearchBar", payload: false });
-              setTimeout(resolve, 1000);
-            }).then(() => {
-              dispatch({ type: "showSearchResults" });
-            })} />
+          <SearchIcon onClick={() => navigate('/search')} />
         </IconButton>
           <IconButton color="primary" aria-label="close" onClick={handleClose}
             sx={{

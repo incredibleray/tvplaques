@@ -13,7 +13,6 @@ import Paper from '@mui/material/Paper';
 import {Table} from 'react-bootstrap';
 import { Carousel } from 'react-responsive-carousel';
 import { Box, Stack } from '@mui/material';
-import ReactCardFlip from 'react-card-flip';
 import ReactPlayer from 'react-player'
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -113,7 +112,6 @@ isHighlight={true}
   return (
     <DialogContent sx={{overflow: "hidden", height: "100vh", backgroundColor:"black" }} ref={elementRef}>
 <Table style={{tableLayout: "fixed"}}><tbody><tr><td/><td colSpan={3}>
-<ReactCardFlip isFlipped={showGallery} >
   <div onClick={()=>setShowGallery(true)}>{plaqueImg}</div>
         <div>
         <ImageList cols={3} rowHeight={164}>
@@ -133,7 +131,6 @@ isHighlight={true}
 })}
 </ImageList>
 {cardFlipControl}        </div>
-      </ReactCardFlip>
 
 </td><td/><td colSpan={12}>
   {/* this spacing value will put the carousel roughly in the center vertically in 4k resolution */}

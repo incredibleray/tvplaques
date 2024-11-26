@@ -220,44 +220,6 @@ if (location=="photoBooth") {
   return selected;
 }
 
-// export function getSearchView(allPlaques, picsPerCol, searchResult) {
-//   const resultIndex=allPlaques.findIndex(
-//     (p)=>p.id===searchResult.id
-//   );
-
-//   if (resultIndex===-1){
-//     return [];
-//   }
-
-//   const imagesPerPage=picsPerCol * NUM_ROWS;
-//   const page=(resultIndex-(resultIndex%imagesPerPage))/imagesPerPage;
-
-//   return getImages(allPlaques, picsPerCol, page);
-
-// }
-
-export function searchPlaques(allPlaques, searchTerms) {
-  if (searchTerms == null || searchTerms.length === 0) {
-    return null;
-  }
-
-  const query=searchTerms[0];
-  // searchTerms = searchTerms.map(s => s.toLowerCase());
-  for (const plaqueOnPage of allPlaques) {
-    if (!plaqueOnPage.searchTerms.includes(query)) {
-      continue;
-    }
-
-    const plaque=plaqueOnPage.plaques.find(p=>p.searchTerms.includes(query));
-    return {
-      page: plaqueOnPage.index,
-      plaque:plaque
-    }
-  }
-
-  return null;
-}
-
 let textMeasurementObj=null
 
 function addFontSizes(plaque) {
@@ -337,4 +299,29 @@ function genDateString(plaque) {
   }
 
   return '';
+}
+
+export function getAutocompleteOptions(plaquesOnFile) {
+
+const forbiddenSearchTerms=[
+  /Depression/, /Manic/, /Gambling/, /Paranoia/, /Creditor/, /Anxiety/, /Cancer/
+];
+let searchTerms=new Set(plaquesOnFile.map(p=>[p.beneficiary, p.sponsor]).flat());
+console.log(`found ${searchTerms.size} search terms from beneficairy and sponsor texts of plaques`);
+
+const options = Array.from(searchTerms).filter(
+  t=>{
+    if (t ==null) return false;
+    for (let i=0; i<forbiddenSearchTerms.length;i++) {
+      if (forbiddenSearchTerms[i].exec(t)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+console.log(`${options.length} filtered search terms, first five are`, options.slice(0, 5));
+
+  return options;
 }

@@ -1,10 +1,10 @@
 import { createAction } from '@reduxjs/toolkit'
-import { preprocessSvgPlaques, searchPlaques} from './plaques';
+import { preprocessSvgPlaques} from './plaques';
 import {NUM_ROWS} from './plaques';
+import FuzzySearch from 'fuzzy-search';
 
 
 const initialState = { 
-  search: [],
   allPlaques:[
     {"id": 2024040001, "beneficiary": "Permanent MMB Beneficiary", "beneficiaryTextSize": 30, "sponsor": "Permanent MMB Sponsor", "sponsorTextSize": 20,"dateStringSize":10, "type": "mmb", "requestDate": "04/01/2024", "expiryDate": "Permanent", "searchTerms": [], "mediaFiles": [], "locations": ["DTT"], "showOnTv": true, "jotformSubmissionId": "001"},
     {"id": 2024040002, "beneficiary": "Temporary MMB Beneficiary", "beneficiaryTextSize": 30, "sponsor": "Temporary MMB Sponsor", "sponsorTextSize": 20, "dateStringSize":10, "type": "mmb", "requestDate": "04/01/2024", "expiryDate": "01/01/9999", "searchTerms": [], "mediaFiles": [], "locations": ["DTT"], "showOnTv": true, "jotformSubmissionId": "002"},
@@ -12,6 +12,8 @@ const initialState = {
   ],
   totalPages:0,
   plaquesOnFile: [],
+  searchIndex: new FuzzySearch(),
+  searchTerm: null,
   searchResults:[],
   highlightPlaque: null,
   picsPerCol:1,
@@ -26,7 +28,7 @@ const initialState = {
   initDone: false,
   showSearchBar: false,
   location: "DTT",
-  plaqueTypes: [],
+  plaqueTypes: ["mmb","wmmb","ayw", ],
   lastRefreshDate: new Date(),
   colWidth: 1,
   carouselAutoplay: true,
@@ -61,38 +63,41 @@ export default function appReducer(state = initialState, action) {
         currentPage:action.payload 
       }
     }
-    case 'showSearchResults': {
-      const searchTerm=state.search;
+    case 'search': {
+      const searchTerm=state.searchTerm;
 
-      if (searchTerm.length==0) {
+      if (!searchTerm) {
         return state;
       }
 
-      const searchResults=searchPlaques(state.allPlaques, searchTerm);
+      console.time("fuzzy search");
+    
+      const results =state.searchIndex.search(searchTerm)
 
-      if (searchResults==null) {
-        return state;
-      }
+      console.timeEnd("fuzzy search");
 
     return {
           ...state,
-          searchResults: [searchResults.plaque],       
-          highlightPlaque: searchResults.plaque,
-          searchResultPage:searchResults.page,
-          showSearchBar: false
+          searchResults: results,       
         }
     
     }
-    case 'search':{
-      const searchTerm=action.payload;
+    case 'updateSearchTerm':{
+      const term=action.payload;
 
-      if (state.search==searchTerm) {
+      if (state.searchTerm==term || term == null) {
         return state;
       }
       
+      let results=state.searchResults;
+      if (term=="") {
+        results=[];
+      }
+
       return {
         ...state,
-        search:searchTerm
+        searchTerm:term,
+        searchResults: results
       };
     }
     case 'remoteLoadAllPlaques':{
@@ -111,11 +116,20 @@ export default function appReducer(state = initialState, action) {
 
       const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, state.location, state.plaqueTypes,action.payload);
 
+      console.time("fuzzySearch indexing");
+
+      const fuzzySearch = new FuzzySearch(action.payload, ['beneficiary', 'sponsor'], {
+          caseSensitive: false,
+          sort:true
+        });
+      console.timeEnd("fuzzySearch indexing");
+
       return {
         ...state,
         plaquesOnFile: action.payload,
         allPlaques: allPlaques,
         totalPages:allPlaques.length,
+        searchIndex: fuzzySearch
       }
     }
     case 'closeHighlightPopup': {

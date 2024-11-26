@@ -6,14 +6,32 @@ import reportWebVitals from './reportWebVitals';
 import { Provider  } from 'react-redux'
 import { createStore } from '@reduxjs/toolkit'
 import reducer from './reducer';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import SearchPage from "./search";
+import {searchTheme} from "./SVGOverlay";
+import { ThemeProvider } from '@mui/material/styles';
 
 const store = createStore(reducer);
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/search",
+    element: <ThemeProvider theme={searchTheme} ><SearchPage /></ThemeProvider>
+  }
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-    <App />
+    <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );
