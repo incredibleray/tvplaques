@@ -267,6 +267,10 @@ function addFontSizes(plaque) {
 
   plaque.dateString= genDateString(plaque);
 
+  // beneficiary text sometimes have trailing white spaces.
+  // remove trailing white spaces.
+  plaque.beneficiary=plaque.beneficiary.trim();
+
   const measurements=plaqueMeasurements[plaque.type]
 
   if (measurements==null) {
