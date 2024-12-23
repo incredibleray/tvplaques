@@ -92,7 +92,7 @@ function App(props) {
     // WMT TV on left side of Buddha hall,
     // shows rebirth plaques. do not display W-Rebirth plaque , Master do not seem to like to see a single W-Rebirth plaque of Thomas. 
       location="WMT";
-      types=["rebirth"];
+      types=["rebirth", "wrebirth"];
     } else if (tv=="wplaque") {
       location="DTT";
       types=["wmmb", "wrebirth"];
@@ -120,7 +120,7 @@ function App(props) {
       const res=await axios.get('./plaques.json');
     
       if (res.statusText=="OK") {
-        console.log(`loading ${res.data.length} plaques from plaques.json. last five are\n`, 
+        console.log(`[${new Date().toLocaleString()}]  loading ${res.data.length} plaques from plaques.json. last five are\n`, 
           // res.data
           res.data.slice(res.data.length-5)
         );
@@ -134,24 +134,24 @@ function App(props) {
     })
     // end of initialization.
 
-    console.log("creating plaque updater.");
+    console.log(`[${new Date().toLocaleString()}] creating plaque updater.`);
 
     // refresh the plaques.json every half an hour.
     // bypass browser cache. the request will keep getting the same file from cache if cache is not bypassed.
     const plaqueUpdater=setInterval(
       async ()=> {
-        console.log("updater wakes up");
+        console.log(`[${new Date().toLocaleString()}] updater wakes up`);
 
-        console.log("check if browser should reload site");
+        console.log(`[${new Date().toLocaleString()}] check if browser should reload site`);
         const now=new Date();
         // reload page every Sunday between 2:00 AM and 4:00 AM.
         if (now.getDay()==1 && now.getHours()>=2 && now.getHours()<4) {
-          console.log(`At hour ${now.getHours()}, time ${now.toLocaleString()}, refresh page.`);
+          console.log(`[${new Date().toLocaleString()}] plaque updater refresh page.`);
 
           window.location.reload();
         }
 
-        console.log("fetching plaques.json from server.")
+        console.log(`[${new Date().toLocaleString()}] plaque updater fetch plaques.json from server.`)
         await axios.get('./plaques.json', {
           headers: {
             'Cache-Control': 'no-cache',
@@ -160,10 +160,10 @@ function App(props) {
           },
         })
         .then(response => {
-          console.log(`updater received response of status code ${response.statusText} from server.`);
+          console.log(`[${new Date().toLocaleString()}] updater received response of status code ${response.statusText} from server.`);
 
           if (response.statusText=="OK") {
-            console.log(`updater successfully fetch plaques.json from server. plaques.json has ${response.data.length} rows. The last and latest record is\n${JSON.stringify(response.data.at(-1))}.\nDispatching remote loading event.`)
+            console.log(`[${new Date().toLocaleString()}] updater successfully fetch plaques.json from server. plaques.json has ${response.data.length} rows. The last and latest record is\n${JSON.stringify(response.data.at(-1))}.\nDispatching remote loading event.`)
 
             // remote load plaques handler will not use remote loaded plaques.json if it is null or empty array.
             // no need to check for null or empty array here.
@@ -172,11 +172,11 @@ function App(props) {
       },
       30*60*1000)
 
-      console.log("creating display controller.");
+      console.log(`[${new Date().toLocaleString()}] creating display controller.`);
 
       const displayController=setInterval(
         async ()=> {
-          console.log("display controller wakes up");
+          console.log(`[${new Date().toLocaleString()}] display controller wakes up`);
 
           // add 20 minutes to the current time
           // display will darken 20 minutes earlier than black screen start time and recover 20 minutes before the black screen end time 
@@ -184,7 +184,7 @@ function App(props) {
           const time=new Date(new Date().getTime()+1000 * 60 * 20);
   
           if (time.getHours()>=0 && time.getHours()<4) {
-            console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn off display.`);
+            console.log(`[${new Date().toLocaleString()}] At hour ${time.getHours()}, time ${time.toLocaleString()}, turn off display.`);
 
             dispatch({
               type:"turnOffDisplay"
@@ -192,7 +192,7 @@ function App(props) {
           }
   
           if (time.getHours()>=4) {
-            console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn on display.`);
+            console.log(`[${new Date().toLocaleString()}] At hour ${time.getHours()}, time ${time.toLocaleString()}, turn on display.`);
 
             dispatch({
               type:"turnOnDisplay"
@@ -201,38 +201,40 @@ function App(props) {
         },
         10*60*1000)
 
-      console.log(`check location=${location} to decide if ChanQi dim controller needs to be created.`);
+      console.log(`[${new Date().toLocaleString()}] check location=${location} to decide if ChanQi dim controller needs to be created.`);
 
       let chanQiDimController=null;
 
       if (location.includes('WMT') || location.includes('GF')) {
-        console.log("creating ChanQi dim controller.");
+        console.log(`[${new Date().toLocaleString()}] creating ChanQi dim controller.`);
 
         // Chan Qi is over, do not set the Chan Qi Dim controller.
 
-        // chanQiDimController=setInterval(
-        //   async ()=> {
-        //     console.log("display controller wakes up");
+        chanQiDimController=setInterval(
+          async ()=> {
+            console.log(`[${new Date().toLocaleString()}] ChanQi display controller wakes up`);
 
-        //     // deduct 10 minutes from the current time
-        //     // display will dim from about 9:10 pm to 7:10 pm. 
-        //     const time=new Date(new Date().getTime()-1000 * 60 * 10);
+            // deduct 10 minutes from the current time
+            // display will dim from about 9:10 pm to 7:10 pm. 
+            const current=new Date();
+            const currentPlus30Minutes=new Date(new Date().getTime()+1000 * 60 * 30);
+            const time=new Date();
 
-        //     if (time.getHours()>=19 && time.getHours()<21) {
-        //       console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim OFF.`);
+            if (current.getHours()>=19 && currentPlus30Minutes.getHours()<=21 ) {
+              console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim OFF. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
 
-        //       dispatch({
-        //         type:"turnOffDimDisplay"
-        //       })
-        //     } else {
-        //       console.log(`At hour ${time.getHours()}, time ${time.toLocaleString()}, turn dim ON.`);
+              dispatch({
+                type:"turnOffDimDisplay"
+              })
+            } else {
+              console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim ON. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
 
-        //       dispatch({
-        //         type:"turnOnDimDisplay"
-        //       })
-        //     }        
-        //   },
-        //   10*60*1000) 
+              dispatch({
+                type:"turnOnDimDisplay"
+              })
+            }        
+          },
+          10*60*1000) 
         }
         
     return ()=>{

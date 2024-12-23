@@ -54,7 +54,7 @@ export default function appReducer(state = initialState, action) {
         lastRefreshDate = currentDate;
       }
 
-      console.log(`setting current page state to ${action.payload}`)
+      // console.log(`[${new Date().toLocaleString()}] setting current page state to ${action.payload}`)
       return {
         ...state,
         lastRefreshDate: lastRefreshDate,
