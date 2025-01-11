@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import useKeypress from 'react-use-keypress';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 export default function SearchPage() {
     const results=useSelector((state)=>state.searchResults);
@@ -27,19 +28,23 @@ export default function SearchPage() {
     navigate("/");
   });
 
+    const avatarProps={ width: 96, height: 96 };
     let list=[];
     let combo=[];
     for (let i=0; i<results.length;i++) {
       let avatar=null;
       switch (results[i].type) {
         case 'mmb':
-          avatar=<Avatar src="/mmbSearchResult.png" />;
+          avatar=<Avatar src="/mmbSearchResult.png" sx={avatarProps} />;
           break;
         case 'rebirth':
-          avatar=<Avatar src="/rebirthSearchResult.png" />;
+          avatar=<Avatar src="/rebirthSearchResult.png" sx={avatarProps} />;
           break;
         case 'ayw':
-          avatar=<Avatar src="/aywSearchResult.png" />;
+          avatar=<Avatar src="/aywSearchResult.png" sx={avatarProps} />;
+          break;
+        case 'wmmb':
+          avatar=<Avatar src="/wmmbSearchResult.png" sx={avatarProps} />;
           break;
       }
 
@@ -51,21 +56,19 @@ export default function SearchPage() {
       }
 
         const item=<ListItem alignItems="flex-start">
-        <ListItemAvatar>
+        <ListItemAvatar sx={{marginRight: "20px"}}>
           {avatar}
         </ListItemAvatar>
         <ListItemText
           primary={
             <div>
-          <Typography variant="h5">{results[i].beneficiary}</Typography>
-          <Typography variant="h6">{results[i].sponsor}</Typography>
+          <Typography variant="h3">{results[i].beneficiary}</Typography>
+          <Typography variant="h4">{results[i].sponsor}</Typography>
           </div>
         }
           secondary={
             <div>
-          <Typography variant="body2">{`Requested on ${results[i].requestDate}`}</Typography>
-          <Typography variant="body2">{expireText}</Typography>
-          <Typography variant="body2">{results[i].locations.join(',')}</Typography>
+          <Typography variant="h5">{`Requested on ${results[i].requestDate}`}<br/>{expireText}<br/>{results[i].locations.join(',')}</Typography>
           </div>
         }
         />
@@ -116,14 +119,14 @@ export default function SearchPage() {
     }, searchButtonPosition={
       position:"relative",
       top: "0px",
-      right: "7px"
+      right: "-5px"
     };
     let hint=<div style={{
       position:"relative",
       top: "20px",
       left: "0px",
       textAlign: "center"
-    }}><Typography variant="body2" >
+    }}><Typography variant="h4" >
       Use Ctrl+Shift+Space to switch between input languages on Plaque TV.
     </Typography>
     </div>
@@ -132,8 +135,9 @@ export default function SearchPage() {
       searchBarPosition={
         position:"relative",
         left: "19%",
-        top: "0px",
-        width: "62%"
+        top: "50px",
+        width: "62%",
+        marginBottom: "150px"
       };
       hint=<></>
     }
@@ -157,9 +161,11 @@ export default function SearchPage() {
       <TextField
         {...params}
         variant="filled"
+        InputProps={{ style: { fontSize: 45 } }}
         sx={{ ml: 2, flex: 1, mt: 2,
           maxWidth: "91%", 
           display:"inline-block",
+          fontSize:"25px",
           ...autocompletePosition
            }}
         label="Plaque Search"
@@ -190,6 +196,16 @@ export default function SearchPage() {
   <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {list}
     </List>
+    <Fab color="success" sx={{
+  position: 'fixed',
+  bottom: "120px",
+  right: "50px",
+}} onClick={()=>{
+  dispatch({ type: 'showSearchResult', payload: "" });
+  navigate("/");
+}}>
+  <ViewModuleIcon />
+</Fab>
   <Fab color="secondary" sx={{
   position: 'fixed',
   bottom: "50px",

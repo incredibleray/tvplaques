@@ -30,6 +30,7 @@ import { CheckBox } from '@mui/icons-material';
 import Settings from "./Settings";
 import {getAutocompleteOptions} from "./plaques";
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 export function SearchBar() {
   const dispatch = useDispatch();
@@ -64,46 +65,12 @@ export function SearchBar() {
         onClose={handleClose}
       >
         <DialogTitle sx={{ m: 0, p: 3 }}>
-        <Stack direction="row" spacing={3}>
-        <Autocomplete
-          // multiple
-          autoHighlight
-          handleHomeEndKeys={false}
-          options={getAutocompleteOptions(plaquesOnFile)}
-          // defaultValue={[]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              sx={{ ml: 2, flex: 1, 
-                width: searchBarWidth, 
-                display:"inline-block" }}
-              variant="standard"
-              label="Plaque Search"
-              placeholder="Beneficiary or Sponsor's Name"
-            />
-          )}
-          onChange={(event, value) => dispatch({ type: 'search', payload: [value,] })}
-          // onFocus={() => dispatch({ type: "startTyping" })}
-          // onBlur={() => dispatch({ type: "stopTyping" })}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (search) {
-                navigate('/search');
-              }
-            }
-          }}
-          value={search}
-        />
-        <IconButton aria-label="search" sx={{display:"inline-block"}} >
-          <SearchIcon onClick={() => navigate('/search')} />
-        </IconButton>
           <IconButton color="primary" aria-label="close" onClick={handleClose}
-            sx={{
-              display:"inline-block"
+            sx={{ position: "relative",
+              "left": "93%"
             }}>
             <CloseIcon />
           </IconButton>
-          </Stack>
         </DialogTitle>
         <DialogContent>
           <Settings />

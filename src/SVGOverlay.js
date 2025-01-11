@@ -8,13 +8,13 @@ import "./kaiti-700.css";
 
 export const searchTheme = createTheme({
   typography: {
+    h3: {
+      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
+    },
+    h4: {
+      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
+    },
     h5: {
-      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
-    },
-    h6: {
-      fontFamily: '"Playfair Display", Kaiti, "Gowun Batang"',
-    },
-    body2: {
       fontFamily: "Roboto",
     },
   },

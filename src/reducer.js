@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
-import { preprocessSvgPlaques} from './plaques';
+import { preprocessSvgPlaques, CreatePlaquePages, addFontSizes} from './plaques';
 import {NUM_ROWS} from './plaques';
 import FuzzySearch from 'fuzzy-search';
 
@@ -100,6 +100,52 @@ export default function appReducer(state = initialState, action) {
         searchResults: results
       };
     }
+    case 'showSearchResult': {
+      const orderDict={"mmb": 1, "rebirth": 2, "ayw": 3, "wmmb": 1, "wrebirth": 2};
+      const wPlaques=state.searchResults.filter(x=>["wmmb", "wrebirth"].includes(x.type)).map(addFontSizes).sort((x, y)=>orderDict[x.type]-orderDict[y.type]);
+      const smallPlaques=state.searchResults.filter(x=>["mmb", "rebirth", "ayw"].includes(x.type)).map(addFontSizes).sort((x, y)=>orderDict[x.type]-orderDict[y.type]);
+      
+      console.log(`converting ${wPlaques.length} W plaques and ${smallPlaques.length} small plaques from search results to carousel pages`);
+
+      let lastSmallPlaqueType="rebirth";
+      if (smallPlaques.length) {
+        lastSmallPlaqueType=smallPlaques[smallPlaques.length-1].type;
+      }
+      let lastWPlaqueType="wrebirth";
+      if (wPlaques.length) {
+        lastWPlaqueType=wPlaques[wPlaques.length-1].type;
+      }
+
+      const smallPlaquesPages= CreatePlaquePages(smallPlaques, state.picsPerCol, 2,lastSmallPlaqueType, 0);
+      const wPlaquePages=CreatePlaquePages(wPlaques, state.singleRowImagesPerRow,1,lastWPlaqueType, smallPlaquesPages.length);
+
+      const pages=smallPlaquesPages.concat(wPlaquePages);
+
+      console.log(`search results have ${smallPlaquesPages.length} pages of small plaques, ${wPlaquePages.length} W Plaque pages. First and last pages are`, pages[0], pages[pages.length-1]);
+
+      return {
+        ...state,
+        allPlaques: pages,
+        totalPages:pages.length,
+        currentPage: 0,
+        highlightPlaque: null,
+        showSearchBar: false
+      }
+    }
+    case 'clearSearchResult': {
+      const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, state.location, state.plaqueTypes,state.plaquesOnFile);
+
+      console.log(`cleared search results. all plaques have ${allPlaques.length} pages. First and last pages are`, allPlaques[0], allPlaques[allPlaques.length-1]);
+
+      return {
+        ...state,
+        searchResults: [],
+        allPlaques: allPlaques,
+        totalPages:allPlaques.length,
+        currentPage: 0,
+        highlightPlaque: null,
+      }
+    }
     case 'remoteLoadAllPlaques':{
       // remote load plaques at initialization,
       // and every half an hour after that
@@ -114,11 +160,15 @@ export default function appReducer(state = initialState, action) {
         return state;
       } 
 
+      const validPlaques=action.payload.filter(x=>x.expiryDate=="Permanent" || new Date()-new Date(x.expiryDate)<0);
+
+      console.log(`${validPlaques.length} plaques are within expiration. Last five are`, validPlaques.slice(validPlaques.length-5));
+
       const allPlaques=preprocessSvgPlaques(state.singleRowImagesPerRow,state.picsPerCol, state.location, state.plaqueTypes,action.payload);
 
       console.time("fuzzySearch indexing");
 
-      const fuzzySearch = new FuzzySearch(action.payload, ['beneficiary', 'sponsor'], {
+      const fuzzySearch = new FuzzySearch(validPlaques, ['beneficiary', 'sponsor'], {
           caseSensitive: false,
           sort:true
         });

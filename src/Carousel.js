@@ -8,12 +8,14 @@ import { Box } from '@mui/material';
 import { current } from '@reduxjs/toolkit';
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Fab } from "@mui/material";
+import SearchOffIcon from '@mui/icons-material/SearchOff';
 
 function PlaqueCarousel() {
   const dispatch = useDispatch();
 
   const highlightPlaque = useSelector((state) => state.highlightPlaque);
-  const searchResultPage = useSelector((state) => state.searchResultPage);
+  const searchResult = useSelector((state) => state.searchResults);
   const totalPages = useSelector((state) => state.totalPages);
   const showSearchBar=useSelector((state)=>state.showSearchBar);
   const carouselAutoplay=useSelector(s=>s.carouselAutoplay);
@@ -30,6 +32,18 @@ function PlaqueCarousel() {
 
   }
 
+  let clearSearchResultButton=<></>;
+  if (searchResult.length) {
+    clearSearchResultButton=<Fab color="extended" sx={{
+      position: 'fixed',
+      bottom: "50px",
+      right: "50px",
+    }} onClick={()=>{
+      dispatch({ type: 'clearSearchResult', payload: "" });
+    }}>
+      <SearchOffIcon />
+    </Fab>;
+  }
   // the pages are layed out horizontally from left to right like a long horizontal scrolls that span many screens
   // there is some gap between adjacent pages
   // a segment of the scroll is shown at any given time, 
@@ -53,9 +67,12 @@ function PlaqueCarousel() {
   // when autoplayCarousel is set to false, set the interval to null, which will stop the automatic scrolling.
   // React will omit activeIndex attribute if currentPage==null. (an answer from StackOverflow)
   return (
+    <div>
     <Carousel indicators={false} controls={true} interval={autoPlayCarousel? scrollInterval:null} pause={false} activeIndex={currentPage} onSelect={onItemChange} >
       {pages}
       </Carousel>
+      {clearSearchResultButton}
+      </div>
   );
 }
 

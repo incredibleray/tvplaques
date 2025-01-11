@@ -13,7 +13,7 @@ function isPlaqueExpired(currentDate, start, end) {
   return plaqueStarted && plaqueNotExpired;
 }
 
-function CreatePlaquePages(plaques, imagesPerRow, rows, type, pageOffset) {
+export function CreatePlaquePages(plaques, imagesPerRow, rows, type, pageOffset) {
   const imagesPerPage=imagesPerRow*rows;
   let pages=[];
   let i=0;
@@ -222,7 +222,7 @@ if (location=="photoBooth") {
 
 let textMeasurementObj=null
 
-function addFontSizes(plaque) {
+export function addFontSizes(plaque) {
   const beneficiaryTextFontFamily = '"Playfair Display", Kaiti, "Gowun Batang"'
   const sponsorTextFontFamily= '"Playfair Display", Kaiti, "Gowun Batang"'
   const dateStringFontFamily='Roboto'
