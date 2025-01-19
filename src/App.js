@@ -210,31 +210,31 @@ function App(props) {
 
         // Chan Qi is over, do not set the Chan Qi Dim controller.
 
-        chanQiDimController=setInterval(
-          async ()=> {
-            console.log(`[${new Date().toLocaleString()}] ChanQi display controller wakes up`);
+        // chanQiDimController=setInterval(
+        //   async ()=> {
+        //     console.log(`[${new Date().toLocaleString()}] ChanQi display controller wakes up`);
 
-            // deduct 10 minutes from the current time
-            // display will dim from about 9:10 pm to 7:10 pm. 
-            const current=new Date();
-            const currentPlus30Minutes=new Date(new Date().getTime()+1000 * 60 * 30);
-            const time=new Date();
+        //     // deduct 10 minutes from the current time
+        //     // display will dim from about 9:10 pm to 7:10 pm. 
+        //     const current=new Date();
+        //     const currentPlus30Minutes=new Date(new Date().getTime()+1000 * 60 * 30);
+        //     const time=new Date();
 
-            if (current.getHours()>=19 && currentPlus30Minutes.getHours()<=21 ) {
-              console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim OFF. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
+        //     if (current.getHours()>=19 && currentPlus30Minutes.getHours()<=21 ) {
+        //       console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim OFF. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
 
-              dispatch({
-                type:"turnOffDimDisplay"
-              })
-            } else {
-              console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim ON. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
+        //       dispatch({
+        //         type:"turnOffDimDisplay"
+        //       })
+        //     } else {
+        //       console.log(`[${new Date().toLocaleString()}] ChanQi controller turn dim ON. current: ${current}, currentPlus30Minutes: ${currentPlus30Minutes}`);
 
-              dispatch({
-                type:"turnOnDimDisplay"
-              })
-            }        
-          },
-          10*60*1000) 
+        //       dispatch({
+        //         type:"turnOnDimDisplay"
+        //       })
+        //     }        
+        //   },
+        //   10*60*1000) 
         }
         
     return ()=>{
