@@ -402,6 +402,10 @@ def parse_jotform_entry_term(entry, plaque_index):
     return term_text
 
 
+def parse_jotform_entry_more_options(entry):
+    return entry['More options']
+
+
 def parse_jotform_entry_locations(entry):
     return parse_location(entry['Which BLI temple'])
 
@@ -505,6 +509,12 @@ def parse_jotform_plaque(entry, index):
 
     if plaque_type == '' or plaque_type is None:
         return None
+
+    # if "More options" contains "Do Not Display" skip entry
+    options = parse_jotform_entry_more_options(entry).lower()
+    if 'do not display' in options:
+        print(f'DEBUG: Plaque entry skipped due to "do not display" option.')
+        return None 
 
     beneficiary = parse_jotform_entry_beneficiary(entry, index)
     sponsor = parse_jotform_entry_sponsor(entry, index)
