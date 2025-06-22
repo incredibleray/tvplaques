@@ -1,5 +1,6 @@
 import json
 import os.path
+import sys
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -200,7 +201,7 @@ def get_current_dharma_assembly_plaques(creds=None):
             plaques = get_dharma_assembly_plaques(url, start_date, end_date, event, location=location, creds=creds)
             entries.extend(plaques)
         elif enabled:
-            # print("Skipping row due to missing inputs.")
+            print("Skipping row due to missing inputs.", file=sys.stderr)
             continue
 
     return entries
@@ -513,21 +514,21 @@ def parse_jotform_plaque(entry, index):
     # if "More options" contains "Do Not Display" skip entry
     options = parse_jotform_entry_more_options(entry).lower()
     if 'do not display' in options:
-        print(f'DEBUG: Plaque entry skipped due to "do not display" option.')
+        print(f'DEBUG: Plaque entry skipped due to "do not display" option.', file=sys.stderr)
         return None 
 
     beneficiary = parse_jotform_entry_beneficiary(entry, index)
     sponsor = parse_jotform_entry_sponsor(entry, index)
     if beneficiary == '' and sponsor == '':
         if '2023' not in entry['Submission Date']:
-            print(f'WARNING: Missing beneficiary/sponsor for index={index}')
+            print(f'WARNING: Missing beneficiary/sponsor for index={index}', file=sys.stderr)
             dump_plaque(entry)
         return None
 
     term = parse_jotform_entry_term(entry, index)
     if term == '':
         if '2023' not in entry['Submission Date']:
-            print(f'WARNING: Missing term for index={index}')
+            print(f'WARNING: Missing term for index={index}', file=sys.stderr)
             dump_plaque(entry)
         return None
 
@@ -692,7 +693,7 @@ def parse_dharma_assembly_plaque(entry, index, start_date, end_date, event_name=
         return None
 
     if beneficiary == '' and sponsor == '':
-        print(f'WARNING: Missing DA beneficiary/sponsor for index={index}')
+        print(f'WARNING: Missing DA beneficiary/sponsor for index={index}', file=sys.stderr)
         dump_plaque(entry)
         return None
 
