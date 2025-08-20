@@ -332,7 +332,7 @@ def parse_jotform_entry_plaque_type(entry, plaque_index):
 
 def parse_plaque_type(plaque_type):
     value = plaque_type.lower().strip()
-    return JOTFORM_PLAQUETYPE_MAP[value]
+    return JOTFORM_PLAQUETYPE_MAP.get(value, value)
 
 
 JOTFORM_BENEFICIARY_KEYS = [
