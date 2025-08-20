@@ -39,7 +39,12 @@
     "build": "react-scripts build && az storage blob directory upload -c '$web' --account-name plaquetvalpha -s 'build/*' -d './' --recursive",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deployToProd": "az storage blob directory upload -c \"$web\" --account-name plaquetv -s \"build/*\" -d \".\" --recursive"
+    "deployToProd": "az storage blob directory upload -c \"$web\" --account-name plaquetv -s \"build/*\" -d \".\" --recursive",
+    "install:importer": "pip3 install -r importer/requirements.txt",
+    "test:importer": "python3 -m unittest discover -s importer/tests",
+    "test:importer:coverage": "python3 -m coverage run -m unittest discover -s importer/tests && python3 -m coverage report --show-missing",
+    "start:importer:read": "python3 -m importer.readSheet",
+    "start:importer:sync": "python3 -m importer.syncSheet"
   },
   "eslintConfig": {
     "extends": [

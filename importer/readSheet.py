@@ -4,11 +4,11 @@ import json
 import sys
 
 from googleapiclient.errors import HttpError
-from importerlib import dump_json_files
-from importerlib import fetch_credentials
-from importerlib import get_current_dharma_assembly_plaques
-from importerlib import get_plaquetv_permanent_entries
-from importerlib import get_plaquetv_jotform_entries
+from .importerlib import dump_json_files
+from .importerlib import fetch_credentials
+from .importerlib import get_current_dharma_assembly_plaques
+from .importerlib import get_plaquetv_permanent_entries
+from .importerlib import get_plaquetv_jotform_entries
 
 
 """
@@ -72,4 +72,3 @@ def main(args):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

@@ -34,3 +34,4 @@ src/credentials.json
 token.json
 src/token.json
 *token.json
+.coverage
