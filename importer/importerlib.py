@@ -212,13 +212,23 @@ def get_dharma_assembly_plaques(gsheet_url, start_date, end_date, event_name, lo
     data = fetch_sheet_by_url(gsheet_url, creds=creds)
     if not data:
         return []
+
+    header = data[0]
     rows = get_entries_as_maps(data)
     entries = []
-    for row in rows:
-        for idx in range(2):
-            entry = parse_dharma_assembly_plaque(row, idx, start_date, end_date, event_name=event_name, location=location)
+
+    # New style: Sponsor, Plaque, Beneficiary, Branch, Note, Time Submitted
+    if 'Sponsor' in header and 'Plaque' in header and 'Beneficiary' in header:
+        for row in rows:
+            entry = parse_new_dharma_assembly_plaque(row, start_date, end_date, event_name=event_name, location=location)
             if entry:
                 entries.append(entry)
+    else:
+        for row in rows:
+            for idx in range(2):
+                entry = parse_dharma_assembly_plaque(row, idx, start_date, end_date, event_name=event_name, location=location)
+                if entry:
+                    entries.append(entry)
 
     return entries
 
@@ -665,6 +675,50 @@ def append_plaquetv_jotform_entry(entries, creds=None):
              valueInputOption='USER_ENTERED',
              body=body)
      .execute())
+
+
+def parse_new_dharma_assembly_plaque(entry, start_date, end_date, event_name="", location=""):
+    locations = parse_location(location if location else entry['Branch'])
+    plaque_type = parse_plaque_type(entry['Plaque'])
+
+    sponsor = correct_sponsor(
+        entry['Sponsor'],
+        entry['Beneficiary'],
+        entry['Plaque']
+    )
+
+    beneficiary = correct_beneficiary(
+        entry['Beneficiary'],
+        entry['Plaque']
+    )
+
+    start_datetime_obj = datetime.strptime(start_date, '%m/%d/%Y')
+    end_datetime_obj = datetime.strptime(end_date, '%m/%d/%Y')
+
+    submission_date = entry['Time Submitted']
+    plaque_id = get_plaque_id(start_datetime_obj)
+
+    if plaque_type == '' or plaque_type is None:
+        return None
+
+    if beneficiary == '' and sponsor == '':
+        print(f'WARNING: Missing DA beneficiary/sponsor for new format plaque', file=sys.stderr)
+        dump_plaque(entry)
+        return None
+
+    return {
+        'id': plaque_id,
+        'beneficiary': beneficiary,
+        'sponsor': sponsor,
+        'type': plaque_type,
+        'locations': locations,
+        'requestDate': datetime_to_str(start_datetime_obj),
+        'expiryDate': datetime_to_str(end_datetime_obj),
+        'eventName': event_name,
+        'searchable': True,
+        'mediaUrl': '',
+        'submission_date': submission_date
+    }
 
 
 def parse_dharma_assembly_plaque(entry, index, start_date, end_date, event_name="", location=""):

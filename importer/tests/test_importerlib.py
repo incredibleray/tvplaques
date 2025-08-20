@@ -325,6 +325,40 @@ class TestGetDharmaAssemblyPlaques(unittest.TestCase):
         self.assertEqual(plaques[0]['type'], 'mmb')
         self.assertEqual(plaques[1]['type'], 'wmmb')
 
+    def test_get_dharma_assembly_plaques_new_format(self, mock_fetch_sheet_by_url):
+        mock_fetch_sheet_by_url.return_value = [
+            ['Sponsor', 'Plaque', 'Beneficiary', 'Branch', 'Note', 'Time Submitted'],
+            ['Sponsor1', 'mmb', 'Beneficiary1', 'GF', '', '01/01/2023']
+        ]
+        
+        plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
+        
+        self.assertEqual(len(plaques), 1)
+        self.assertEqual(plaques[0]['type'], 'mmb')
+        self.assertEqual(plaques[0]['sponsor'], 'Sponsor1')
+        self.assertEqual(plaques[0]['beneficiary'], 'Beneficiary1')
+        self.assertEqual(plaques[0]['locations'], ['GF'])
+
+    def test_get_dharma_assembly_plaques_new_format_missing_beneficiary_and_sponsor(self, mock_fetch_sheet_by_url):
+        mock_fetch_sheet_by_url.return_value = [
+            ['Sponsor', 'Plaque', 'Beneficiary', 'Branch', 'Note', 'Time Submitted'],
+            ['', 'mmb', '', 'GF', '', '01/01/2023']
+        ]
+        
+        plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
+        
+        self.assertEqual(len(plaques), 0)
+
+    def test_get_dharma_assembly_plaques_new_format_empty_plaque_type(self, mock_fetch_sheet_by_url):
+        mock_fetch_sheet_by_url.return_value = [
+            ['Sponsor', 'Plaque', 'Beneficiary', 'Branch', 'Note', 'Time Submitted'],
+            ['Sponsor1', '', 'Beneficiary1', 'GF', '', '01/01/2023']
+        ]
+        
+        plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
+        
+        self.assertEqual(len(plaques), 0)
+
     def test_get_dharma_assembly_plaques_no_data(self, mock_fetch_sheet_by_url):
         mock_fetch_sheet_by_url.return_value = []
         plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
