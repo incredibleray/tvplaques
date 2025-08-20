@@ -245,6 +245,19 @@ class TestDataProcessing(unittest.TestCase):
         entries = get_entries_as_maps(data)
         self.assertEqual(entries, [{'col1': 'a', 'col2': 'b'}, {'col1': 'c', 'col2': 'd'}])
 
+    def test_parse_jotform_plaques_no_plaque_type(self):
+        entry = {
+            'Plaque Type': '',
+            'Beneficiary Name': 'Beneficiary',
+            'Sponsor Name': 'Sponsor',
+            'Term': 'one year',
+            'Submission Date': '2023-01-01 10:00:00',
+            'Starting Date': '01-01-2023',
+            'Which BLI temple': 'GF',
+            'More options': ''
+        }
+        self.assertEqual(parse_jotform_plaques(entry), [])
+
 
 @patch('importer.importerlib.fetch_sheet')
 class TestGetPlaqueTVPermanentEntries(unittest.TestCase):
@@ -263,6 +276,38 @@ class TestGetPlaqueTVPermanentEntries(unittest.TestCase):
         self.assertEqual(entries[0]['sponsor'], 'Sponsor1')
         self.assertEqual(entries[0]['type'], 'mmb')
         self.assertEqual(entries[0]['locations'], ['GF'])
+
+    def test_get_plaquetv_permanent_entries_sponsor_equals_beneficiary(self, mock_fetch_sheet):
+        mock_fetch_sheet.return_value = [
+            ['Plaque ID', 'Beneficiary', 'Sponsor', 'PlaqueTypeKey', 'Request Date', 'Expiration Date', 'Temple Location', 'Media Url'],
+            ['1', 'Beneficiary1', 'Beneficiary1', 'mmb', '01/01/2023', '01/01/2024', 'GF', '']
+        ]
+        
+        entries = get_plaquetv_permanent_entries()
+        
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]['sponsor'], '')
+
+    def test_get_plaquetv_permanent_entries_empty_plaque_type(self, mock_fetch_sheet):
+        mock_fetch_sheet.return_value = [
+            ['Plaque ID', 'Beneficiary', 'Sponsor', 'PlaqueTypeKey', 'Request Date', 'Expiration Date', 'Temple Location', 'Media Url'],
+            ['1', 'Beneficiary1', 'Sponsor1', '', '01/01/2023', '01/01/2024', 'GF', '']
+        ]
+        
+        entries = get_plaquetv_permanent_entries()
+        
+        self.assertEqual(len(entries), 0)
+
+    def test_get_plaquetv_permanent_entries_empty_index(self, mock_fetch_sheet):
+        mock_fetch_sheet.return_value = [
+            ['Plaque ID', 'Beneficiary', 'Sponsor', 'PlaqueTypeKey', 'Request Date', 'Expiration Date', 'Temple Location', 'Media Url'],
+            ['', 'Beneficiary1', 'Sponsor1', 'mmb', '01/01/2023', '01/01/2024', 'GF', '']
+        ]
+        
+        entries = get_plaquetv_permanent_entries()
+        
+        self.assertEqual(len(entries), 0)
+
 
 
 @patch('importer.importerlib.fetch_sheet_by_url')
@@ -284,6 +329,34 @@ class TestGetDharmaAssemblyPlaques(unittest.TestCase):
         mock_fetch_sheet_by_url.return_value = []
         plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
         self.assertEqual(len(plaques), 0)
+
+    def test_parse_dharma_assembly_plaque_sponsor_equals_beneficiary(self, mock_fetch_sheet_by_url):
+        mock_fetch_sheet_by_url.return_value = [
+            ['Branch (Temple Name)', 'Plaque #1', 'Sponsor #1', 'Beneficiary #1', 'Plaque #2', 'Sponsor #2', 'Beneficiary #2', 'Create Date'],
+            ['GF', 'mmb', 'Sponsor1', 'Sponsor1', 'w-mmb', 'Sponsor2', 'Beneficiary2', '01/01/2023']
+        ]
+        
+        plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
+        
+        self.assertEqual(len(plaques), 2)
+        self.assertEqual(plaques[0]['sponsor'], '')
+
+    def test_parse_dharma_assembly_plaque(self, mock_fetch_sheet_by_url):
+        mock_fetch_sheet_by_url.return_value = [
+            ['Branch (Temple Name)', 'Plaque #1', 'Sponsor #1', 'Beneficiary #1', 'Plaque #2', 'Sponsor #2', 'Beneficiary #2', 'Create Date'],
+            ['GF', 'mmb', 'Sponsor1', 'Beneficiary1', 'w-mmb', 'Sponsor2', 'Beneficiary2', '01/01/2023']
+        ]
+        
+        plaques = get_dharma_assembly_plaques('url', '01/01/2023', '01/31/2023', 'event', location='GF')
+        
+        self.assertEqual(len(plaques), 2)
+        self.assertEqual(plaques[0]['type'], 'mmb')
+        self.assertEqual(plaques[0]['sponsor'], 'Sponsor1')
+        self.assertEqual(plaques[0]['beneficiary'], 'Beneficiary1')
+        self.assertEqual(plaques[0]['locations'], ['GF'])
+        self.assertEqual(plaques[0]['requestDate'], '01/01/2023')
+        self.assertEqual(plaques[0]['expiryDate'], '01/31/2023')
+        self.assertEqual(plaques[0]['eventName'], 'event')
 
     @patch('importer.importerlib.get_dharma_assembly_plaques')
     def test_get_current_dharma_assembly_plaques(self, mock_get_dharma_assembly_plaques, mock_fetch_sheet_by_url):
@@ -387,11 +460,41 @@ class TestErrorCases(unittest.TestCase):
 
     def test_fetch_sheet_by_url_no_spreadsheet_id(self):
         with self.assertRaises(ValueError):
-            fetch_sheet_by_url('https://docs.google.com/spreadsheets/d/')
+            fetch_sheet_by_url('https://docs.google.com/spreadsheets/d//edit?gid=0')
 
-    def test_fetch_sheet_by_url_no_gid(self, ):
+    def test_fetch_sheet_by_url_no_gid(self):
         with self.assertRaises(ValueError):
             fetch_sheet_by_url('https://docs.google.com/spreadsheets/d/123/edit')
+
+    @patch('importer.importerlib.fetch_credentials')
+    @patch('importer.importerlib.build')
+    def test_fetch_sheet_by_url_path_based_id(self, mock_build, mock_fetch_creds):
+        mock_service = MagicMock()
+        mock_build.return_value = mock_service
+        mock_service.spreadsheets().get().execute.return_value = {
+            'sheets': [{'properties': {'sheetId': 0, 'title': 'Sheet1'}}]
+        }
+        mock_service.spreadsheets().values().get().execute.return_value = {
+            'values': [['a', 'b'], ['c', 'd']]
+        }
+        
+        url = 'https://docs.google.com/spreadsheets/d/12345/edit?gid=0'
+        values = fetch_sheet_by_url(url)
+        
+        self.assertEqual(values, [['a', 'b'], ['c', 'd']])
+
+    @patch('importer.importerlib.fetch_credentials')
+    @patch('importer.importerlib.build')
+    def test_fetch_sheet_by_url_no_sheet_found(self, mock_build, mock_fetch_creds):
+        mock_service = MagicMock()
+        mock_build.return_value = mock_service
+        mock_service.spreadsheets().get().execute.return_value = {
+            'sheets': [{'properties': {'sheetId': 1, 'title': 'Sheet1'}}]
+        }
+        
+        url = 'https://docs.google.com/spreadsheets/d/123/edit?gid=0'
+        with self.assertRaises(ValueError):
+            fetch_sheet_by_url(url)
 
     @patch('importer.importerlib.build')
     def test_fetch_sheet_by_url_no_sheet_name(self, mock_build):
@@ -434,6 +537,23 @@ class TestErrorCases(unittest.TestCase):
             'Which BLI temple': 'GF'
         }
         self.assertIsNone(parse_jotform_plaque(entry, 0))
+
+    @patch('importer.importerlib.fetch_credentials')
+    def test_fetch_sheet_by_url_with_key(self, mock_fetch_creds):
+        with patch('importer.importerlib.build') as mock_build:
+            mock_service = MagicMock()
+            mock_build.return_value = mock_service
+            mock_service.spreadsheets().get().execute.return_value = {
+                'sheets': [{'properties': {'sheetId': 0, 'title': 'Sheet1'}}]
+            }
+            mock_service.spreadsheets().values().get().execute.return_value = {
+                'values': [['a', 'b'], ['c', 'd']]
+            }
+            
+            url = 'https://docs.google.com/spreadsheets/d/123/edit?key=456'
+            values = fetch_sheet_by_url(url)
+            
+            self.assertEqual(values, [['a', 'b'], ['c', 'd']])
 
 
 class TestMissingLines(unittest.TestCase):
@@ -542,3 +662,22 @@ class TestMissingLines(unittest.TestCase):
             'Which BLI temple': 'GF'
         }
         self.assertIsNone(parse_jotform_plaque(entry, 0))
+
+    def test_parse_jotform_plaque_content(self):
+        entry = {
+            'Plaque Type': 'mmb',
+            'Beneficiary Name': 'Beneficiary',
+            'Sponsor Name': 'Sponsor',
+            'Term': 'one year',
+            'Submission Date': '2023-01-01 10:00:00',
+            'Starting Date': '01-01-2023',
+            'Which BLI temple': 'GF',
+            'More options': ''
+        }
+        plaque = parse_jotform_plaque(entry, 0)
+        self.assertEqual(plaque['beneficiary'], 'Beneficiary')
+        self.assertEqual(plaque['sponsor'], 'Sponsor')
+        self.assertEqual(plaque['type'], 'mmb')
+        self.assertEqual(plaque['locations'], ['GF'])
+        self.assertEqual(plaque['requestDate'], '01/01/2023')
+        self.assertEqual(plaque['expiryDate'], '12/31/2023')
